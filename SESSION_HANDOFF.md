@@ -9,6 +9,7 @@
 - 纳入等比例授奖和选题统计后，结论仍为 C；人数不会机械改变获奖率，新增风险是 C 题方案同质化。
 - 人类已授权专注 C 题；已核对官方题面及附件并生成 `research/C_problem_map.md`，项目进入 `SOLVING` 的题意冻结阶段。
 - 问题地图已补充模块接口、决策信息时间轴、统一费用账本和 P0/P1/P2 歧义优先级。
+- 已生成 `research/C_route_cross_validation.md`；未修改或提交队友初稿。独立 Q1 复算仅在初稿假设下复现 35126.95 元，说明该数值不能替代 P0 口径冻结。
 
 ## 当前结论
 
@@ -23,10 +24,11 @@
 - `research/topic_selection_B.md`
 - `research/topic_selection_compare.md`
 - `research/C_problem_map.md`
+- `research/C_route_cross_validation.md`
 
 ## 尚未解决
 
-- 时间标签、决策信息集、效率、跨日 SOC、调整费用和波动价格可知性尚待人类冻结。
+- 时间标签、Q1 初始 SOC、决策信息集、跨日 SOC、实际电池重调权限、效率、供能边界、调整费用和波动价格可知性尚待人类冻结。
 
 ## 下一步
 
