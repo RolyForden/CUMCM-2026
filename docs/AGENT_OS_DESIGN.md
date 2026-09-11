@@ -1,5 +1,25 @@
-# CUMCM 轻量多 Agent 协作系统
 
+# CUMCM Agent 系统架构设计
+
+> 文档定位：本文件是整个多 Agent 协作系统的“架构设计与首次部署说明”，不是日常 Agent 的运行时上下文。
+>
+> ## 加载规则
+>
+> - BOOTSTRAP 首次部署时：总控 Agent 完整读取一次本文件。
+> - BOOTSTRAP 完成后：普通 Agent 和新会话默认不得重新读取本文件。
+> - 日常运行时，新 Agent 应优先读取：
+>   1. `AGENTS.md`
+>   2. `STATE.md`
+>   3. 当前 `TASK`
+>   4. 如需接续上一会话，再读取 `SESSION_HANDOFF.md`
+>   5. 与当前任务直接相关的代码、数据和 Skill
+> - 只有在重新设计工作流、修改系统架构或重新部署时，才重新读取本文件。
+>BOOTSTRAP 成功完成后，本文件退出日常运行上下文。
+后续 Agent 不得因为方便而默认加载本文件。
+运行时上下文由 `AGENTS.md + STATE.md + 当前 TASK + 按需 HANDOFF/Skill` 组成。
+> 核心原则：
+>
+> **Git 保存历史，STATE 保存现在，TASK 保存目标，HANDOFF 保存接力，Skill 按需加载。**
 ## 0. 当前目标
 
 为两名队员建立一套适用于约 1.5 天数学建模竞赛的：
