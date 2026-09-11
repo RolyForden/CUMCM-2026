@@ -10,6 +10,9 @@
 - 人类已授权专注 C 题；已核对官方题面及附件并生成 `research/C_problem_map.md`，项目进入 `SOLVING` 的题意冻结阶段。
 - 问题地图已补充模块接口、决策信息时间轴、统一费用账本和 P0/P1/P2 歧义优先级。
 - 已生成 `research/C_route_cross_validation.md`；未修改或提交队友初稿。独立 Q1 复算仅在初稿假设下复现 35126.95 元，说明该数值不能替代 P0 口径冻结。
+- 队友方法地图 `research/C_method_map.md` 已完成融合重构（对照分析 → 去重 → 补充 → 融合）与团队化路径修订，并通过交叉验证（`research/C_method_map_cross_validation.md`，总评 PASS 有风险）。
+- 交叉验证提出的 4 项小修已全部落实：头部阶段声明对齐 SOLVING；§1.4 补附件 3 日期列前向填充；§1.5 对齐问题地图 13 项 P0/P1/P2（求解器降为配置项）；§12.3 敏感性按必做/余量分级；§15 排期映射阶段机（SOLVING→MODEL_FREEZE→PAPER→FINAL_CHECK）。
+- 两线工作已在分支 `task/c-method-map-merge` 合并（基线为队友分支，未合并 main）。
 
 ## 当前结论
 
@@ -25,14 +28,16 @@
 - `research/topic_selection_compare.md`
 - `research/C_problem_map.md`
 - `research/C_route_cross_validation.md`
+- `research/C_method_map.md`（统一方法路线，融合版 v3）
+- `research/C_method_map_cross_validation.md`（对方法地图的交叉验证）
 
 ## 尚未解决
 
-- 时间标签、Q1 初始 SOC、决策信息集、跨日 SOC、实际电池重调权限、效率、供能边界、调整费用和波动价格可知性尚待人类冻结。
+- 问题地图 13 项 P0/P1/P2 口径待人类冻结：P0 = 时间标签、Q1 初始 SOC、信息集与 Q4 电价可知性、跨日 SOC、实际电池重调权限、效率、供能边界、调整费用；P1 = "每天电价相同"声明、预报映射与视野、调整收益判据；P2 = 结果模板省略号展开。
 
 ## 下一步
 
-- 人类确认问题地图中的关键歧义。
+- 人类确认问题地图中的关键歧义，写入 `DECISIONS.md`。
 - 随后执行 30-45 分钟的小窗口时序与独立核算探针。
 
 ## 不要重复

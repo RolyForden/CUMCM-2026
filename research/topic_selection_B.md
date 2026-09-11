@@ -8,9 +8,9 @@
 
 已完整阅读本地 A—E 五份题面共 15 页，包括附录、输出要求和 B 题两份说明文档；只读检查了全部本地表格及结果模板，并对照官网原始题包核验。未读取另一名队员或其他 Agent 的选题报告，未读取 `docs/AGENT_OS_DESIGN.md`，未借用外部选题分析。本次没有运行完整模型、联网模拟器或正式测试；下文 baseline 时间、模型效果潜力及风险等级均为工程估计，不是已完成实验。
 
-原始材料位于 `D:/Data/Download/math/CUMCM2026Problems/`。题面来源：[A 题](D:/Data/Download/math/CUMCM2026Problems/A题/A题.pdf)、[B 题](D:/Data/Download/math/CUMCM2026Problems/B题/B题.pdf)、[C 题](D:/Data/Download/math/CUMCM2026Problems/C题/C题.pdf)、[D 题](D:/Data/Download/math/CUMCM2026Problems/D题/D题.pdf)、[E 题](D:/Data/Download/math/CUMCM2026Problems/E题/E题.pdf)。B 题还依据其附件 1《模拟器使用说明》和附件 2《模拟器通信接口说明及编程指南》。
+原始材料位于题目文件夹 `CUMCM2026Problems/`（仓库外）。题面来源：[A 题](CUMCM2026Problems/A题/A题.pdf)、[B 题](CUMCM2026Problems/B题/B题.pdf)、[C 题](CUMCM2026Problems/C题/C题.pdf)、[D 题](CUMCM2026Problems/D题/D题.pdf)、[E 题](CUMCM2026Problems/E题/E题.pdf)。B 题还依据其附件 1《模拟器使用说明》和附件 2《模拟器通信接口说明及编程指南》。
 
-为核实实际发现的缺表问题，访问了[官网赛题发布页](https://www.mcm.edu.cn/html_cn/node/27b6e148f8113f09b0269f64a02629fb.html)，下载其直接链接的[官方原始题包](https://www.mcm.edu.cn/upload_cn/CUMCM2026Problems.zip)作只读比较。题包大小 4,362,100 字节，SHA-256 为 `a54c0e6b552d31e2dbd41aba4a07769943433cb9317927514c2d39ec6442e241`。五份 PDF 和 B 题两份 DOCX 与本地文件逐字节一致。临时核验副本在 `C:/Users/shsf/AppData/Local/Temp/cumcm-topic-a/official.zip`，原目录和 `data/raw/` 均未修改。
+为核实实际发现的缺表问题，访问了[官网赛题发布页](https://www.mcm.edu.cn/html_cn/node/27b6e148f8113f09b0269f64a02629fb.html)，下载其直接链接的[官方原始题包](https://www.mcm.edu.cn/upload_cn/CUMCM2026Problems.zip)作只读比较。题包大小 4,362,100 字节，SHA-256 为 `a54c0e6b552d31e2dbd41aba4a07769943433cb9317927514c2d39ec6442e241`。五份 PDF 和 B 题两份 DOCX 与本地文件逐字节一致。核验基于个人临时目录中的只读副本，原目录和 `data/raw/` 均未修改。
 
 ### 必须先知道的附件问题
 

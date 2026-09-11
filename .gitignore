@@ -17,3 +17,6 @@ venv/
 .worktrees/
 .DS_Store
 Thumbs.db
+
+# Local scratch
+tmp/
