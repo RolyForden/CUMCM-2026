@@ -1,19 +1,20 @@
 {
   "scope": "纯合成零流量数据；官方模板临时副本；不修改data/raw和正式outputs",
   "summary": {
-    "total": 4,
-    "passed": 4,
+    "total": 5,
+    "passed": 5,
     "failed": 0
   },
   "checks": {
     "官方模板副本生成成功": true,
     "独立核验器全部通过": true,
     "两份VBA保持": true,
-    "缺一槽会拒绝": true
+    "缺一槽会拒绝": true,
+    "错误表头会拒绝": true
   },
   "validator_summary": {
-    "total": 76,
-    "passed": 76,
+    "total": 78,
+    "passed": 78,
     "failed": 0
   },
   "validator_failed_checks": [],

@@ -342,6 +342,11 @@ def _check_workbook(
         # 结果与模板一致：有则哈希相同，无则两边都无，不能把官方无宏误判为失败。
         "vba_preserved": _vba_sha256(template_path) == _vba_sha256(result_path),
     }
+    checks["original_headers_unchanged"] = all(
+        template[sheet].cell(1, column).value == workbook[sheet].cell(1, column).value
+        for sheet in template.sheetnames
+        for column in range(1, template[sheet].max_column + 1)
+    )
     metrics: dict[str, float] = {}
     tables = [
         sheet for sheet in workbook.worksheets

@@ -85,13 +85,30 @@ def forecast_same_weekday(
     decision_time: datetime,
     weeks: int = 4,
     decay: float = 0.8,
+    prior: pd.DataFrame | None = None,
 ) -> pd.DataFrame:
-    """按最近若干个同星期日的同一时刻作衰减加权平均。"""
+    """按最近若干个同星期日的同一时刻作衰减加权平均。
+
+    滚动视野在一月初可能尚无任何已观测的同星期来源。此时若提供
+    ``prior``，仅对缺少来源的槽回退附件1典型日；一旦存在历史来源，
+    仍使用原有衰减平均，不让未来目标日推进信息边界。
+    """
     if weeks <= 0 or not 0 < decay <= 1:
         raise ValueError("weeks 必须为正，decay 必须在 (0,1] 内")
     _validate_history(history, decision_time)
     targets = _target_frame(target_day, decision_time)
     lookup = history.set_index("valid_time")
+    prior_by_slot = None
+    if prior is not None:
+        required_prior = {"slot", "load_forecast", "pv_forecast"}
+        missing = required_prior - set(prior.columns)
+        if missing:
+            raise ValueError(f"典型日先验缺少字段: {sorted(missing)}")
+        if len(prior) != 144 or sorted(prior["slot"].tolist()) != list(range(144)):
+            raise ValueError("典型日先验必须包含唯一的0至143槽")
+        if prior["slot"].duplicated().any():
+            raise ValueError("典型日先验槽位重复")
+        prior_by_slot = prior.set_index("slot")
     rows: list[dict] = []
     for row in targets.itertuples(index=False):
         sources = []
@@ -102,7 +119,18 @@ def forecast_same_weekday(
                 if source.observed_at <= decision_time:
                     sources.append((k, source))
         if not sources:
-            raise ValueError(f"{row.valid_time.isoformat()} 没有已观测的同星期历史")
+            if prior_by_slot is None:
+                raise ValueError(f"{row.valid_time.isoformat()} 没有已观测的同星期历史")
+            rows.append(
+                {
+                    **row._asdict(),
+                    "load_forecast": float(prior_by_slot.loc[row.slot, "load_forecast"]),
+                    "pv_forecast": float(prior_by_slot.loc[row.slot, "pv_forecast"]),
+                    "source_max_observed_at": datetime.min,
+                    "method": f"same-weekday-{weeks}-decay-{decay:g}:attachment1-prior",
+                }
+            )
+            continue
         weights = np.array([decay ** (k - 1) for k, _ in sources], dtype=float)
         weights /= weights.sum()
         rows.append(

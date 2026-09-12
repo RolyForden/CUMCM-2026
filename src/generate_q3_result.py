@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import csv
 from datetime import date
 import json
@@ -46,7 +47,11 @@ def write_csv(path: Path, rows: list[dict]) -> None:
 
 
 def main() -> int:
-    OUT.mkdir(parents=True, exist_ok=True)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--output", type=Path, default=OUT)
+    args = parser.parse_args()
+    output = args.output
+    output.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
     actuals = load_actuals()
     prior = prior_from_attachment1(START)
@@ -66,11 +71,11 @@ def main() -> int:
     records = result.pop("records")
     versions = result.pop("versions")
     daily = result.pop("daily")
-    write_csv(OUT / "q3_dispatch.csv", records)
-    write_csv(OUT / "q3_versions.csv", versions)
-    write_csv(OUT / "q3_daily_summary.csv", [r for r in daily if r["date"] >= EVAL_START.isoformat()])
+    write_csv(output / "q3_dispatch.csv", records)
+    write_csv(output / "q3_versions.csv", versions)
+    write_csv(output / "q3_daily_summary.csv", [r for r in daily if r["date"] >= EVAL_START.isoformat()])
     summary = {**result, "elapsed_seconds": time.time()-t0, "record_count": len(records), "version_count": len(versions)}
-    (OUT / "q3_replay_summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
+    (output / "q3_replay_summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(summary, ensure_ascii=False, indent=2), flush=True)
     return 0
 

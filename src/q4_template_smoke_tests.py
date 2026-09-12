@@ -10,6 +10,7 @@ import sys
 import tempfile
 
 import pandas as pd
+import openpyxl
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
@@ -87,7 +88,18 @@ def main() -> int:
             "独立核验器全部通过": check is not None and check.returncode == 0,
             "两份VBA保持": json.loads((out / "q4_workbook_audit.json").read_text(encoding="utf-8"))["all_vba_preserved"] if make.returncode == 0 else False,
             "缺一槽会拒绝": False,
+            "错误表头会拒绝": False,
         }
+        book = out / "result4-2.xlsm"
+        wb = openpyxl.load_workbook(book, keep_vba=True)
+        wb["计划购电量 (2)"].cell(1, 2, "错误标签")
+        wb.save(book)
+        wb.close()
+        bad_header = subprocess.run(
+            [sys.executable, str(ROOT / "src/validate_q4_results.py"), "--output-dir", str(out)],
+            cwd=ROOT, capture_output=True, text=True,
+        )
+        checks["错误表头会拒绝"] = bad_header.returncode != 0
         broken = pd.DataFrame(dispatch42[:-1])
         broken.to_csv(out / "q4_2_dispatch.csv", index=False)
         reject = subprocess.run(

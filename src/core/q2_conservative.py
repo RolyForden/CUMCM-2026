@@ -30,11 +30,14 @@ def _method_forecast(
     history: pd.DataFrame,
     target_day: date,
     decision_time: datetime,
+    prior: pd.DataFrame | None = None,
 ) -> pd.DataFrame:
     if method == "D-7":
         return forecast_lag_day(history, target_day, decision_time, 7)
     if method == "same-weekday-4-decay-0.8":
-        return forecast_same_weekday(history, target_day, decision_time, weeks=4, decay=0.8)
+        return forecast_same_weekday(
+            history, target_day, decision_time, weeks=4, decay=0.8, prior=prior
+        )
     raise ValueError(f"未知预测方法: {method}")
 
 
@@ -108,11 +111,12 @@ def conservative_plan_forecast(
     decision_time: datetime,
     level: str,
     lookback_days: int = 21,
+    prior: pd.DataFrame | None = None,
 ) -> pd.DataFrame:
     """生成点预测或分位保守的计划用负荷/光伏预测。"""
     if level not in CONSERVATIVE_LEVELS:
         raise ValueError(f"未知保守等级: {level}")
-    base = _method_forecast(method, history, target_day, decision_time)
+    base = _method_forecast(method, history, target_day, decision_time, prior=prior)
     if level == "point":
         out = base.copy()
         out["plan_level"] = "point"

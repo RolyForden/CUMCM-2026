@@ -1,7 +1,7 @@
 {
   "summary": {
-    "total": 76,
-    "passed": 76,
+    "total": 78,
+    "passed": 78,
     "failed": 0
   },
   "failed_checks": [],
@@ -63,6 +63,7 @@
     "result4-2_original_sheet_names_order_states": true,
     "result4-2_required_added_sheets": true,
     "result4-2_vba_preserved": true,
+    "result4-2_original_headers_unchanged": true,
     "result4-2_table_roles": true,
     "result4-2_unused_hidden_plan_unchanged": true,
     "result4-2_workbook_table_dates": true,
@@ -72,6 +73,7 @@
     "result4-3_original_sheet_names_order_states": true,
     "result4-3_required_added_sheets": true,
     "result4-3_vba_preserved": true,
+    "result4-3_original_headers_unchanged": true,
     "result4-3_table_roles": true,
     "result4-3_workbook_table_dates": true,
     "result4-3_workbook_table_values": true,

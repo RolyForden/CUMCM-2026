@@ -115,7 +115,13 @@ def build_forecast(
         return forecast_cold_start(history, prior, day, decision)
     try:
         return conservative_plan_forecast(
-            strategy.method, history, day, decision, strategy.level, strategy.lookback_days
+            strategy.method,
+            history,
+            day,
+            decision,
+            strategy.level,
+            strategy.lookback_days,
+            prior=prior,
         )
     except ValueError:
         # A D-7 rolling horizon has one causal edge case: the farthest target
