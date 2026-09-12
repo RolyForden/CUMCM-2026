@@ -146,6 +146,7 @@ def build_result(template: Path, output_dir: Path) -> dict[str, Any]:
         "template_vba_container_preserved": source_snapshot["vba_names"] == output_snapshot["vba_names"],
         "raw_template_unchanged": source_hash_before == source_hash_after,
     }
+    checks = {name: bool(passed) for name, passed in checks.items()}
     if not all(checks.values()):
         failed = [name for name, passed in checks.items() if not passed]
         raise RuntimeError(f"Q1正式结果验收失败：{failed}")
