@@ -1,0 +1,82 @@
+{
+  "scope": "N3 point forecast expansion; January-only method choice",
+  "summary": {
+    "total": 12,
+    "passed": 12,
+    "failed": 0
+  },
+  "january_metrics": {
+    "linear": {
+      "n": 4429,
+      "mae_kw": 61.92616951155265,
+      "rmse_kw": 133.09211550051228
+    },
+    "previous": {
+      "n": 4429,
+      "mae_kw": 242.04415430119664,
+      "rmse_kw": 463.2216916801561
+    }
+  },
+  "results": [
+    {
+      "name": "附件3记录完整",
+      "passed": true,
+      "actual": "35040"
+    },
+    {
+      "name": "点预测有效时刻",
+      "passed": true,
+      "actual": "valid_time=issue+lead"
+    },
+    {
+      "name": "工作簿缓存命中",
+      "passed": true,
+      "actual": "CacheInfo(hits=1, misses=1, maxsize=1, currsize=1)"
+    },
+    {
+      "name": "单次更新覆盖至下一发布点",
+      "passed": true,
+      "actual": "37"
+    },
+    {
+      "name": "无后发批次泄漏",
+      "passed": true,
+      "actual": "2025-02-01 06:00:00"
+    },
+    {
+      "name": "整点间线性插值",
+      "passed": true,
+      "actual": "1208.5315"
+    },
+    {
+      "name": "00:00批次覆盖",
+      "passed": true,
+      "actual": "35"
+    },
+    {
+      "name": "06:00批次覆盖",
+      "passed": true,
+      "actual": "36"
+    },
+    {
+      "name": "12:00批次覆盖",
+      "passed": true,
+      "actual": "36"
+    },
+    {
+      "name": "18:00批次覆盖",
+      "passed": true,
+      "actual": "37"
+    },
+    {
+      "name": "四批次不重不漏覆盖144槽",
+      "passed": true,
+      "actual": "(144, 144)"
+    },
+    {
+      "name": "1月线性插值优于前值保持",
+      "passed": true,
+      "actual": "{'linear': {'n': 4429, 'mae_kw': 61.92616951155265, 'rmse_kw': 133.09211550051228}, 'previous': {'n': 4429, 'mae_kw': 242.04415430119664, 'rmse_kw': 463.2216916801561}}"
+    }
+  ]
+}

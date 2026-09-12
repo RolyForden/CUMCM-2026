@@ -8,6 +8,7 @@ Q1 输入、历史实际值、执行回放真值和预报批次使用不同入�
 from __future__ import annotations
 
 from datetime import date, datetime, time, timedelta
+from functools import lru_cache
 from numbers import Real
 from pathlib import Path
 
@@ -158,12 +159,9 @@ def history_actuals_as_of(decision_time: datetime) -> pd.DataFrame:
     return out
 
 
-def forecast_vintage_as_of(decision_time: datetime) -> pd.DataFrame:
-    """返回截至决策时刻已经发布的原始小时级光伏预报。
-
-    这里只构造 issue_time、lead_hour 和小时有效时刻，不把小时值展开到
-    10分钟槽位；N3首小时映射经人类裁决后再实现展开器。
-    """
+@lru_cache(maxsize=1)
+def _load_forecast_vintages_cached() -> pd.DataFrame:
+    """一次读取附件3的全部预报批次，避免滚动回放反复加载工作簿。"""
     wb = openpyxl.load_workbook(
         RAW / "official/附件3.xlsm", read_only=True, data_only=True
     )
@@ -178,8 +176,6 @@ def forecast_vintage_as_of(decision_time: datetime) -> pd.DataFrame:
         hour_text = str(row[1]).strip()
         hour = int(hour_text.split(":", 1)[0])
         issue_time = datetime.combine(current_day, time(hour=hour))
-        if issue_time > decision_time:
-            continue
         for lead_hour, value in enumerate(row[2:26], start=1):
             rows.append(
                 {
@@ -192,6 +188,22 @@ def forecast_vintage_as_of(decision_time: datetime) -> pd.DataFrame:
             )
     wb.close()
     out = pd.DataFrame(rows)
+    if len(out) != 365 * 4 * 24:
+        raise ValueError(f"附件3预报记录数 {len(out)} != 35040")
+    if out.duplicated(["issue_time", "lead_hour"]).any():
+        raise ValueError("附件3存在重复的发布时刻/提前量")
+    return out
+
+
+def load_forecast_vintages() -> pd.DataFrame:
+    """返回附件3全部原始点预测的副本；底层工作簿只加载一次。"""
+    return _load_forecast_vintages_cached().copy()
+
+
+def forecast_vintage_as_of(decision_time: datetime) -> pd.DataFrame:
+    """返回截至决策时刻已经发布的原始小时级光伏点预测。"""
+    out = _load_forecast_vintages_cached()
+    out = out[out["issue_time"] <= decision_time].copy()
     if not out.empty and out["issue_time"].max() > decision_time:
         raise AssertionError("预报接口泄漏尚未发布的批次")
     return out
