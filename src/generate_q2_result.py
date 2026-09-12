@@ -93,28 +93,39 @@ def merge_emergency_intervals(
     for rec in ordered:
         if rec["grid_emergency"] > EMERGENCY_EPS:
             if run and run[-1]["interval_end"] != rec["interval_start"]:
-                merged.append(_close_run(run))
+                merged.append(_close_run(day, run))
                 run = []
             run.append(rec)
         else:
             if run:
-                merged.append(_close_run(run))
+                merged.append(_close_run(day, run))
                 run = []
     if run:
-        merged.append(_close_run(run))
+        merged.append(_close_run(day, run))
     return merged
 
 
-def _close_run(run: list[dict]) -> dict[str, Any]:
+def _close_run(day: date, run: list[dict]) -> dict[str, Any]:
+    """按计划所属日 day 生成区间标签：落在次日的端点加 '+1'。
+
+    槽 143 的区间是次日 00:00-00:10，即使该段只由槽 143 组成，起点也必须
+    相对计划日标注为 00:00+1，而不是误用次日日期判断。
+    """
     first_start = datetime.fromisoformat(run[0]["interval_start"])
     last_end = datetime.fromisoformat(run[-1]["interval_end"])
-    start_day = first_start.date()
-    end_label = _fmt_hhmm(last_end)
-    if last_end.date() != start_day:
-        end_label += "+1"
+    next_day = day + timedelta(days=1)
+
+    def label(dt: datetime) -> str:
+        text = _fmt_hhmm(dt)
+        if dt.date() == next_day:
+            text += "+1"
+        elif dt.date() != day:
+            raise AssertionError(f"紧急购电区间端点 {dt} 既不在计划日也不在次日")
+        return text
+
     return {
-        "start": _fmt_hhmm(first_start),
-        "end_label": end_label,
+        "start": label(first_start),
+        "end_label": label(last_end),
         "quantity": float(sum(r["grid_emergency"] for r in run)),
         "slot_first": run[0]["slot"],
         "slot_last": run[-1]["slot"],
