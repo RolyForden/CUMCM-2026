@@ -176,7 +176,7 @@ def plan_day(
 
 
 def replay(
-    strategy: Strategy,
+    strategy: Strategy | Callable[[date], Strategy],
     terminal: Terminal,
     actuals: pd.DataFrame,
     prior: pd.DataFrame,
@@ -185,17 +185,31 @@ def replay(
     evaluation_start: date,
     evaluation_end: date,
     observer: EventObserver | None = None,
+    collect_records: bool = False,
 ) -> dict:
-    """从 start 顺序回放到 evaluation_end，汇总 evaluation_start 起的指标。"""
+    """从 start 顺序回放到 evaluation_end，汇总 evaluation_start 起的指标。
+
+    strategy 可以是固定 Strategy，也可以是 date -> Strategy 的函数，用于
+    按日切换策略（顺序参数选择）；函数只接收当天日期，调用方必须保证它
+    只依据该日期之前已完成的信息返回策略。
+
+    collect_records=True 时返回值额外包含 evaluation_start 起的逐槽执行记录
+    （仅保留生成 result2 所需字段），供正式结果生成器使用。
+    """
     if evaluation_start < start or evaluation_end < evaluation_start:
         raise ValueError("评价窗口必须落在回放区间内且顺序正确")
 
+    def strategy_for(day: date) -> Strategy:
+        return strategy(day) if callable(strategy) else strategy
+
     day = start
     estimated_soc = 6000.0
-    plan = plan_day(strategy, terminal, actuals, prior, price, day, estimated_soc)
+    plan = plan_day(strategy_for(day), terminal, actuals, prior, price, day, estimated_soc)
     actual_soc_at_slot0 = 6000.0
     daily: list[dict] = []
     observations: list[dict] = []
+    all_records: list = []
+    active_strategy = strategy_for(day)
 
     def emit(event: dict) -> None:
         observations.append(event)
@@ -203,6 +217,7 @@ def replay(
             observer(event)
 
     while day <= evaluation_end:
+        active_strategy = strategy_for(day)
         truth = actuals[actuals["date"] == day].sort_values("slot")
         if len(truth) != 144:
             raise ValueError(f"{day}实际数据不是144槽")
@@ -234,7 +249,7 @@ def replay(
                 soc_at_midnight, plan.charge[143], plan.discharge[143]
             )
             next_plan = plan_day(
-                strategy, terminal, actuals, prior, price, next_day, next_estimated_soc
+                strategy_for(next_day), terminal, actuals, prior, price, next_day, next_estimated_soc
             )
             if not np.isfinite(next_plan.grid).all():
                 raise AssertionError(
@@ -268,6 +283,24 @@ def replay(
         )
         records = first + bridge
         audit = accountant.audit(records, require_q1_semantics=False)
+        if collect_records and day >= evaluation_start:
+            # 以计划所属日 day 标记，而非 interval_start.date()：slot 143 的
+            # 区间落在次日，但属于当天的计划，不能串到次日分组。
+            for rec in records:
+                all_records.append(
+                    {
+                        "date": day.isoformat(),
+                        "slot": rec.slot,
+                        "grid_contract": rec.grid_contract,
+                        "grid_emergency": rec.grid_emergency,
+                        "charge": rec.charge,
+                        "discharge": rec.discharge,
+                        "soc_start": rec.soc_start,
+                        "soc_end": rec.soc_end,
+                        "interval_start": rec.interval_start.isoformat(),
+                        "interval_end": rec.interval_end.isoformat(),
+                    }
+                )
         if not audit.ok:
             raise AssertionError(f"{terminal.label()} {day} 核算失败: {audit.violations[:5]}")
 
@@ -275,8 +308,8 @@ def replay(
             {
                 "date": day.isoformat(),
                 "terminal": terminal.label(),
-                "strategy_method": strategy.method,
-                "strategy_level": strategy.level,
+                "strategy_method": active_strategy.method,
+                "strategy_level": active_strategy.level,
                 "actual_soc_start": float(actual_soc_at_slot0),
                 "actual_soc_end": float(records[-1].soc_end),
                 "cost_normal": audit.cost_normal,
@@ -312,8 +345,12 @@ def replay(
     evaluated = [
         row for row in daily if evaluation_start.isoformat() <= row["date"] <= evaluation_end.isoformat()
     ]
-    return {
-        "strategy": {"method": strategy.method, "level": strategy.level},
+    if callable(strategy):
+        strategy_desc = {"mode": "date-switching", "levels": sorted({r["strategy_level"] for r in daily})}
+    else:
+        strategy_desc = {"method": strategy.method, "level": strategy.level}
+    result = {
+        "strategy": strategy_desc,
         "terminal": terminal.label(),
         "terminal_mode": terminal.mode,
         "terminal_param": terminal.param,
@@ -352,3 +389,6 @@ def replay(
         "daily": daily,
         "observations": observations,
     }
+    if collect_records:
+        result["records"] = all_records
+    return result
