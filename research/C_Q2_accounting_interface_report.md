@@ -15,7 +15,7 @@
 
 ## 结果
 
-- `python src/q2_accounting_tests.py`：7/7 通过。
+- `python src/q2_accounting_tests.py`：8/8 通过。
 - `python src/probe_timing.py`：48/48 通过。
 - `python src/probe_cross_validation.py`：39/39 通过。
 - 机器结果：`experiments/q2_accounting_results.json`。
@@ -23,3 +23,5 @@
 ## 人类裁决后的补充
 
 人类已选择方案A（DECISIONS.md D008）：满电附近若实际负荷偏低，计划放电被削减并使后续计划充电越上限，执行器临时削减必要的充电量。执行记录保存计划充电、实际充电、少充量和事件标志，核算器独立复查；少充后不需要的合同电按未使用合同电处理。
+
+人类已选择零点衔接方案A（DECISIONS.md D009）：新计划在00:00根据已知库存和旧计划最后一槽电池动作估计00:10库存，00:00至00:10继续执行旧计划；执行后的真实偏差交给安全削减规则。桥接反例已纳入第8项测试。

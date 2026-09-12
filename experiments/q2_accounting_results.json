@@ -1,8 +1,8 @@
 {
   "scope": "Q2 frozen accounting semantics only",
   "summary": {
-    "total": 7,
-    "passed": 7,
+    "total": 8,
+    "passed": 8,
     "failed": 0
   },
   "results": [
@@ -40,6 +40,11 @@
       "name": "削减放电导致后续库存偏高时安全少充电",
       "passed": true,
       "actual": "[]"
+    },
+    {
+      "name": "零点桥接估计只按旧计划且实际偏差留给执行器",
+      "passed": true,
+      "actual": "estimate=9910.0, actual=10000.0"
     }
   ]
 }

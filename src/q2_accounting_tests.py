@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from core.accountant import audit
-from core.executor import ExecRecord, execute_q2
+from core.executor import ExecRecord, estimate_bridge_soc, execute_q2
 from core.slot_adapter import build_day_slots
 
 
@@ -135,6 +135,30 @@ def main() -> int:
         and abs(clipped[1].charge_shortfall - 100.0) < 1e-9
         and abs(clipped[1].soc_end - 10800.0) < 1e-9,
         clipped_audit.violations,
+    )
+
+    estimated = estimate_bridge_soc(
+        soc_at_midnight=10000.0, charge_planned=0.0, discharge_planned=81.0
+    )
+    actual_bridge = execute_q2(
+        grid_contract=np.array([0.0]),
+        price=np.array([1.0]),
+        load_actual=np.array([0.0]),
+        pv_available=np.array([0.0]),
+        charge_planned=np.array([0.0]),
+        discharge_planned=np.array([81.0]),
+        soc0=10000.0,
+        starts=[slots[0].interval_start],
+        ends=[slots[0].interval_end],
+        plan_issue_time=datetime(2025, 2, 1),
+        slot_ids=[143],
+    )
+    check(
+        "零点桥接估计只按旧计划且实际偏差留给执行器",
+        abs(estimated - 9910.0) < 1e-9
+        and abs(actual_bridge[0].soc_end - 10000.0) < 1e-9
+        and actual_bridge[0].discharge_clipped,
+        f"estimate={estimated}, actual={actual_bridge[0].soc_end}",
     )
 
     failed = [item for item in RESULTS if not item["passed"]]

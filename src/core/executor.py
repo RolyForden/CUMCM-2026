@@ -160,6 +160,7 @@ def execute_q2(
     ends: list[datetime],
     plan_issue_time: datetime,
     params: BatteryParams = DEFAULT_BATTERY,
+    slot_ids: list[int] | None = None,
 ) -> list[ExecRecord]:
     """按 D002/D007 顺序回放第二问的实际运行。
 
@@ -183,6 +184,10 @@ def execute_q2(
             raise ValueError(f"{name} 不得为负")
     if len(starts) != n or len(ends) != n:
         raise ValueError("槽位起止时间长度与计划不一致")
+    if slot_ids is None:
+        slot_ids = list(range(n))
+    if len(slot_ids) != n or len(set(slot_ids)) != n:
+        raise ValueError("slot_ids 必须与计划等长且不得重复")
 
     E = float(soc0)
     recs: list[ExecRecord] = []
@@ -222,7 +227,7 @@ def execute_q2(
         )
         recs.append(
             ExecRecord(
-                slot=t,
+                slot=slot_ids[t],
                 interval_start=starts[t],
                 interval_end=ends[t],
                 price=float(price[t]),
@@ -251,6 +256,46 @@ def execute_q2(
         )
         E = E_next
     return recs
+
+
+def estimate_bridge_soc(
+    soc_at_midnight: float,
+    charge_planned: float,
+    discharge_planned: float,
+    params: BatteryParams = DEFAULT_BATTERY,
+) -> float:
+    """在00:00估计旧计划最后十分钟执行后的00:10库存。
+
+    只使用00:00已经知道的库存和前一天已经安排的电池动作，不读取该十
+    分钟的未来实际负荷或光伏。容量边界采用D008安全削减；因实际需求
+    造成的放电削减要到00:10执行结束后才知道，由新计划执行器吸收偏差。
+    """
+    values = (soc_at_midnight, charge_planned, discharge_planned)
+    if any(not np.isfinite(value) for value in values):
+        raise ValueError("桥接库存和电池动作必须为有限数")
+    if not params.soc_min - 1e-9 <= soc_at_midnight <= params.soc_max + 1e-9:
+        raise ValueError("00:00实际库存越界")
+    if charge_planned < -1e-9 or discharge_planned < -1e-9:
+        raise ValueError("桥接充放电计划不得为负")
+    if charge_planned > 1e-9 and discharge_planned > 1e-9:
+        raise ValueError("桥接槽不得同时计划充放电")
+
+    charge_actual = min(
+        float(charge_planned),
+        max((params.soc_max - soc_at_midnight) / params.eta_charge, 0.0),
+    )
+    discharge_actual = min(
+        float(discharge_planned),
+        max((soc_at_midnight - params.soc_min) * params.eta_discharge, 0.0),
+    )
+    estimate = (
+        soc_at_midnight
+        + params.eta_charge * charge_actual
+        - discharge_actual / params.eta_discharge
+    )
+    if not params.soc_min - 1e-6 <= estimate <= params.soc_max + 1e-6:
+        raise AssertionError("桥接库存估计越界")
+    return float(estimate)
 
 
 def records_to_plan_rows(plan: np.ndarray, day: str, issue_time: datetime,
