@@ -1,0 +1,122 @@
+{
+  "status": "PASS",
+  "scope": "D007 prewindow synthetic checks; no Q2/Q3 window, no annual run",
+  "summary": {
+    "total": 17,
+    "passed": 17,
+    "failed": 0
+  },
+  "n3_summary": {
+    "decision_time": "2025-01-01T06:00:00",
+    "records": 48,
+    "max_issue_time": "2025-01-01T06:00:00",
+    "max_valid_time": "2025-01-02T06:00:00",
+    "max_delta_error_hours": 0.0,
+    "slot143_start": "2025-01-02T00:00:00",
+    "h24_valid_time": "2025-01-02T00:00:00"
+  },
+  "results": [
+    {
+      "name": "N1-zero-load-discharge-clipped",
+      "passed": true,
+      "expected": "planned discharge clipped to 0, shortfall=10",
+      "actual": "actual=0, shortfall=10"
+    },
+    {
+      "name": "N1-high-pv-contract-overage",
+      "passed": true,
+      "expected": "curtail=100, unused=50, discharge_actual=10, shortfall=10",
+      "actual": "curtail=100, unused=50, discharge_actual=10, shortfall=10"
+    },
+    {
+      "name": "N1-severe-contract-overage",
+      "passed": true,
+      "expected": "delivered=0, unused=100, discharge_actual=5, discharge_shortfall=45",
+      "actual": "delivered=0, unused=100, shortfall=45"
+    },
+    {
+      "name": "N1-contract-shortage-emergency",
+      "passed": true,
+      "expected": "emergency=50, emergency cost=5*2*50=500",
+      "actual": "emergency=50, cost=500"
+    },
+    {
+      "name": "N1-soc-boundary-proxy",
+      "passed": true,
+      "expected": "near power limit planned discharge is clipped when no demand",
+      "actual": "actual=0, clipped=True"
+    },
+    {
+      "name": "N2-no-adjust",
+      "passed": true,
+      "expected": "100.0",
+      "actual": "100.0"
+    },
+    {
+      "name": "N2-up-only",
+      "passed": true,
+      "expected": "130.0",
+      "actual": "130.0"
+    },
+    {
+      "name": "N2-down-only",
+      "passed": true,
+      "expected": "90.0",
+      "actual": "90.0"
+    },
+    {
+      "name": "N2-100-80-100",
+      "passed": true,
+      "expected": "120.0",
+      "actual": "120.0"
+    },
+    {
+      "name": "N2-target-slot-price",
+      "passed": true,
+      "expected": "target price 2 gives 260, issue-price-like 1 would give 130",
+      "actual": "target=260.0, wrong=130.0"
+    },
+    {
+      "name": "N2-no-q-final-double-charge",
+      "passed": true,
+      "expected": "plan cashflow=120 and q_final charge would be duplicate",
+      "actual": "plan=120.0, duplicated=220.0"
+    },
+    {
+      "name": "N2-reject-history-edit",
+      "passed": true,
+      "expected": "ValueError",
+      "actual": "ValueError"
+    },
+    {
+      "name": "N2-q4-price-forecast-vs-actual",
+      "passed": true,
+      "expected": "optimizer uses forecast price, accountant uses actual price",
+      "actual": "opt=260.0, settlement=390.0"
+    },
+    {
+      "name": "N3-valid-time-equals-issue-plus-lead",
+      "passed": true,
+      "expected": "max delta error 0",
+      "actual": "0.0"
+    },
+    {
+      "name": "N3-issue-time-causal-cutoff",
+      "passed": true,
+      "expected": "<= 2025-01-01T06:00:00",
+      "actual": "2025-01-01T06:00:00"
+    },
+    {
+      "name": "N3-scheme-a-last-slot-h24-point",
+      "passed": true,
+      "expected": "slot143 start equals 0:00 issue h24 valid_time",
+      "actual": "slot143=2025-01-02T00:00:00, h24=2025-01-02T00:00:00"
+    },
+    {
+      "name": "N3-first-hour-gap-documented",
+      "passed": true,
+      "expected": "0:00-1:00 precedes first point forecast, needs redecision",
+      "actual": "first_hour_start=2025-01-01T00:00:00, f1=2025-01-01T01:00:00"
+    }
+  ]
+}
