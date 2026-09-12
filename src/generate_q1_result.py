@@ -54,7 +54,13 @@ def workbook_snapshot(path: Path) -> dict[str, Any]:
                     non_target_cells.append(
                         [ws.title, cell.coordinate, cell.value, cell.data_type, cell.number_format]
                     )
-    vba_names = sorted(wb.vba_archive.namelist()) if wb.vba_archive is not None else []
+    # keep_vba 的 archive 包含工作簿全部 ZIP 条目；这里只比较真正与宏有关的
+    # 部件。普通 sharedStrings/目录项会被 openpyxl 合法重写，不能冒充 VBA。
+    archive_names = wb.vba_archive.namelist() if wb.vba_archive is not None else []
+    vba_names = sorted(
+        name for name in archive_names
+        if "vba" in name.lower() or "macro" in name.lower()
+    )
     wb.close()
     return {"sheets": sheets, "non_target_cells": non_target_cells, "vba_names": vba_names}
 
