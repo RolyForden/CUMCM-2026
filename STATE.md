@@ -4,7 +4,7 @@
 
 状态：原探针 41/41 保留为整改前基线；整改提交 `7464ccc` 的主探针 48/48、独立交叉验证 39/39 均通过。
 
-结论：人类已在D003选择方案A；Q1执行—核算—官方模板链已重新认证，主口径费用为35126.948590元。**Q1正式结果已生成并通过重开核验（2026-09-12，见“下一步”）。**
+结论：人类已在D003选择方案A；Q1执行—核算—官方模板链已重新认证，主口径费用为35126.948590元。**Q1正式结果已完成系统验证并形成论文正文（2026-09-12）。**
 
 ## 当前硬闸门
 
@@ -20,6 +20,7 @@
 - 独立交叉验证：`src/probe_cross_validation.py`，39/39；逐项输出：`experiments/probe_cross_validation_results.json`。
 - 审查报告：`research/C_probe_cross_validation.md`。
 - N4 人类裁决记录：DECISIONS.md D003；说明材料：`research/C_time_boundary_decision.md`。
+- Q1 定稿验证：`src/validate_q1.py`、`outputs/q1_validation/q1_validation_summary.json`、`research/C_q1_validation.md`；论文正文：`paper/q1_section.md`。
 
 ## 下一步
 
@@ -28,4 +29,5 @@
    - 产物 `outputs/q1_scheme_a/`：`result1.xlsm`、`q1_dispatch.csv`、`q1_paper_tables.json`（论文表 1/表 2）、`q1_audit.json`。
    - 验收：生成期 16 项 + 独立重开 8 项全过；主口径费用 **35126.948589390 元**；`probe_timing.py` 48/48 与 `probe_cross_validation.py` 39/39 复跑无回归。
    - 论文表 2 块区间（方案 A，见 `q1_paper_tables.json` covers_slots）：0:00-4:00=槽0-23 … 20:00-24:00=槽120-143（含跨日槽）；24:00 储电量 = E_143 = 6000.000000。
-2. 人类依次裁决N1–N3后，再实现并小窗口验证Q2/Q3；未裁决前不得全年运行。
+2. ~~完成 Q1 结果验证与论文正文。~~ **已完成（2026-09-12）**：逐槽独立复算、显式互斥 MILP、参数敏感性和 60 次输入扰动均通过；正式 CSV 未修改。
+3. 人类依次裁决N1–N3后，再实现并小窗口验证Q2/Q3；未裁决前不得全年运行。

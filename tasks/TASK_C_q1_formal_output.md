@@ -1,6 +1,6 @@
 # TASK：按方案A生成Q1正式结果
 
-- 状态：进行中。
+- 状态：已完成（2026-09-12）。
 - 目标：在D002参数与D003方案A下生成官方 `result1.xlsm` 副本，并完成求解、执行、独立核算、模板回读和结构保持检查。
 - 输入：`data/raw/official/附件1.xlsm`、`data/raw/official/附件5/result1.xlsm`。
 - 输出：`outputs/q1_scheme_a/result1.xlsm`、完整调度明细、审计证据和实验记录。
