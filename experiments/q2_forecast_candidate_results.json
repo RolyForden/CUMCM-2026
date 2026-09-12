@@ -1,8 +1,8 @@
 {
   "scope": "Q2 forecast candidates and causality only; no final model selected",
   "summary": {
-    "total": 6,
-    "passed": 6,
+    "total": 8,
+    "passed": 8,
     "failed": 0
   },
   "results": [
@@ -35,6 +35,16 @@
       "name": "历史输入混入未来观测时拒绝",
       "passed": true,
       "actual": "True"
+    },
+    {
+      "name": "一月一日无历史时完整使用典型日先验",
+      "passed": true,
+      "actual": "{'cold-start:attachment1-prior': 144}"
+    },
+    {
+      "name": "一月二日已观测槽用历史且未完成末槽用先验",
+      "passed": true,
+      "actual": "{'cold-start:available-history-slot-mean': 143, 'cold-start:attachment1-prior': 1}"
     }
   ]
 }

@@ -12,7 +12,12 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from core.q2_forecast import forecast_lag_day, forecast_same_weekday, validate_forecast_causality
+from core.q2_forecast import (
+    forecast_cold_start,
+    forecast_lag_day,
+    forecast_same_weekday,
+    validate_forecast_causality,
+)
 from core.slot_adapter import build_day_slots
 
 
@@ -23,6 +28,7 @@ def synthetic_history(start: date, days: int) -> pd.DataFrame:
         for slot in build_day_slots(day):
             rows.append(
                 {
+                    "slot": slot.slot_id,
                     "valid_time": slot.interval_start,
                     "observed_at": slot.interval_end,
                     "load_actual": float(1000 + 10 * offset + slot.slot_id),
@@ -80,6 +86,38 @@ def main() -> int:
     except ValueError:
         future_rejected = True
     check("历史输入混入未来观测时拒绝", future_rejected, future_rejected)
+
+    prior = pd.DataFrame(
+        {
+            "slot": list(range(144)),
+            "load_forecast": [2000.0] * 144,
+            "pv_forecast": [100.0] * 144,
+        }
+    )
+    jan1 = forecast_cold_start(
+        pd.DataFrame(), prior, date(2025, 1, 1), datetime(2025, 1, 1)
+    )
+    validate_forecast_causality(jan1)
+    check(
+        "一月一日无历史时完整使用典型日先验",
+        len(jan1) == 144
+        and set(jan1.method) == {"cold-start:attachment1-prior"}
+        and (jan1.load_forecast == 2000.0).all(),
+        jan1.method.value_counts().to_dict(),
+    )
+
+    jan2_decision = datetime(2025, 1, 2)
+    jan1_history = synthetic_history(date(2025, 1, 1), 1)
+    jan1_history = jan1_history[jan1_history.observed_at <= jan2_decision].copy()
+    jan2 = forecast_cold_start(jan1_history, prior, date(2025, 1, 2), jan2_decision)
+    validate_forecast_causality(jan2)
+    check(
+        "一月二日已观测槽用历史且未完成末槽用先验",
+        jan2.iloc[0].method == "cold-start:available-history-slot-mean"
+        and jan2.iloc[143].method == "cold-start:attachment1-prior"
+        and jan2.source_max_observed_at.max() <= jan2_decision,
+        jan2.method.value_counts().to_dict(),
+    )
 
     failed = [item for item in checks if not item["passed"]]
     payload = {

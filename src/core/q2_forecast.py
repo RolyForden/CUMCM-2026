@@ -121,6 +121,53 @@ def forecast_same_weekday(
     return pd.DataFrame(rows)
 
 
+def forecast_cold_start(
+    history: pd.DataFrame,
+    prior: pd.DataFrame,
+    target_day: date,
+    decision_time: datetime,
+) -> pd.DataFrame:
+    """1月1日至7日：已有同槽历史均值，缺失槽用附件1典型日先验。"""
+    required_prior = {"slot", "load_forecast", "pv_forecast"}
+    missing = required_prior - set(prior.columns)
+    if missing:
+        raise ValueError(f"典型日先验缺少字段: {sorted(missing)}")
+    if len(prior) != 144 or sorted(prior["slot"].tolist()) != list(range(144)):
+        raise ValueError("典型日先验必须包含唯一的0至143槽")
+    if prior["slot"].duplicated().any():
+        raise ValueError("典型日先验槽位重复")
+    if not history.empty:
+        _validate_history(history, decision_time)
+
+    targets = _target_frame(target_day, decision_time)
+    prior_by_slot = prior.set_index("slot")
+    rows: list[dict] = []
+    for row in targets.itertuples(index=False):
+        available = history[
+            (history["slot"] == row.slot) & (history["observed_at"] <= decision_time)
+        ] if not history.empty else history
+        if available.empty:
+            load_value = float(prior_by_slot.loc[row.slot, "load_forecast"])
+            pv_value = float(prior_by_slot.loc[row.slot, "pv_forecast"])
+            source_max = datetime.min
+            source = "attachment1-prior"
+        else:
+            load_value = float(available["load_actual"].mean())
+            pv_value = float(available["pv_actual"].mean())
+            source_max = available["observed_at"].max()
+            source = "available-history-slot-mean"
+        rows.append(
+            {
+                **row._asdict(),
+                "load_forecast": load_value,
+                "pv_forecast": pv_value,
+                "source_max_observed_at": source_max,
+                "method": f"cold-start:{source}",
+            }
+        )
+    return pd.DataFrame(rows)
+
+
 def validate_forecast_causality(frame: pd.DataFrame) -> None:
     if len(frame) != 144 or frame["slot"].tolist() != list(range(144)):
         raise ValueError("预测必须按槽位0至143恰好给出144项")
@@ -130,4 +177,3 @@ def validate_forecast_causality(frame: pd.DataFrame) -> None:
         raise ValueError("预测含空值")
     if (frame[FORECAST_COLUMNS] < 0).any().any():
         raise ValueError("负荷或光伏预测不得为负")
-
