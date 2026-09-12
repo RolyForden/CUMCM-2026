@@ -625,6 +625,1079 @@
           "discharge_clipped_slots": 9,
           "audit_ok": true
         }
+      ],
+      "observations": [
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-01-01",
+          "next_plan_day": "2025-01-02",
+          "decision_time": "2025-01-02T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-02T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-02T00:00:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 0.0,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 6000.000000000004
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-01-01",
+          "first_interval_start": "2025-01-01T00:10:00",
+          "bridge_interval_start": "2025-01-02T00:00:00",
+          "last_interval_end": "2025-01-02T00:10:00",
+          "max_residual": 2.2737367544323206e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 715.6530333333282,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-01-02",
+          "next_plan_day": "2025-01-03",
+          "decision_time": "2025-01-03T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-03T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-03T00:00:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 0.0,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 6144.681425925934
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-01-02",
+          "first_interval_start": "2025-01-02T00:10:00",
+          "bridge_interval_start": "2025-01-03T00:00:00",
+          "last_interval_end": "2025-01-03T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-01-03",
+          "next_plan_day": "2025-01-04",
+          "decision_time": "2025-01-04T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-04T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-04T00:00:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 0.0,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 9568.292555555565
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-01-03",
+          "first_interval_start": "2025-01-03T00:10:00",
+          "bridge_interval_start": "2025-01-04T00:00:00",
+          "last_interval_end": "2025-01-04T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 2118.2142592592563,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 711.3221500000001,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-01-04",
+          "next_plan_day": "2025-01-05",
+          "decision_time": "2025-01-05T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-05T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-05T00:00:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 131.43617283951426,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-01-04",
+          "first_interval_start": "2025-01-04T00:10:00",
+          "bridge_interval_start": "2025-01-05T00:00:00",
+          "last_interval_end": "2025-01-05T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 2499.277999999999,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 640.1816666666667,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-01-05",
+          "next_plan_day": "2025-01-06",
+          "decision_time": "2025-01-06T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-06T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-06T00:00:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-01-05",
+          "first_interval_start": "2025-01-05T00:10:00",
+          "bridge_interval_start": "2025-01-06T00:00:00",
+          "last_interval_end": "2025-01-06T00:10:00",
+          "max_residual": 2.2737367544323206e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0000000000023,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 746.1750333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-01-06",
+          "next_plan_day": "2025-01-07",
+          "decision_time": "2025-01-07T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-07T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-07T00:00:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-01-06",
+          "first_interval_start": "2025-01-06T00:10:00",
+          "bridge_interval_start": "2025-01-07T00:00:00",
+          "last_interval_end": "2025-01-07T00:10:00",
+          "max_residual": 2.2737367544323206e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 784.5009633333334,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-01-07",
+          "next_plan_day": "2025-01-08",
+          "decision_time": "2025-01-08T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-08T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-02T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-01-07",
+          "first_interval_start": "2025-01-07T00:10:00",
+          "bridge_interval_start": "2025-01-08T00:00:00",
+          "last_interval_end": "2025-01-08T00:10:00",
+          "max_residual": 2.2737367544323206e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 806.6139333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-01-08",
+          "next_plan_day": "2025-01-09",
+          "decision_time": "2025-01-09T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-09T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-03T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-01-08",
+          "first_interval_start": "2025-01-08T00:10:00",
+          "bridge_interval_start": "2025-01-09T00:00:00",
+          "last_interval_end": "2025-01-09T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0000000000005,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-01-09",
+          "next_plan_day": "2025-01-10",
+          "decision_time": "2025-01-10T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-10T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-04T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-01-09",
+          "first_interval_start": "2025-01-09T00:10:00",
+          "bridge_interval_start": "2025-01-10T00:00:00",
+          "last_interval_end": "2025-01-10T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.000000000001,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-01-10",
+          "next_plan_day": "2025-01-11",
+          "decision_time": "2025-01-11T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-11T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-05T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-01-10",
+          "first_interval_start": "2025-01-10T00:10:00",
+          "bridge_interval_start": "2025-01-11T00:00:00",
+          "last_interval_end": "2025-01-11T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1222.394149696423,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 618.6850000000001,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-01-11",
+          "next_plan_day": "2025-01-12",
+          "decision_time": "2025-01-12T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-12T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-06T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-01-11",
+          "first_interval_start": "2025-01-11T00:10:00",
+          "bridge_interval_start": "2025-01-12T00:00:00",
+          "last_interval_end": "2025-01-12T00:10:00",
+          "max_residual": 2.2737367544323206e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1306.802276178298,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 620.3881666666666,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-01-12",
+          "next_plan_day": "2025-01-13",
+          "decision_time": "2025-01-13T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-13T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-07T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-01-12",
+          "first_interval_start": "2025-01-12T00:10:00",
+          "bridge_interval_start": "2025-01-13T00:00:00",
+          "last_interval_end": "2025-01-13T00:10:00",
+          "max_residual": 2.2737367544323206e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0000000000018,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-01-13",
+          "next_plan_day": "2025-01-14",
+          "decision_time": "2025-01-14T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-14T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-08T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-01-13",
+          "first_interval_start": "2025-01-13T00:10:00",
+          "bridge_interval_start": "2025-01-14T00:00:00",
+          "last_interval_end": "2025-01-14T00:10:00",
+          "max_residual": 2.2737367544323206e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-01-14",
+          "next_plan_day": "2025-01-15",
+          "decision_time": "2025-01-15T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-15T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-09T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-01-14",
+          "first_interval_start": "2025-01-14T00:10:00",
+          "bridge_interval_start": "2025-01-15T00:00:00",
+          "last_interval_end": "2025-01-15T00:10:00",
+          "max_residual": 2.2737367544323206e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0000000000016,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-01-15",
+          "next_plan_day": "2025-01-16",
+          "decision_time": "2025-01-16T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-16T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-10T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-01-15",
+          "first_interval_start": "2025-01-15T00:10:00",
+          "bridge_interval_start": "2025-01-16T00:00:00",
+          "last_interval_end": "2025-01-16T00:10:00",
+          "max_residual": 2.2737367544323206e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0000000000011,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-01-16",
+          "next_plan_day": "2025-01-17",
+          "decision_time": "2025-01-17T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-17T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-11T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-01-16",
+          "first_interval_start": "2025-01-16T00:10:00",
+          "bridge_interval_start": "2025-01-17T00:00:00",
+          "last_interval_end": "2025-01-17T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0000000000011,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-01-17",
+          "next_plan_day": "2025-01-18",
+          "decision_time": "2025-01-18T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-18T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-12T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-01-17",
+          "first_interval_start": "2025-01-17T00:10:00",
+          "bridge_interval_start": "2025-01-18T00:00:00",
+          "last_interval_end": "2025-01-18T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1324.4797053017396,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 613.0143666666667,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-01-18",
+          "next_plan_day": "2025-01-19",
+          "decision_time": "2025-01-19T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-19T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-13T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-01-18",
+          "first_interval_start": "2025-01-18T00:10:00",
+          "bridge_interval_start": "2025-01-19T00:00:00",
+          "last_interval_end": "2025-01-19T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1316.9355941413535,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 606.705,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-01-19",
+          "next_plan_day": "2025-01-20",
+          "decision_time": "2025-01-20T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-20T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-14T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-01-19",
+          "first_interval_start": "2025-01-19T00:10:00",
+          "bridge_interval_start": "2025-01-20T00:00:00",
+          "last_interval_end": "2025-01-20T00:10:00",
+          "max_residual": 2.2737367544323206e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0000000000023,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-01-20",
+          "next_plan_day": "2025-01-21",
+          "decision_time": "2025-01-21T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-21T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-15T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-01-20",
+          "first_interval_start": "2025-01-20T00:10:00",
+          "bridge_interval_start": "2025-01-21T00:00:00",
+          "last_interval_end": "2025-01-21T00:10:00",
+          "max_residual": 2.2737367544323206e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0000000000016,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-01-21",
+          "next_plan_day": "2025-01-22",
+          "decision_time": "2025-01-22T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-22T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-16T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-01-21",
+          "first_interval_start": "2025-01-21T00:10:00",
+          "bridge_interval_start": "2025-01-22T00:00:00",
+          "last_interval_end": "2025-01-22T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0000000000032,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-01-22",
+          "next_plan_day": "2025-01-23",
+          "decision_time": "2025-01-23T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-23T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-17T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-01-22",
+          "first_interval_start": "2025-01-22T00:10:00",
+          "bridge_interval_start": "2025-01-23T00:00:00",
+          "last_interval_end": "2025-01-23T00:10:00",
+          "max_residual": 2.2737367544323206e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0000000000014,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-01-23",
+          "next_plan_day": "2025-01-24",
+          "decision_time": "2025-01-24T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-24T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-18T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-01-23",
+          "first_interval_start": "2025-01-23T00:10:00",
+          "bridge_interval_start": "2025-01-24T00:00:00",
+          "last_interval_end": "2025-01-24T00:10:00",
+          "max_residual": 2.2737367544323206e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0000000000018,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-01-24",
+          "next_plan_day": "2025-01-25",
+          "decision_time": "2025-01-25T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-25T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-19T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-01-24",
+          "first_interval_start": "2025-01-24T00:10:00",
+          "bridge_interval_start": "2025-01-25T00:00:00",
+          "last_interval_end": "2025-01-25T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1610.6394259259216,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 624.2020833333332,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-01-25",
+          "next_plan_day": "2025-01-26",
+          "decision_time": "2025-01-26T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-26T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-20T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-01-25",
+          "first_interval_start": "2025-01-25T00:10:00",
+          "bridge_interval_start": "2025-01-26T00:00:00",
+          "last_interval_end": "2025-01-26T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1451.7651296296244,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 621.1975,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-01-26",
+          "next_plan_day": "2025-01-27",
+          "decision_time": "2025-01-27T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-27T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-21T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-01-26",
+          "first_interval_start": "2025-01-26T00:10:00",
+          "bridge_interval_start": "2025-01-27T00:00:00",
+          "last_interval_end": "2025-01-27T00:10:00",
+          "max_residual": 2.2737367544323206e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0000000000011,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-01-27",
+          "next_plan_day": "2025-01-28",
+          "decision_time": "2025-01-28T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-28T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-22T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-01-27",
+          "first_interval_start": "2025-01-27T00:10:00",
+          "bridge_interval_start": "2025-01-28T00:00:00",
+          "last_interval_end": "2025-01-28T00:10:00",
+          "max_residual": 2.2737367544323206e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0000000000018,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-01-28",
+          "next_plan_day": "2025-01-29",
+          "decision_time": "2025-01-29T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-29T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-23T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-01-28",
+          "first_interval_start": "2025-01-28T00:10:00",
+          "bridge_interval_start": "2025-01-29T00:00:00",
+          "last_interval_end": "2025-01-29T00:10:00",
+          "max_residual": 2.2737367544323206e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.000000000001,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-01-29",
+          "next_plan_day": "2025-01-30",
+          "decision_time": "2025-01-30T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-30T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-24T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-01-29",
+          "first_interval_start": "2025-01-29T00:10:00",
+          "bridge_interval_start": "2025-01-30T00:00:00",
+          "last_interval_end": "2025-01-30T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0000000000018,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-01-30",
+          "next_plan_day": "2025-01-31",
+          "decision_time": "2025-01-31T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-31T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-25T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-01-30",
+          "first_interval_start": "2025-01-30T00:10:00",
+          "bridge_interval_start": "2025-01-31T00:00:00",
+          "last_interval_end": "2025-01-31T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.000000000002,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-01-31",
+          "next_plan_day": "2025-02-01",
+          "decision_time": "2025-02-01T00:00:00",
+          "forecast_input_max_observed_at": "2025-02-01T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-26T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-01-31",
+          "first_interval_start": "2025-01-31T00:10:00",
+          "bridge_interval_start": "2025-02-01T00:00:00",
+          "last_interval_end": "2025-02-01T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1201.5166790831067,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 606.2145833333334,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-02-01",
+          "next_plan_day": "2025-02-02",
+          "decision_time": "2025-02-02T00:00:00",
+          "forecast_input_max_observed_at": "2025-02-02T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-27T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-02-01",
+          "first_interval_start": "2025-02-01T00:10:00",
+          "bridge_interval_start": "2025-02-02T00:00:00",
+          "last_interval_end": "2025-02-02T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1642.7964629629632,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 608.7916666666666,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "plan_made",
+          "day": "2025-02-02",
+          "next_plan_day": "2025-02-03",
+          "decision_time": "2025-02-03T00:00:00",
+          "forecast_input_max_observed_at": "2025-02-03T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-28T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-02-02",
+          "first_interval_start": "2025-02-02T00:10:00",
+          "bridge_interval_start": "2025-02-03T00:00:00",
+          "last_interval_end": "2025-02-03T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.000016638327,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "D-7",
+          "event": "day_completed",
+          "day": "2025-02-03",
+          "first_interval_start": "2025-02-03T00:10:00",
+          "bridge_interval_start": "2025-02-04T00:00:00",
+          "last_interval_end": "2025-02-04T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        }
       ]
     },
     {
@@ -1249,6 +2322,1079 @@
           "discharge_shortfall_kwh": 156.82377868111996,
           "charge_clipped_slots": 1,
           "discharge_clipped_slots": 9,
+          "audit_ok": true
+        }
+      ],
+      "observations": [
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-01-01",
+          "next_plan_day": "2025-01-02",
+          "decision_time": "2025-01-02T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-02T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-02T00:00:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 0.0,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 6000.000000000004
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-01-01",
+          "first_interval_start": "2025-01-01T00:10:00",
+          "bridge_interval_start": "2025-01-02T00:00:00",
+          "last_interval_end": "2025-01-02T00:10:00",
+          "max_residual": 2.2737367544323206e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 715.6530333333282,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-01-02",
+          "next_plan_day": "2025-01-03",
+          "decision_time": "2025-01-03T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-03T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-03T00:00:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 0.0,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 6144.681425925934
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-01-02",
+          "first_interval_start": "2025-01-02T00:10:00",
+          "bridge_interval_start": "2025-01-03T00:00:00",
+          "last_interval_end": "2025-01-03T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-01-03",
+          "next_plan_day": "2025-01-04",
+          "decision_time": "2025-01-04T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-04T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-04T00:00:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 0.0,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 9568.292555555565
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-01-03",
+          "first_interval_start": "2025-01-03T00:10:00",
+          "bridge_interval_start": "2025-01-04T00:00:00",
+          "last_interval_end": "2025-01-04T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 2118.2142592592563,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 711.3221500000001,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-01-04",
+          "next_plan_day": "2025-01-05",
+          "decision_time": "2025-01-05T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-05T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-05T00:00:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 131.43617283951426,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-01-04",
+          "first_interval_start": "2025-01-04T00:10:00",
+          "bridge_interval_start": "2025-01-05T00:00:00",
+          "last_interval_end": "2025-01-05T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 2499.277999999999,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 640.1816666666667,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-01-05",
+          "next_plan_day": "2025-01-06",
+          "decision_time": "2025-01-06T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-06T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-06T00:00:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-01-05",
+          "first_interval_start": "2025-01-05T00:10:00",
+          "bridge_interval_start": "2025-01-06T00:00:00",
+          "last_interval_end": "2025-01-06T00:10:00",
+          "max_residual": 2.2737367544323206e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0000000000023,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 746.1750333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-01-06",
+          "next_plan_day": "2025-01-07",
+          "decision_time": "2025-01-07T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-07T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-07T00:00:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-01-06",
+          "first_interval_start": "2025-01-06T00:10:00",
+          "bridge_interval_start": "2025-01-07T00:00:00",
+          "last_interval_end": "2025-01-07T00:10:00",
+          "max_residual": 2.2737367544323206e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 784.5009633333334,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-01-07",
+          "next_plan_day": "2025-01-08",
+          "decision_time": "2025-01-08T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-08T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-02T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-01-07",
+          "first_interval_start": "2025-01-07T00:10:00",
+          "bridge_interval_start": "2025-01-08T00:00:00",
+          "last_interval_end": "2025-01-08T00:10:00",
+          "max_residual": 2.2737367544323206e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 806.6139333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-01-08",
+          "next_plan_day": "2025-01-09",
+          "decision_time": "2025-01-09T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-09T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-03T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-01-08",
+          "first_interval_start": "2025-01-08T00:10:00",
+          "bridge_interval_start": "2025-01-09T00:00:00",
+          "last_interval_end": "2025-01-09T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0000000000005,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-01-09",
+          "next_plan_day": "2025-01-10",
+          "decision_time": "2025-01-10T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-10T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-04T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-01-09",
+          "first_interval_start": "2025-01-09T00:10:00",
+          "bridge_interval_start": "2025-01-10T00:00:00",
+          "last_interval_end": "2025-01-10T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.000000000001,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-01-10",
+          "next_plan_day": "2025-01-11",
+          "decision_time": "2025-01-11T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-11T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-05T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-01-10",
+          "first_interval_start": "2025-01-10T00:10:00",
+          "bridge_interval_start": "2025-01-11T00:00:00",
+          "last_interval_end": "2025-01-11T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1222.394149696423,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 618.6850000000001,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-01-11",
+          "next_plan_day": "2025-01-12",
+          "decision_time": "2025-01-12T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-12T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-06T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-01-11",
+          "first_interval_start": "2025-01-11T00:10:00",
+          "bridge_interval_start": "2025-01-12T00:00:00",
+          "last_interval_end": "2025-01-12T00:10:00",
+          "max_residual": 2.2737367544323206e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1306.802276178298,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 620.3881666666666,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-01-12",
+          "next_plan_day": "2025-01-13",
+          "decision_time": "2025-01-13T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-13T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-07T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-01-12",
+          "first_interval_start": "2025-01-12T00:10:00",
+          "bridge_interval_start": "2025-01-13T00:00:00",
+          "last_interval_end": "2025-01-13T00:10:00",
+          "max_residual": 2.2737367544323206e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0000000000018,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-01-13",
+          "next_plan_day": "2025-01-14",
+          "decision_time": "2025-01-14T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-14T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-08T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-01-13",
+          "first_interval_start": "2025-01-13T00:10:00",
+          "bridge_interval_start": "2025-01-14T00:00:00",
+          "last_interval_end": "2025-01-14T00:10:00",
+          "max_residual": 2.2737367544323206e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-01-14",
+          "next_plan_day": "2025-01-15",
+          "decision_time": "2025-01-15T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-15T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-09T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-01-14",
+          "first_interval_start": "2025-01-14T00:10:00",
+          "bridge_interval_start": "2025-01-15T00:00:00",
+          "last_interval_end": "2025-01-15T00:10:00",
+          "max_residual": 2.2737367544323206e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0000000000016,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-01-15",
+          "next_plan_day": "2025-01-16",
+          "decision_time": "2025-01-16T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-16T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-10T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-01-15",
+          "first_interval_start": "2025-01-15T00:10:00",
+          "bridge_interval_start": "2025-01-16T00:00:00",
+          "last_interval_end": "2025-01-16T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0000000000011,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-01-16",
+          "next_plan_day": "2025-01-17",
+          "decision_time": "2025-01-17T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-17T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-11T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-01-16",
+          "first_interval_start": "2025-01-16T00:10:00",
+          "bridge_interval_start": "2025-01-17T00:00:00",
+          "last_interval_end": "2025-01-17T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0000000000011,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-01-17",
+          "next_plan_day": "2025-01-18",
+          "decision_time": "2025-01-18T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-18T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-12T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-01-17",
+          "first_interval_start": "2025-01-17T00:10:00",
+          "bridge_interval_start": "2025-01-18T00:00:00",
+          "last_interval_end": "2025-01-18T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1297.744857515843,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 618.3771296296297,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-01-18",
+          "next_plan_day": "2025-01-19",
+          "decision_time": "2025-01-19T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-19T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-13T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-01-18",
+          "first_interval_start": "2025-01-18T00:10:00",
+          "bridge_interval_start": "2025-01-19T00:00:00",
+          "last_interval_end": "2025-01-19T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1283.3038822071337,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 620.0644444444445,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-01-19",
+          "next_plan_day": "2025-01-20",
+          "decision_time": "2025-01-20T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-20T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-14T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-01-19",
+          "first_interval_start": "2025-01-19T00:10:00",
+          "bridge_interval_start": "2025-01-20T00:00:00",
+          "last_interval_end": "2025-01-20T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.000000000002,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-01-20",
+          "next_plan_day": "2025-01-21",
+          "decision_time": "2025-01-21T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-21T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-15T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-01-20",
+          "first_interval_start": "2025-01-20T00:10:00",
+          "bridge_interval_start": "2025-01-21T00:00:00",
+          "last_interval_end": "2025-01-21T00:10:00",
+          "max_residual": 2.2737367544323206e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0000000000018,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-01-21",
+          "next_plan_day": "2025-01-22",
+          "decision_time": "2025-01-22T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-22T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-16T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-01-21",
+          "first_interval_start": "2025-01-21T00:10:00",
+          "bridge_interval_start": "2025-01-22T00:00:00",
+          "last_interval_end": "2025-01-22T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0000000000007,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-01-22",
+          "next_plan_day": "2025-01-23",
+          "decision_time": "2025-01-23T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-23T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-17T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-01-22",
+          "first_interval_start": "2025-01-22T00:10:00",
+          "bridge_interval_start": "2025-01-23T00:00:00",
+          "last_interval_end": "2025-01-23T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0000000000018,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-01-23",
+          "next_plan_day": "2025-01-24",
+          "decision_time": "2025-01-24T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-24T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-18T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-01-23",
+          "first_interval_start": "2025-01-23T00:10:00",
+          "bridge_interval_start": "2025-01-24T00:00:00",
+          "last_interval_end": "2025-01-24T00:10:00",
+          "max_residual": 2.2737367544323206e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0000000000007,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-01-24",
+          "next_plan_day": "2025-01-25",
+          "decision_time": "2025-01-25T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-25T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-19T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-01-24",
+          "first_interval_start": "2025-01-24T00:10:00",
+          "bridge_interval_start": "2025-01-25T00:00:00",
+          "last_interval_end": "2025-01-25T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1253.411874043966,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 620.7644057377049,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-01-25",
+          "next_plan_day": "2025-01-26",
+          "decision_time": "2025-01-26T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-26T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-20T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-01-25",
+          "first_interval_start": "2025-01-25T00:10:00",
+          "bridge_interval_start": "2025-01-26T00:00:00",
+          "last_interval_end": "2025-01-26T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1467.250697328484,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 620.5288114754098,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-01-26",
+          "next_plan_day": "2025-01-27",
+          "decision_time": "2025-01-27T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-27T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-21T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-01-26",
+          "first_interval_start": "2025-01-26T00:10:00",
+          "bridge_interval_start": "2025-01-27T00:00:00",
+          "last_interval_end": "2025-01-27T00:10:00",
+          "max_residual": 2.2737367544323206e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0000000000018,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-01-27",
+          "next_plan_day": "2025-01-28",
+          "decision_time": "2025-01-28T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-28T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-22T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-01-27",
+          "first_interval_start": "2025-01-27T00:10:00",
+          "bridge_interval_start": "2025-01-28T00:00:00",
+          "last_interval_end": "2025-01-28T00:10:00",
+          "max_residual": 2.2737367544323206e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0000000000011,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-01-28",
+          "next_plan_day": "2025-01-29",
+          "decision_time": "2025-01-29T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-29T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-23T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-01-28",
+          "first_interval_start": "2025-01-28T00:10:00",
+          "bridge_interval_start": "2025-01-29T00:00:00",
+          "last_interval_end": "2025-01-29T00:10:00",
+          "max_residual": 2.2737367544323206e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0000000000016,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-01-29",
+          "next_plan_day": "2025-01-30",
+          "decision_time": "2025-01-30T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-30T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-24T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-01-29",
+          "first_interval_start": "2025-01-29T00:10:00",
+          "bridge_interval_start": "2025-01-30T00:00:00",
+          "last_interval_end": "2025-01-30T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.000000000001,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-01-30",
+          "next_plan_day": "2025-01-31",
+          "decision_time": "2025-01-31T00:00:00",
+          "forecast_input_max_observed_at": "2025-01-31T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-25T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-01-30",
+          "first_interval_start": "2025-01-30T00:10:00",
+          "bridge_interval_start": "2025-01-31T00:00:00",
+          "last_interval_end": "2025-01-31T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.000000000001,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-01-31",
+          "next_plan_day": "2025-02-01",
+          "decision_time": "2025-02-01T00:00:00",
+          "forecast_input_max_observed_at": "2025-02-01T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-26T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-01-31",
+          "first_interval_start": "2025-01-31T00:10:00",
+          "bridge_interval_start": "2025-02-01T00:00:00",
+          "last_interval_end": "2025-02-01T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1397.674559285835,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 615.8356041102078,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-02-01",
+          "next_plan_day": "2025-02-02",
+          "decision_time": "2025-02-02T00:00:00",
+          "forecast_input_max_observed_at": "2025-02-02T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-27T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-02-01",
+          "first_interval_start": "2025-02-01T00:10:00",
+          "bridge_interval_start": "2025-02-02T00:00:00",
+          "last_interval_end": "2025-02-02T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1709.1938214393265,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 608.7916666666666,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "plan_made",
+          "day": "2025-02-02",
+          "next_plan_day": "2025-02-03",
+          "decision_time": "2025-02-03T00:00:00",
+          "forecast_input_max_observed_at": "2025-02-03T00:00:00",
+          "forecast_source_max_observed_at": "2025-01-28T00:10:00",
+          "planned_actions": [
+            {
+              "slot": 143,
+              "charge_kwh": 833.3333333333333,
+              "discharge_kwh": 0.0
+            }
+          ],
+          "next_plan_soc_start": 10800.0
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-02-02",
+          "first_interval_start": "2025-02-02T00:10:00",
+          "bridge_interval_start": "2025-02-03T00:00:00",
+          "last_interval_end": "2025-02-03T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0000000000027,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
+          "audit_ok": true
+        },
+        {
+          "method": "same-weekday-4-decay-0.8",
+          "event": "day_completed",
+          "day": "2025-02-03",
+          "first_interval_start": "2025-02-03T00:10:00",
+          "bridge_interval_start": "2025-02-04T00:00:00",
+          "last_interval_end": "2025-02-04T00:10:00",
+          "max_residual": 1.1368683772161603e-13,
+          "simultaneous_charge_discharge": 0,
+          "soc_min_seen": 1200.0000000000011,
+          "soc_max_seen": 10800.0,
+          "max_charge": 833.3333333333333,
+          "max_discharge": 833.3333333333333,
           "audit_ok": true
         }
       ]

@@ -2,6 +2,9 @@
 
 比较七天前同刻与同星期日衰减平均。计划层暂用每日首尾库存相同，
 仅用于D007允许的小窗口检查，不作为全年正式终端库存裁决。
+
+回放全程记录观察者事实（决策时刻、预测器输入的信息边界、核算结果），
+供 src/q2_three_day_acceptance.py 独立验收，不自行宣布验收通过。
 """
 
 from __future__ import annotations
@@ -10,6 +13,7 @@ from datetime import date, datetime, timedelta
 import json
 from pathlib import Path
 import sys
+from typing import Callable
 
 import numpy as np
 import pandas as pd
@@ -22,6 +26,8 @@ from core.executor import estimate_bridge_soc, execute_q2
 from core.lp_kernel import LpInputs, solve_lp
 from core.q2_forecast import forecast_cold_start, forecast_lag_day, forecast_same_weekday
 from core.slot_adapter import build_day_slots
+
+EventObserver = Callable[[dict], None]
 
 
 START = date(2025, 1, 1)
@@ -76,13 +82,26 @@ def plan_day(forecast: pd.DataFrame, price: np.ndarray, estimated_soc: float):
     )
 
 
-def simulate(method: str, actuals: pd.DataFrame, prior: pd.DataFrame, price: np.ndarray) -> dict:
+def simulate(
+    method: str,
+    actuals: pd.DataFrame,
+    prior: pd.DataFrame,
+    price: np.ndarray,
+    observer: EventObserver | None = None,
+) -> dict:
     day = START
     estimated_soc = 6000.0
     forecast = make_forecast(method, actuals, prior, day)
     plan = plan_day(forecast, price, estimated_soc)
     actual_soc_at_slot0 = 6000.0
     daily = []
+    observations: list[dict] = []
+
+    def emit(event: dict) -> None:
+        event = {"method": method, **event}
+        observations.append(event)
+        if observer is not None:
+            observer(event)
 
     while day <= PROBE_END:
         truth = actuals[actuals["date"] == day].sort_values("slot")
@@ -111,11 +130,39 @@ def simulate(method: str, actuals: pd.DataFrame, prior: pd.DataFrame, price: np.
         next_estimated_soc = None
         if day < PROBE_END:
             next_day = day + timedelta(days=1)
+            next_decision = datetime.combine(next_day, datetime.min.time())
+            next_history = actuals[actuals["observed_at"] <= next_decision].copy()
             next_estimated_soc = estimate_bridge_soc(
                 soc_at_midnight, plan.charge[143], plan.discharge[143]
             )
             next_forecast = make_forecast(method, actuals, prior, next_day)
             next_plan = plan_day(next_forecast, price, next_estimated_soc)
+            emit(
+                {
+                    "event": "plan_made",
+                    "day": day.isoformat(),
+                    "next_plan_day": next_day.isoformat(),
+                    "decision_time": next_decision.isoformat(),
+                    "forecast_input_max_observed_at": (
+                        np.nan
+                        if next_history.empty
+                        else next_history["observed_at"].max().isoformat()
+                    ),
+                    "forecast_source_max_observed_at": (
+                        np.nan
+                        if not next_forecast["source_max_observed_at"].notna().any()
+                        else next_forecast["source_max_observed_at"].max().isoformat()
+                    ),
+                    "planned_actions": [
+                        {
+                            "slot": 143,
+                            "charge_kwh": float(plan.charge[143]),
+                            "discharge_kwh": float(plan.discharge[143]),
+                        }
+                    ],
+                    "next_plan_soc_start": float(next_estimated_soc),
+                }
+            )
 
         bridge = execute_q2(
             grid_contract=plan.grid[143:],
@@ -134,6 +181,24 @@ def simulate(method: str, actuals: pd.DataFrame, prior: pd.DataFrame, price: np.
         audit = accountant.audit(records, require_q1_semantics=False)
         if not audit.ok:
             raise AssertionError(f"{method} {day}核算失败: {audit.violations[:5]}")
+        emit(
+            {
+                "event": "day_completed",
+                "day": day.isoformat(),
+                "first_interval_start": first[0].interval_start.isoformat(),
+                "bridge_interval_start": bridge[0].interval_start.isoformat(),
+                "last_interval_end": records[-1].interval_end.isoformat(),
+                "max_residual": float(audit.max_residual),
+                "simultaneous_charge_discharge": int(
+                    audit.simultaneous_charge_discharge
+                ),
+                "soc_min_seen": float(audit.soc_min),
+                "soc_max_seen": float(audit.soc_max),
+                "max_charge": float(max(r.charge for r in records)),
+                "max_discharge": float(max(r.discharge for r in records)),
+                "audit_ok": bool(audit.ok),
+            }
+        )
 
         daily.append(
             {
@@ -174,6 +239,7 @@ def simulate(method: str, actuals: pd.DataFrame, prior: pd.DataFrame, price: np.
         "probe_grid_unused_kwh": float(sum(row["grid_unused_kwh"] for row in probe)),
         "probe_all_audits_ok": all(row["audit_ok"] for row in probe),
         "daily": daily,
+        "observations": observations,
     }
 
 
@@ -194,7 +260,7 @@ def main() -> int:
     output = ROOT / "experiments" / "q2_three_day_probe_results.json"
     output.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps({"scope": payload["scope"], "summary": [
-        {k: v for k, v in row.items() if k != "daily"} for row in results
+        {k: v for k, v in row.items() if k != "daily" and k != "observations"} for row in results
     ]}, ensure_ascii=False, indent=2))
     return 0 if all(row["probe_all_audits_ok"] for row in results) else 1
 
