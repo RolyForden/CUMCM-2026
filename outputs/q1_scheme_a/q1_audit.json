@@ -1,0 +1,190 @@
+{
+  "status": "PASS",
+  "scheme": "D003方案A：slot 0从00:10开始，完整执行144槽，E_144=E_0=6000 kWh",
+  "model_commit": "8729a805db974ec092a5b230c49fa70ee5f11583",
+  "generated_at": "2026-09-12T14:22:00.006650+08:00",
+  "inputs": {
+    "day": "2025-01-01",
+    "decision_time": "2025-01-01T00:00:00",
+    "template": "data/raw/official/附件5/result1.xlsm",
+    "template_sha256": "14b323bf0c1a223536a042eb8f59453154441a473f7f6acda853b779ba61f1ec"
+  },
+  "outputs": {
+    "workbook": "outputs/q1_scheme_a/result1.xlsm",
+    "workbook_sha256": "df3a1150409aa3c04690f44cfcdc7195a43df390f922c022119538e09c43acd6",
+    "dispatch_csv": "outputs/q1_scheme_a/q1_dispatch.csv",
+    "dispatch_csv_sha256": "79e9e4787979726fd1e35ef9733c0f62864c0cd2bad6f61536a54f168b4112e2",
+    "paper_tables": "outputs/q1_scheme_a/q1_paper_tables.json"
+  },
+  "solver": {
+    "highs_ds_cost": 35126.94858938963,
+    "highs_ds_primary_optimum": 35126.94858928963,
+    "highs_ipm_cost": 35126.94858938963,
+    "cost_difference": 0.0
+  },
+  "audit": {
+    "max_residual": 2.2737367544323206e-13,
+    "soc_min": 1199.999999999987,
+    "soc_max": 10800.0,
+    "soc_bounds_ok": true,
+    "power_bounds_ok": true,
+    "nonneg_ok": true,
+    "simultaneous_charge_discharge": 0,
+    "pv_identity_ok": true,
+    "curtail_only_from_pv": true,
+    "slots_unique": true,
+    "slots_contiguous": true,
+    "intervals_contiguous": true,
+    "soc_chain_ok": true,
+    "q1_semantics_ok": true,
+    "cost_normal": 35126.94858938963,
+    "cost_emergency": 0.0,
+    "cost_up": 0.0,
+    "cost_down": 0.0,
+    "cost_total": 35126.94858938963,
+    "violations": [],
+    "ok": true
+  },
+  "summary": {
+    "grid_total_kwh": 59482.69899811735,
+    "pv_used_total_kwh": 55482.835666666666,
+    "pv_curtail_total_kwh": 0.0,
+    "charge_total_kwh": 20740.666130442187,
+    "discharge_total_kwh": 16799.93956565817,
+    "soc_e0_kwh": 6000.0,
+    "soc_e143_kwh": 5999.999999999997,
+    "soc_e144_kwh": 5999.999999999997,
+    "readback_max_abs_diff": 4.547473508864641e-13,
+    "cd_readback_max_abs_diff": 9.094947017729282e-13
+  },
+  "paper_tables": {
+    "table1": {
+      "10:00-10:10": 0.0,
+      "12:00-12:10": 486.40289999999993,
+      "14:00-14:10": 0.0,
+      "16:00-16:10": 394.9314833333333,
+      "18:00-18:10": 636.9826166666667,
+      "20:00-20:10": 0.0,
+      "全天购电量": 59482.69899811735,
+      "全天购电费": 35126.94858938963
+    },
+    "table2": {
+      "blocks": [
+        {
+          "label": "0:00-4:00",
+          "covers_slots": "0-23",
+          "charge": 4499.999999999999,
+          "discharge": 0.0
+        },
+        {
+          "label": "4:00-8:00",
+          "covers_slots": "24-47",
+          "charge": 833.3333333333333,
+          "discharge": 6365.841198991497
+        },
+        {
+          "label": "8:00-12:00",
+          "covers_slots": "48-71",
+          "charge": 4787.9642868207775,
+          "discharge": 1702.9969833333334
+        },
+        {
+          "label": "12:00-16:00",
+          "covers_slots": "72-95",
+          "charge": 5286.0351769547315,
+          "discharge": 91.1013833333335
+        },
+        {
+          "label": "16:00-20:00",
+          "covers_slots": "96-119",
+          "charge": 0.0,
+          "discharge": 5780.131883333339
+        },
+        {
+          "label": "20:00-24:00",
+          "covers_slots": "120-143",
+          "charge": 5333.333333333344,
+          "discharge": 2859.8681166666665
+        }
+      ],
+      "soc_0000": 6000.0,
+      "soc_2400": 5999.999999999997
+    }
+  },
+  "template_snapshot": {
+    "official_source_sheets": [
+      {
+        "title": "Sheet1",
+        "state": "hidden",
+        "max_row": 4,
+        "max_column": 2
+      },
+      {
+        "title": "Sheet2",
+        "state": "hidden",
+        "max_row": 1,
+        "max_column": 1
+      },
+      {
+        "title": "计划购电量",
+        "state": "visible",
+        "max_row": 145,
+        "max_column": 2
+      }
+    ],
+    "output_sheets": [
+      {
+        "title": "Sheet1",
+        "state": "hidden",
+        "max_row": 4,
+        "max_column": 2
+      },
+      {
+        "title": "Sheet2",
+        "state": "hidden",
+        "max_row": 1,
+        "max_column": 1
+      },
+      {
+        "title": "计划购电量",
+        "state": "visible",
+        "max_row": 145,
+        "max_column": 2
+      },
+      {
+        "title": "充放电量",
+        "state": "visible",
+        "max_row": 5,
+        "max_column": 6
+      }
+    ]
+  },
+  "checks": {
+    "dual_simplex_feasible": true,
+    "ipm_feasible": true,
+    "dual_engine_cost_match": true,
+    "independent_audit_ok": true,
+    "optimizer_accountant_cost_match": true,
+    "max_energy_residual_below_1e-9": true,
+    "terminal_soc_e144_is_6000": true,
+    "no_simultaneous_charge_discharge": true,
+    "template_readback_144_slots": true,
+    "template_readback_matches_plan": true,
+    "cd_sheet_readback_matches_blocks": true,
+    "cd_sheet_soc_matches": true,
+    "official_sheets_untouched": true,
+    "template_non_target_cells_preserved": true,
+    "template_vba_container_preserved": true,
+    "raw_template_unchanged": true
+  },
+  "reopen_checks": {
+    "csv_144_slots": true,
+    "csv_max_residual_below_1e-9": true,
+    "csv_total_cost_matches_audit": true,
+    "csv_sha256_matches_evidence": true,
+    "workbook_sha256_matches_evidence": true,
+    "reopen_plan_sheet_matches_csv": true,
+    "reopen_cd_sheet_matches_evidence": true,
+    "reopen_cd_soc_matches_evidence": true
+  }
+}
