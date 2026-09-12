@@ -1,0 +1,29 @@
+{
+  "scope": "Q3 one-day forecast-driven smoke; 2025-02-01; soc0=6000",
+  "summary": {
+    "total": 7,
+    "passed": 7,
+    "failed": 0
+  },
+  "checks": {
+    "144_slots": true,
+    "physical_audit": true,
+    "four_versions_after_18": true,
+    "executed_slot_not_rewritten": true,
+    "finite_cost": true,
+    "ledger_identity": true,
+    "soc_continuous": true
+  },
+  "metrics": {
+    "initial_contract_cost": 23568.51824771832,
+    "up_cost": 1089.6600661149118,
+    "down_credit": 564.0819314302297,
+    "adjustment_cashflow": 525.5781346846821,
+    "emergency_cost": 3142.2231765680544,
+    "total_cost": 27236.31955897106,
+    "increase_kwh": 1427.9156780521253,
+    "decrease_kwh": 1646.4725247599517,
+    "emergency_kwh": 743.7772305555551,
+    "unused_kwh": 1671.6593499999997
+  }
+}
