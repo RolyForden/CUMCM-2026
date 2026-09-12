@@ -21,20 +21,24 @@ sum(c+d)（不引入 ε 惩罚改变主目标）。
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import numpy as np
 from scipy.optimize import linprog
 
+from core.params import BatteryParams, DEFAULT_BATTERY
+
 EPS = 1e-9
 
-ETA_C = 0.9  # D002 P0-3
-ETA_D = 0.9
-SOC_MIN = 1200.0  # D002 数据固定口径
-SOC_MAX = 10800.0
-P_MAX = 5000.0  # kW
-DT = 1.0 / 6.0  # h
-C_MAX = P_MAX * DT  # 833.333... kWh/格
+# 兼容现有调用；新代码应通过 BatteryParams 显式传参。
+ETA_C = DEFAULT_BATTERY.eta_charge
+ETA_D = DEFAULT_BATTERY.eta_discharge
+SOC_MIN = DEFAULT_BATTERY.soc_min
+SOC_MAX = DEFAULT_BATTERY.soc_max
+P_MAX = DEFAULT_BATTERY.power_max
+DT = DEFAULT_BATTERY.delta_t
+C_MAX = DEFAULT_BATTERY.energy_limit
+LEX_TOL = 1e-7
 
 
 @dataclass
@@ -49,6 +53,7 @@ class LpInputs:
     soc_final_slot: int | None = None  # 终端约束作用的槽位下标：
         # None → 全部 n 槽之后（E_n = soc_final，D002 P0-2 冻结口径）；
         # k → 前 k+1 槽之后（E_{k+1} = soc_final，用于敏感性对照 E_143=E_0）
+    params: BatteryParams = field(default_factory=lambda: DEFAULT_BATTERY)
 
 
 @dataclass
@@ -60,6 +65,7 @@ class LpSolution:
     discharge: np.ndarray   # d_t 母线侧放电
     soc: np.ndarray         # E_t，长度 n+1（E[0]=soc0）
     cost: float             # sum(price·grid)
+    primary_optimum: float  # 第一阶段真实最优费用
     status: int
     message: str
     solver: str
@@ -69,16 +75,18 @@ def solve_lp(inp: LpInputs, solver: str = "highs-ds") -> LpSolution:
     """求解单日/窗口确定性 LP（含字典序吞吐量最小化）。
 
     solver: 'highs-ds'（dual simplex）| 'highs-ipm'（内点法）。
-    变量布局：g[0..n), v[0..n), w[0..n), c[0..n), d[0..n)，E 由状态方程消去。
+    变量布局：g[0..n), v[0..n), c[0..n), d[0..n)，E 由状态方程消去。
     """
     n = len(inp.price)
     assert inp.load.shape == (n,) and inp.pv_available.shape == (n,)
 
-    # 变量：g, v, w, c, d 各 n 个
-    def idx(name: str, t: int) -> int:
-        return {"g": 0, "v": 1, "w": 2, "c": 3, "d": 4}[name] * n + t
+    params = inp.params
 
-    nv = 5 * n
+    # 变量：g, v, c, d 各 n 个；弃光由 pv_available - v 推导。
+    def idx(name: str, t: int) -> int:
+        return {"g": 0, "v": 1, "c": 2, "d": 3}[name] * n + t
+
+    nv = 4 * n
     c_obj = np.zeros(nv)
     for t in range(n):
         c_obj[idx("g", t)] = inp.price[t]
@@ -110,11 +118,11 @@ def solve_lp(inp: LpInputs, solver: str = "highs-ds") -> LpSolution:
         row = np.zeros(nv)
         row[idx("c", t)] = 1.0
         A_ub.append(row)
-        b_ub.append(C_MAX)
+        b_ub.append(params.energy_limit)
         row = np.zeros(nv)
         row[idx("d", t)] = 1.0
         A_ub.append(row)
-        b_ub.append(C_MAX)
+        b_ub.append(params.energy_limit)
 
     # SOC 链：E_{t+1} = E_t + η_c·c_t − d_t/η_d  ∈ [SOC_MIN, SOC_MAX]
     # E_{t+1} = E_0 + Σ_{s≤t}(η_c·c_s − d_s/η_d)
@@ -123,24 +131,24 @@ def solve_lp(inp: LpInputs, solver: str = "highs-ds") -> LpSolution:
     for t in range(n):
         row = np.zeros(nv)
         for s in range(t + 1):
-            row[idx("c", s)] = ETA_C
-            row[idx("d", s)] = -1.0 / ETA_D
+            row[idx("c", s)] = params.eta_charge
+            row[idx("d", s)] = -1.0 / params.eta_discharge
         A_ub.append(row.copy())
-        b_ub.append(SOC_MAX - inp.soc0)
+        b_ub.append(params.soc_max - inp.soc0)
         A_ub.append(-row)
-        b_ub.append(-(SOC_MIN - inp.soc0))
+        b_ub.append(-(params.soc_min - inp.soc0))
 
     # 终端 SOC 约束（Q1：E_n = E_0；soc_final_slot 控制约束作用的槽位）
     if inp.soc_final is not None:
         horizon = inp.soc_final_slot if inp.soc_final_slot is not None else n - 1
         row = np.zeros(nv)
         for s in range(horizon + 1):
-            row[idx("c", s)] = ETA_C
-            row[idx("d", s)] = -1.0 / ETA_D
+            row[idx("c", s)] = params.eta_charge
+            row[idx("d", s)] = -1.0 / params.eta_discharge
         A_eq.append(row)
         b_eq.append(inp.soc_final - inp.soc0)
 
-    bounds = [(0, None)] * nv  # 全部非负（g≥0 禁止反送；v,w,c,d ≥ 0）
+    bounds = [(0, None)] * nv  # 全部非负（g≥0 禁止反送；v,c,d ≥ 0）
 
     res = linprog(
         c_obj,
@@ -152,21 +160,23 @@ def solve_lp(inp: LpInputs, solver: str = "highs-ds") -> LpSolution:
         method=solver,
     )
 
-    # 字典序：费用不劣于 tol 的解中最小化吞吐量 Σ(c+d)
+    primary_optimum = float(res.fun) if res.success else np.nan
+
+    # 字典序：费用不劣于 tol 的解中最小化吞吐量 Σ(c+d)。
+    # 费用是上界约束，不得用等式强迫解比主目标贵固定容差。
     if res.success:
         c2 = np.zeros(nv)
         for t in range(n):
             c2[idx("c", t)] = 1.0
             c2[idx("d", t)] = 1.0
-        # 主目标费用固定为第一段最优值（+1e-6 容差）
-        A_eq2 = np.array(A_eq + [c_obj])
-        b_eq2 = np.array(list(b_eq) + [res.fun + 1e-6])
+        A_ub2 = np.array(A_ub + [c_obj])
+        b_ub2 = np.array(list(b_ub) + [primary_optimum + LEX_TOL])
         res2 = linprog(
             c2,
-            A_ub=np.array(A_ub),
-            b_ub=np.array(b_ub),
-            A_eq=A_eq2,
-            b_eq=b_eq2,
+            A_ub=A_ub2,
+            b_ub=b_ub2,
+            A_eq=np.array(A_eq),
+            b_eq=np.array(b_eq),
             bounds=bounds,
             method=solver,
         )
@@ -183,6 +193,7 @@ def solve_lp(inp: LpInputs, solver: str = "highs-ds") -> LpSolution:
             discharge=np.full(n, np.nan),
             soc=np.full(n + 1, np.nan),
             cost=np.nan,
+            primary_optimum=primary_optimum,
             status=res.status,
             message=res.message,
             solver=solver,
@@ -198,7 +209,11 @@ def solve_lp(inp: LpInputs, solver: str = "highs-ds") -> LpSolution:
     soc = np.zeros(n + 1)
     soc[0] = inp.soc0
     for t in range(n):
-        soc[t + 1] = soc[t] + ETA_C * charge[t] - discharge[t] / ETA_D
+        soc[t + 1] = (
+            soc[t]
+            + params.eta_charge * charge[t]
+            - discharge[t] / params.eta_discharge
+        )
 
     return LpSolution(
         grid=grid,
@@ -208,38 +223,30 @@ def solve_lp(inp: LpInputs, solver: str = "highs-ds") -> LpSolution:
         discharge=discharge,
         soc=soc,
         cost=float(res.fun),
+        primary_optimum=primary_optimum,
         status=res.status,
         message=res.message,
         solver=solver,
     )
 
 
-def rule_based_schedule(price: np.ndarray, load: np.ndarray, pv: np.ndarray,
-                        soc0: float) -> tuple[float, np.ndarray, np.ndarray]:
-    """规则法（回归测试 baseline）：净负荷优先 + 贪心充放电。
-
-    - 光伏先供负荷，富余充电（容量允许），再弃；
-    - 缺口先用电池（SOC 允许），再购电；
-    - 充电只在有富余光伏时进行（避免购电充电的套利判断）。
-    返回 (费用, soc 轨迹, 购电向量)。
-    """
+def no_storage_schedule(
+    price: np.ndarray,
+    load: np.ndarray,
+    pv_available: np.ndarray,
+    soc0: float,
+) -> dict[str, np.ndarray | float]:
+    """同初末 SOC 的可行基线：完全不使用电池。"""
+    pv_used = np.minimum(load, pv_available)
+    pv_curtail = pv_available - pv_used
+    grid = load - pv_used
     n = len(load)
-    E = soc0
-    socs = [E]
-    g = np.zeros(n)
-    for t in range(n):
-        net = load[t] - pv[t]  # 净缺口（负 = 富余）
-        if net > 0:
-            # 放电优先：d 满足 电池能量 d/η_d ≤ E−SOC_MIN 与 d ≤ C_MAX
-            d = min(net, (E - SOC_MIN) * ETA_D, C_MAX)
-            E -= d / ETA_D
-            g[t] = net - d
-        else:
-            surplus = -net
-            # 充电优先：c ≤ min(surplus, (SOC_MAX−E)/η_c, C_MAX)
-            c = min(surplus, (SOC_MAX - E) / ETA_C, C_MAX)
-            E += ETA_C * c
-            # 剩余弃光（富余未被使用）
-            g[t] = 0.0
-        socs.append(E)
-    return float(np.sum(price * g)), np.array(socs), g
+    return {
+        "cost": float(np.sum(price * grid)),
+        "grid": grid,
+        "pv_used": pv_used,
+        "pv_curtail": pv_curtail,
+        "charge": np.zeros(n),
+        "discharge": np.zeros(n),
+        "soc": np.full(n + 1, soc0, dtype=float),
+    }

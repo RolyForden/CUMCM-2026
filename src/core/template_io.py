@@ -1,51 +1,63 @@
-"""模板写入与回读：按 slot_id 对列写入，禁止字符串拼接。
-
-D002 P0-1/P2-1：
-- result1 计划购电量表：145 行（表头 + 144 区间）× 2 列，
-  区间标签 0:10-0:20 … 0:00+1-0:10+1；
-- 结果模板按槽位对列写入，写后回读逐槽验证位置一致
-  （TASK §6.4 跨日和模板回读测试）。
-"""
+"""官方 result1 模板的原位填写与回读。"""
 
 from __future__ import annotations
 
 from datetime import date
+from pathlib import Path
 
 import openpyxl
 
 from core.slot_adapter import N_SLOTS, build_day_slots
 
 
-def write_result1_plan(path: str, day: date, grid: list[float]) -> None:
-    """写 result1 的“计划购电量”表（槽位对列，第一行表头）。"""
+def write_result1_plan(
+    template_path: str | Path,
+    output_path: str | Path,
+    day: date,
+    grid: list[float],
+) -> None:
+    """复制官方模板语义，仅填写“计划购电量”表的144个数值。"""
+    if len(grid) != N_SLOTS:
+        raise ValueError(f"购电计划长度 {len(grid)} != 144")
+    keep_vba = str(template_path).lower().endswith(".xlsm")
+    wb = openpyxl.load_workbook(template_path, keep_vba=keep_vba)
+    if "计划购电量" not in wb.sheetnames:
+        wb.close()
+        raise ValueError("官方模板缺少计划购电量工作表")
+    ws = wb["计划购电量"]
     slots = build_day_slots(day)
-    wb = openpyxl.Workbook()
-    ws = wb.active
-    ws.title = "计划购电量"
-    ws.cell(row=1, column=1, value="时间段")
-    ws.cell(row=1, column=2, value="购电量")
-    for k, s in enumerate(slots):
-        ws.cell(row=k + 2, column=1, value=s.template_interval)
-        ws.cell(row=k + 2, column=2, value=float(grid[k]))
-    wb.save(path)
-
-
-def read_result1_plan(path: str, day: date) -> list[float]:
-    """回读 result1 计划购电量表，返回 144 个槽位的购电量（按 slot 顺序）。"""
-    slots = build_day_slots(day)
-    wb = openpyxl.load_workbook(path, read_only=True, data_only=True)
-    ws = wb[wb.sheetnames[0]]
-    rows = list(ws.iter_rows(min_row=1, max_row=145, values_only=True))
-    wb.close()
-    if len(rows) != 145:
-        raise ValueError(f"result1 计划购电量表行数 = {len(rows)} ≠ 145")
-    out = []
-    for k, s in enumerate(slots):
-        label = rows[k + 1][0]
-        # 禁止模糊匹配：区间标签必须逐字符等于适配器给出的标签
-        if str(label).strip() != s.template_interval:
+    for k, slot in enumerate(slots):
+        label = ws.cell(row=k + 2, column=1).value
+        if str(label).strip() != slot.template_interval:
+            wb.close()
             raise ValueError(
-                f"slot {k}: 模板区间标签 {label!r} != 适配器 {s.template_interval!r}"
+                f"slot {k}: 官方模板标签 {label!r} != {slot.template_interval!r}"
             )
-        out.append(float(rows[k + 1][1]))
-    return out
+        ws.cell(row=k + 2, column=2, value=float(grid[k]))
+    Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+    wb.save(output_path)
+    wb.close()
+
+
+def read_result1_plan(path: str | Path, day: date) -> list[float]:
+    """从官方结构的“计划购电量”表回读144槽。"""
+    keep_vba = str(path).lower().endswith(".xlsm")
+    wb = openpyxl.load_workbook(path, read_only=True, data_only=True, keep_vba=keep_vba)
+    if "计划购电量" not in wb.sheetnames:
+        wb.close()
+        raise ValueError("结果文件缺少计划购电量工作表")
+    ws = wb["计划购电量"]
+    slots = build_day_slots(day)
+    values = []
+    for k, slot in enumerate(slots):
+        label = ws.cell(row=k + 2, column=1).value
+        value = ws.cell(row=k + 2, column=2).value
+        if str(label).strip() != slot.template_interval:
+            wb.close()
+            raise ValueError(f"slot {k}: 结果标签错位")
+        if value is None:
+            wb.close()
+            raise ValueError(f"slot {k}: 购电量为空")
+        values.append(float(value))
+    wb.close()
+    return values

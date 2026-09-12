@@ -15,13 +15,11 @@ grid_unused 与 Q3 多次结算公式待人类确认，代码里只留接口与�
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime
 
 import numpy as np
-import pandas as pd
-
-from core.lp_kernel import DT, ETA_C, ETA_D, SOC_MAX, SOC_MIN
+from core.params import BatteryParams, DEFAULT_BATTERY
 
 
 @dataclass(frozen=True)
@@ -64,16 +62,19 @@ class ExecRecord:
 
 
 def execute_q1(
-    plan: np.ndarray,
+    grid_contract: np.ndarray,
     price: np.ndarray,
     load: np.ndarray,
-    pv: np.ndarray,
+    pv_available: np.ndarray,
+    pv_used: np.ndarray,
+    pv_curtail: np.ndarray,
     charge: np.ndarray,
     discharge: np.ndarray,
     soc0: float,
     starts: list[datetime],
     ends: list[datetime],
     plan_issue_time: datetime,
+    params: BatteryParams = DEFAULT_BATTERY,
 ) -> list[ExecRecord]:
     """Q1 执行：按 0:00 计划执行，实际值揭示后不重调（D002 P0-7 的 Q1 版）。
 
@@ -81,13 +82,39 @@ def execute_q1(
     结果记录 contract = delivered，unused = 0，emergency = 0
     （TASK_C_probe_model_corrections.md §3.2）。
     """
-    n = len(plan)
+    n = len(grid_contract)
+    arrays = {
+        "price": price,
+        "load": load,
+        "pv_available": pv_available,
+        "pv_used": pv_used,
+        "pv_curtail": pv_curtail,
+        "charge": charge,
+        "discharge": discharge,
+    }
+    for name, values in arrays.items():
+        if len(values) != n:
+            raise ValueError(f"{name} 长度 {len(values)} != 计划长度 {n}")
+    if len(starts) != n or len(ends) != n:
+        raise ValueError("槽位起止时间长度与计划不一致")
+
     E = soc0
     recs = []
     for t in range(n):
-        E_next = E + ETA_C * charge[t] - discharge[t] / ETA_D
+        if pv_used[t] < -1e-9 or pv_curtail[t] < -1e-9:
+            raise ValueError(f"slot {t}: 光伏消纳/弃光不得为负")
+        if pv_used[t] > pv_available[t] + 1e-9:
+            raise ValueError(f"slot {t}: 光伏消纳超过可用量")
+        if abs(pv_used[t] + pv_curtail[t] - pv_available[t]) > 1e-8:
+            raise ValueError(f"slot {t}: 光伏消纳与弃光不守恒")
+
+        E_next = (
+            E
+            + params.eta_charge * charge[t]
+            - discharge[t] / params.eta_discharge
+        )
         residual = (
-            plan[t] + pv[t] + discharge[t] - load[t] - charge[t]
+            grid_contract[t] + pv_used[t] + discharge[t] - load[t] - charge[t]
         )
         recs.append(
             ExecRecord(
@@ -96,11 +123,11 @@ def execute_q1(
                 interval_end=ends[t],
                 price=price[t],
                 load=load[t],
-                pv_available=pv[t],
-                pv_used=pv[t],
-                pv_curtail=0.0,
-                grid_contract=plan[t],
-                grid_delivered=plan[t],
+                pv_available=pv_available[t],
+                pv_used=pv_used[t],
+                pv_curtail=pv_curtail[t],
+                grid_contract=grid_contract[t],
+                grid_delivered=grid_contract[t],
                 grid_unused=0.0,
                 grid_emergency=0.0,
                 charge=charge[t],
@@ -108,7 +135,7 @@ def execute_q1(
                 soc_start=E,
                 soc_end=E_next,
                 residual=residual,
-                normal_cost=price[t] * plan[t],
+                normal_cost=price[t] * grid_contract[t],
                 emergency_cost=0.0,
             )
         )

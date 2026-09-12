@@ -15,8 +15,11 @@ T7 Q1 全日回归锚点（双引擎对拍 35126.948589）
 from __future__ import annotations
 
 import os
+import shutil
 import sys
+import tempfile
 from datetime import date, datetime, timedelta
+from pathlib import Path
 
 import numpy as np
 
@@ -25,6 +28,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 from core import accountant as acct
 from core import data_io, executor, template_io
 from core import lp_kernel as lp
+from core.params import BatteryParams
 from core.slot_adapter import (
     N_SLOTS,
     build_day_slots,
@@ -39,6 +43,46 @@ def check(name: str, cond: bool, detail: str = "") -> None:
     RESULTS.append((name, bool(cond), detail))
     if not cond:
         print(f"  [FAIL] {name}: {detail}")
+
+
+def t0_efficiency_direction() -> None:
+    """硬编码手算：5000 + 0.9*100 - 81/0.9 = 5000。"""
+    day = date(2025, 1, 1)
+    slots = build_day_slots(day)[:2]
+    params = BatteryParams()
+    recs = executor.execute_q1(
+        grid_contract=np.array([100.0, 0.0]),
+        price=np.ones(2),
+        load=np.array([0.0, 81.0]),
+        pv_available=np.zeros(2),
+        pv_used=np.zeros(2),
+        pv_curtail=np.zeros(2),
+        charge=np.array([100.0, 0.0]),
+        discharge=np.array([0.0, 81.0]),
+        soc0=5000.0,
+        starts=[s.interval_start for s in slots],
+        ends=[s.interval_end for s in slots],
+        plan_issue_time=datetime(2025, 1, 1),
+        params=params,
+    )
+    check("T0 充电100后SOC=5090", abs(recs[0].soc_end - 5090.0) < 1e-9)
+    check("T0 再放电81后SOC=5000", abs(recs[1].soc_end - 5000.0) < 1e-9)
+    check("T0 独立核算器认可效率方向", acct.audit(recs, params=params).ok)
+    sol = lp.solve_lp(
+        lp.LpInputs(
+            price=np.array([0.0, 1.0]), load=np.array([0.0, 81.0]),
+            pv_available=np.zeros(2), soc0=5000.0, soc_final=5000.0,
+            params=params,
+        )
+    )
+    check(
+        "T0 LP状态同样满足100→90→81",
+        abs(sol.charge[0] - 100.0) < 1e-6
+        and abs(sol.soc[1] - 5090.0) < 1e-6
+        and abs(sol.discharge[1] - 81.0) < 1e-6
+        and abs(sol.soc[2] - 5000.0) < 1e-6,
+        f"c={sol.charge[0]:.6f}, E1={sol.soc[1]:.6f}, d={sol.discharge[1]:.6f}",
+    )
 
 
 # ---------------------------------------------------------------- T1 适配器
@@ -84,7 +128,7 @@ def t1_adapter() -> None:
     check("T1 非官方标签 00:00 被拒绝", raised)
     # 与官方输入表标签逐列比对（按解析后的时间值比较，官方表 '00:10:00'
     # 带秒、末行 '0:00+1' 不带秒，字符串格式本身不一致）
-    labels = data_io._time_labels_xlsx_1(
+    labels = data_io._time_labels_xlsx(
         "data/raw/official/附件1.xlsm", "Sheet1 (2)"
     )
     from core.slot_adapter import parse_input_time_label
@@ -185,24 +229,24 @@ def t4_no_swallow() -> None:
     v 必须为 0。松弛 LP 若仍可行，只能靠"同时充放电"制造假出口
     （电池循环损耗），该解必须被独立审计器拒绝
     （simultaneous_charge_discharge > 0）。"""
-    from scipy.optimize import linprog
+    from scipy.optimize import Bounds, LinearConstraint, linprog, milp
 
-    nv = 5  # g, v, w(弃光=可用-使用，隐含), c, d —— 与内核一致：v ≤ pv 即弃光受限
-    c_obj = np.array([1.0, 0, 0, 0, 0])
-    # 平衡式与内核一致：g + v + d − c = l → [1, 1, 0, -1, 1]
-    A_eq = np.array([[1.0, 1.0, 0, -1.0, 1.0]])
+    nv = 4  # g, v, c, d；弃光只由 pv_available-v 推导，不设自由变量
+    c_obj = np.array([1.0, 0, 0, 0])
+    # 平衡式与内核一致：g + v + d − c = l
+    A_eq = np.array([[1.0, 1.0, -1.0, 1.0]])
     b_eq = np.array([50.0])
     A_ub = []
     b_ub = []
-    A_ub.append([0, 1.0, 0, 0, 0]); b_ub.append(0.0)   # v ≤ pv = 0 ← 弃光只能来自光伏
-    A_ub.append([0, 0, 0, 1.0, 0]); b_ub.append(lp.C_MAX)  # c ≤ C_MAX
-    A_ub.append([0, 0, 0, 0, 1.0]); b_ub.append(lp.C_MAX)  # d ≤ C_MAX
-    A_ub.append([0, 0, 0, lp.ETA_C, -1.0 / lp.ETA_D]); b_ub.append(0.0)  # SOC 上界（E 已满）
-    bounds = [(100.0, 100.0), (0, None), (0, None), (0, None), (0, None)]  # g 固定 100
+    A_ub.append([0, 1.0, 0, 0]); b_ub.append(0.0)   # v ≤ pv = 0
+    A_ub.append([0, 0, 1.0, 0]); b_ub.append(lp.C_MAX)
+    A_ub.append([0, 0, 0, 1.0]); b_ub.append(lp.C_MAX)
+    A_ub.append([0, 0, lp.ETA_C, -1.0 / lp.ETA_D]); b_ub.append(0.0)
+    bounds = [(100.0, 100.0), (0, None), (0, None), (0, None)]
     res = linprog(c_obj, A_ub=np.array(A_ub), b_ub=np.array(b_ub),
                   A_eq=A_eq, b_eq=b_eq, bounds=bounds, method="highs-ds")
     if res.success:
-        g, v, w, c, d = res.x
+        g, v, c, d = res.x
         check(
             "T4 弃光路径不吞购电（光伏为 0 时 v=0）",
             v < 1e-9,
@@ -221,10 +265,12 @@ def t4_no_swallow() -> None:
             day = date(2025, 1, 1)
             slots = build_day_slots(day)
             recs = executor.execute_q1(
-                plan=np.array([g]),
+                grid_contract=np.array([g]),
                 price=np.array([1.0]),
                 load=np.array([50.0]),
-                pv=np.array([0.0]),
+                pv_available=np.array([0.0]),
+                pv_used=np.array([v]),
+                pv_curtail=np.array([0.0]),
                 charge=np.array([c]),
                 discharge=np.array([d]),
                 soc0=10800.0,
@@ -242,6 +288,23 @@ def t4_no_swallow() -> None:
         # 若不可行，也接受：说明约束直接拒绝，更严格
         check("T4 弃光路径不吞购电（光伏为 0 时 v=0）", True, "模型直接不可行")
         check("T4 松弛解只能靠同时充放电可行 → 审计拒绝", True, "模型直接不可行，无需审计")
+
+    # 独立一槽 MILP：z 强制充放电互斥。无余电出口时应不可行。
+    # x=(g,v,c,d,z), g=100, v=0；平衡 g+v+d-c=50；满电时 SOC 增量<=0。
+    M = lp.C_MAX
+    constraints = [
+        LinearConstraint([[1, 1, -1, 1, 0]], [50.0], [50.0]),
+        LinearConstraint([[0, 0, lp.ETA_C, -1 / lp.ETA_D, 0]], [-np.inf], [0.0]),
+        LinearConstraint([[0, 0, 1, 0, -M]], [-np.inf], [0.0]),
+        LinearConstraint([[0, 0, 0, 1, M]], [-np.inf], [M]),
+    ]
+    milp_res = milp(
+        c=np.zeros(5),
+        integrality=np.array([0, 0, 0, 0, 1]),
+        bounds=Bounds([100, 0, 0, 0, 0], [100, 0, M, M, 1]),
+        constraints=constraints,
+    )
+    check("T4 互斥MILP确认无合法余电出口时不可行", not milp_res.success, milp_res.message)
 
 
 # ---------------------------------------------------------------- T5 跨日 + 回读
@@ -262,27 +325,38 @@ def t5_cross_day_roundtrip() -> None:
         and [s.template_interval for s in slots].count("23:50-0:00+1") == 1
         and [s.template_interval for s in slots].count("0:00+1-0:10+1") == 1,
     )
-    # 模板写读
+    # 官方模板临时副本写读；不产生已提交二进制测试文件。
     grid = [float(k) for k in range(144)]  # 可辨识的槽位值
-    path = "data/processed/_probe_result1_roundtrip.xlsx"
-    template_io.write_result1_plan(path, day, grid)
-    back = template_io.read_result1_plan(path, day)
-    check(
-        "T5 模板回读 144 槽逐列一致",
-        len(back) == 144 and all(abs(a - b) < 1e-9 for a, b in zip(back, grid)),
-    )
-    # 故意错位应被拒绝：读入一个平移一格的标签必须报错
+    template = Path("data/raw/official/附件5/result1.xlsm")
     import openpyxl
-    wb = openpyxl.load_workbook(path)
-    ws = wb.active
-    ws.cell(row=2, column=1, value="0:20-0:30")  # 把 slot0 的标签改成平移一格
-    wb.save("data/processed/_probe_result1_corrupt.xlsx")
-    rejected = False
-    try:
-        template_io.read_result1_plan("data/processed/_probe_result1_corrupt.xlsx", day)
-    except ValueError:
-        rejected = True
-    check("T5 错位标签被拒绝", rejected)
+    with tempfile.TemporaryDirectory(prefix="cumcm_result1_") as tmp:
+        path = Path(tmp) / "result1_roundtrip.xlsm"
+        template_io.write_result1_plan(template, path, day, grid)
+        back = template_io.read_result1_plan(path, day)
+        check(
+            "T5 官方模板回读 144 槽逐列一致",
+            len(back) == 144 and all(abs(a - b) < 1e-9 for a, b in zip(back, grid)),
+        )
+        corrupt = Path(tmp) / "result1_corrupt.xlsm"
+        shutil.copy2(path, corrupt)
+        wb = openpyxl.load_workbook(corrupt, keep_vba=True)
+        ws = wb["计划购电量"]
+        ws.cell(row=2, column=1, value="0:20-0:30")
+        wb.save(corrupt)
+        wb.close()
+        rejected = False
+        try:
+            template_io.read_result1_plan(corrupt, day)
+        except ValueError:
+            rejected = True
+        check("T5 错位标签被拒绝", rejected)
+
+        length_rejected = False
+        try:
+            template_io.write_result1_plan(template, path, day, grid[:-1])
+        except ValueError:
+            length_rejected = True
+        check("T5 少一槽被拒绝", length_rejected)
 
 
 # ---------------------------------------------------------------- T6 小窗口对拍
@@ -302,10 +376,12 @@ def t6_small_window() -> None:
     starts = [slots[k].interval_start for k in (141, 142, 143)]
     ends = [slots[k].interval_end for k in (141, 142, 143)]
     recs = executor.execute_q1(
-        plan=sol.grid,
+        grid_contract=sol.grid,
         price=price,
         load=load,
-        pv=pv,
+        pv_available=pv,
+        pv_used=sol.pv_used,
+        pv_curtail=sol.pv_curtail,
         charge=sol.charge,
         discharge=sol.discharge,
         soc0=soc0,
@@ -320,17 +396,20 @@ def t6_small_window() -> None:
         abs(sol.cost - audit.cost_total) < 1e-6,
         f"{sol.cost:.9f} vs {audit.cost_total:.9f}",
     )
-    # 规则法 baseline 要满足同一终端约束（E_n = E_0）：先按规则跑，
-    # 末段缺口用购电补齐、富余用弃光吸收，保证可比。
-    r_cost, r_socs, r_grid = lp.rule_based_schedule(price, load, pv, soc0)
-    final_e = r_socs[-1]
-    if final_e < soc0:
-        # 规则法末段购电补齐到 soc0（单价 = 该段电价）
-        r_cost += price[-1] * (soc0 - final_e)
+    baseline = lp.no_storage_schedule(price, load, pv, soc0)
+    baseline_recs = executor.execute_q1(
+        grid_contract=baseline["grid"], price=price, load=load,
+        pv_available=pv, pv_used=baseline["pv_used"],
+        pv_curtail=baseline["pv_curtail"], charge=baseline["charge"],
+        discharge=baseline["discharge"], soc0=soc0, starts=starts, ends=ends,
+        plan_issue_time=datetime(2025, 1, 1, 0, 0),
+    )
+    baseline_audit = acct.audit(baseline_recs)
+    check("T6 无储能基线经同一核算器可行", baseline_audit.ok)
     check(
-        "T6 规则法 ≥ LP",
-        r_cost + 1e-9 >= sol.cost,
-        f"rule={r_cost:.6f} lp={sol.cost:.6f}",
+        "T6 无储能基线 ≥ LP",
+        baseline_audit.cost_total + 1e-9 >= sol.cost,
+        f"baseline={baseline_audit.cost_total:.6f} lp={sol.cost:.6f}",
     )
     check(
         "T6 无同时充放电",
@@ -369,10 +448,12 @@ def t7_q1_full_day() -> None:
     # 独立核算器对拍
     slots = build_day_slots(day)
     recs = executor.execute_q1(
-        plan=sols["highs-ds"].grid,
+        grid_contract=sols["highs-ds"].grid,
         price=inp.price,
         load=inp.load,
-        pv=inp.pv_available,
+        pv_available=inp.pv_available,
+        pv_used=sols["highs-ds"].pv_used,
+        pv_curtail=sols["highs-ds"].pv_curtail,
         charge=sols["highs-ds"].charge,
         discharge=sols["highs-ds"].discharge,
         soc0=6000.0,
@@ -409,6 +490,7 @@ def t7_q1_full_day() -> None:
 
 def main() -> int:
     print("== C 题探针：槽位适配器 + 最小 LP + 独立核算 ==")
+    t0_efficiency_direction()
     t1_adapter()
     t2_pulse()
     t3_curtail_source()
