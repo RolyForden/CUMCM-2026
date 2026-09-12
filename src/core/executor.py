@@ -61,6 +61,9 @@ class ExecRecord:
     discharge_planned: float | None = None
     discharge_shortfall: float = 0.0
     discharge_clipped: bool = False
+    charge_planned: float | None = None
+    charge_shortfall: float = 0.0
+    charge_clipped: bool = False
 
 
 def execute_q1(
@@ -160,9 +163,10 @@ def execute_q2(
 ) -> list[ExecRecord]:
     """按 D002/D007 顺序回放第二问的实际运行。
 
-    电池充电计划保持不变。需求分配顺序为计划放电、合同电、实际光伏，
+    电池动作尽量按计划执行；为保证库存物理边界，必要时只削减所需的
+    充电或放电量。需求分配顺序为计划放电、合同电、实际光伏，
     仍不足时紧急购电；这等价于过剩时先弃光、再形成未用合同电、最后
-    削减计划放电。若实际库存越界则明确失败，调用方不得静默修正计划。
+    削减计划放电。所有安全削减均显式记入执行记录。
     """
     n = len(grid_contract)
     arrays = {
@@ -183,8 +187,16 @@ def execute_q2(
     E = float(soc0)
     recs: list[ExecRecord] = []
     for t in range(n):
-        demand = float(load_actual[t] + charge_planned[t])
-        discharge_actual = min(float(discharge_planned[t]), demand)
+        if charge_planned[t] > 1e-9 and discharge_planned[t] > 1e-9:
+            raise ValueError(f"slot {t}: 计划不得同时充放电")
+
+        charge_room = max((params.soc_max - E) / params.eta_charge, 0.0)
+        charge_actual = min(float(charge_planned[t]), charge_room)
+        charge_shortfall = float(charge_planned[t]) - charge_actual
+
+        demand = float(load_actual[t] + charge_actual)
+        discharge_room = max((E - params.soc_min) * params.eta_discharge, 0.0)
+        discharge_actual = min(float(discharge_planned[t]), demand, discharge_room)
         remaining = demand - discharge_actual
 
         grid_delivered = min(float(grid_contract[t]), remaining)
@@ -199,16 +211,14 @@ def execute_q2(
         discharge_shortfall = float(discharge_planned[t]) - discharge_actual
         E_next = (
             E
-            + params.eta_charge * float(charge_planned[t])
+            + params.eta_charge * charge_actual
             - discharge_actual / params.eta_discharge
         )
         if E_next < params.soc_min - 1e-6 or E_next > params.soc_max + 1e-6:
-            raise ValueError(
-                f"slot {t}: 实际SOC越界 {E_next:.6f}，需要裁决是否允许削减计划充电"
-            )
+            raise AssertionError(f"slot {t}: 安全削减后SOC仍越界 {E_next:.6f}")
         residual = (
             grid_delivered + grid_emergency + pv_used + discharge_actual
-            - float(load_actual[t]) - float(charge_planned[t])
+            - float(load_actual[t]) - charge_actual
         )
         recs.append(
             ExecRecord(
@@ -224,7 +234,7 @@ def execute_q2(
                 grid_delivered=grid_delivered,
                 grid_unused=grid_unused,
                 grid_emergency=grid_emergency,
-                charge=float(charge_planned[t]),
+                charge=charge_actual,
                 discharge=discharge_actual,
                 soc_start=E,
                 soc_end=E_next,
@@ -234,6 +244,9 @@ def execute_q2(
                 discharge_planned=float(discharge_planned[t]),
                 discharge_shortfall=discharge_shortfall,
                 discharge_clipped=discharge_shortfall > 1e-9,
+                charge_planned=float(charge_planned[t]),
+                charge_shortfall=charge_shortfall,
+                charge_clipped=charge_shortfall > 1e-9,
             )
         )
         E = E_next

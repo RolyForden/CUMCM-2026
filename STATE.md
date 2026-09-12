@@ -12,7 +12,8 @@
 - 不修改 D002 既有口径；D004-D006 保留为复审前裁决稿，冲突处由 D007 覆盖。
 - N1/N2 文档口径按 D007 修订后冻结；D007 前置合成反例 17/17 已通过。
 - Q2 三天窗口需 N1 接口测试通过且 Q2 光伏预测口径明确后才允许。
-- Q2 核算硬错误已修复、接口合成测试7/7通过；连续库存越上限时是否允许削减计划充电仍待人类裁决，因此尚未进入三天窗口。
+- Q2 核算硬错误已修复；人类已在D008选择库存安全削减方案A，执行器会记录计划/实际充电及少充量。接口测试需复跑后进入下一闸门。
+- Q2严格因果预测候选接口已完成，6/6测试通过；已证明七天前和同星期日衰减平均可生成完整144槽，昨天同刻法在方案A末槽会使用尚未观测数据，当前明确拒绝。最终预测器和1月冷启动仍待确定。
 - Q3 纯合成结算账本测试已通过；仍不得接入附件3预测或预测驱动滚动。
 - Q3 预测驱动滚动窗口需 N3 重裁后才允许。
 
@@ -28,6 +29,7 @@
 - D007 前置反例与只读验证：`src/d007_prewindow_tests.py`，17/17；逐项输出：`experiments/d007_prewindow_results.json`；报告：`research/C_D007_prewindow_report.md`。
 - Q3 纯合成账本验证：`src/core/q3_ledger.py`、`src/q3_ledger_synthetic_tests.py`，9/9；逐项输出：`experiments/q3_ledger_synthetic_results.json`；报告：`research/C_Q3_pure_ledger_report.md`。
 - Q2执行与核算接口：`src/core/executor.py`、`src/core/accountant.py`、`src/q2_accounting_tests.py`，7/7；输出 `experiments/q2_accounting_results.json`；报告 `research/C_Q2_accounting_interface_report.md`。
+- Q2历史预测候选：`src/core/q2_forecast.py`、`src/q2_forecast_tests.py`，6/6；输出 `experiments/q2_forecast_candidate_results.json`；报告 `research/C_Q2_forecast_candidates_report.md`。
 - Q1 定稿验证：`src/validate_q1.py`、`outputs/q1_validation/q1_validation_summary.json`、`research/C_q1_validation.md`；覆盖逐槽复算、导出一致性、显式互斥 MILP、参数敏感性和 60 次输入扰动。
 - Q1 正式结果生成审计：`src/generate_q1_result.py`、`outputs/q1_scheme_a/q1_audit.json`；生成期 16 项检查 + 重开 8 项检查均通过。
 - 论文 latex 模板已从已验证模板迁入 `paper/`（cumcmthesis.cls、字体、figures、code、ref.bib）；Q1 正文写入 `paper/数模通用模板.tex`，xelatex 编译通过（14 页无错误）。当前仓库不存在独立 `src/verify_q1_result.py` 及 `experiments/q1_cross_validation_*` 证据文件，故不再以“32/32独立交叉验证”作为当前证据。

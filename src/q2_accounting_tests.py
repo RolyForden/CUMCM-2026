@@ -113,9 +113,7 @@ def main() -> int:
         replay_audit.violations,
     )
 
-    overflow_rejected = False
-    try:
-        execute_q2(
+    clipped = execute_q2(
             grid_contract=np.array([0.0, 100.0]),
             price=np.array([1.0, 1.0]),
             load_actual=np.array([0.0, 100.0]),
@@ -127,9 +125,17 @@ def main() -> int:
             ends=[s.interval_end for s in slots],
             plan_issue_time=datetime(2025, 2, 1),
         )
-    except ValueError:
-        overflow_rejected = True
-    check("削减放电导致后续充电越上限时明确失败", overflow_rejected, overflow_rejected)
+    clipped_audit = audit(clipped, require_q1_semantics=False)
+    check(
+        "削减放电导致后续库存偏高时安全少充电",
+        clipped_audit.ok
+        and clipped[1].charge_clipped
+        and abs(clipped[1].charge_planned - 100.0) < 1e-9
+        and abs(clipped[1].charge - 0.0) < 1e-9
+        and abs(clipped[1].charge_shortfall - 100.0) < 1e-9
+        and abs(clipped[1].soc_end - 10800.0) < 1e-9,
+        clipped_audit.violations,
+    )
 
     failed = [item for item in RESULTS if not item["passed"]]
     payload = {

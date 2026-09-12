@@ -1,0 +1,40 @@
+{
+  "scope": "Q2 forecast candidates and causality only; no final model selected",
+  "summary": {
+    "total": 6,
+    "passed": 6,
+    "failed": 0
+  },
+  "results": [
+    {
+      "name": "七天前基线给出完整144槽",
+      "passed": true,
+      "actual": "144"
+    },
+    {
+      "name": "七天前基线没有读取未来",
+      "passed": true,
+      "actual": "2025-01-26 00:10:00"
+    },
+    {
+      "name": "同星期衰减基线给出完整144槽",
+      "passed": true,
+      "actual": "144"
+    },
+    {
+      "name": "同星期衰减基线没有读取未来",
+      "passed": true,
+      "actual": "2025-01-26 00:10:00"
+    },
+    {
+      "name": "凌晨决策时昨天同刻末槽尚未观测则拒绝末槽偷看",
+      "passed": true,
+      "actual": "True"
+    },
+    {
+      "name": "历史输入混入未来观测时拒绝",
+      "passed": true,
+      "actual": "True"
+    }
+  ]
+}

@@ -161,6 +161,14 @@ def audit(
                 violations.append(f"slot {r.slot}: 放电缺额复算不符")
             if r.discharge_clipped != (expected_shortfall > 1e-9):
                 violations.append(f"slot {r.slot}: 放电削减标志不符")
+        if r.charge_planned is not None:
+            if r.charge > r.charge_planned + 1e-9:
+                violations.append(f"slot {r.slot}: 实际充电超过计划充电")
+            expected_shortfall = r.charge_planned - r.charge
+            if abs(r.charge_shortfall - expected_shortfall) > 1e-6:
+                violations.append(f"slot {r.slot}: 充电缺额复算不符")
+            if r.charge_clipped != (expected_shortfall > 1e-9):
+                violations.append(f"slot {r.slot}: 充电削减标志不符")
 
         if abs(r.pv_used + r.pv_curtail - r.pv_available) > 1e-6:
             pv_id_ok = False
