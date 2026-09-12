@@ -28,7 +28,7 @@ class AuditResult:
     slots_contiguous: bool
     intervals_contiguous: bool
     soc_chain_ok: bool
-    q1_semantics_ok: bool
+    q1_semantics_ok: bool  # 兼容字段名；非Q1时表示合同量账本恒等式通过
     cost_normal: float
     cost_emergency: float
     cost_up: float
@@ -96,8 +96,17 @@ def audit(
     n_simul = 0
 
     for r in recs:
-        residual = r.grid_delivered + r.pv_used + r.discharge - r.load - r.charge
+        residual = (
+            r.grid_delivered
+            + r.grid_emergency
+            + r.pv_used
+            + r.discharge
+            - r.load
+            - r.charge
+        )
         max_res = max(max_res, abs(residual))
+        if abs(r.residual - residual) > 1e-6:
+            violations.append(f"slot {r.slot}: 记录的能量平衡残差与复算值不符")
 
         expected_soc_end = (
             r.soc_start
@@ -144,6 +153,15 @@ def audit(
         if r.charge > 1e-6 and r.discharge > 1e-6:
             n_simul += 1
 
+        if r.discharge_planned is not None:
+            if r.discharge > r.discharge_planned + 1e-9:
+                violations.append(f"slot {r.slot}: 实际放电超过计划放电")
+            expected_shortfall = r.discharge_planned - r.discharge
+            if abs(r.discharge_shortfall - expected_shortfall) > 1e-6:
+                violations.append(f"slot {r.slot}: 放电缺额复算不符")
+            if r.discharge_clipped != (expected_shortfall > 1e-9):
+                violations.append(f"slot {r.slot}: 放电削减标志不符")
+
         if abs(r.pv_used + r.pv_curtail - r.pv_available) > 1e-6:
             pv_id_ok = False
             violations.append(f"slot {r.slot}: 光伏消纳与弃光不守恒")
@@ -161,15 +179,22 @@ def audit(
             if abs(r.grid_unused) > 1e-9 or abs(r.grid_emergency) > 1e-9:
                 q1_semantics_ok = False
                 violations.append(f"slot {r.slot}: Q1 出现未用合同电或紧急购电")
+        elif abs(r.grid_contract - r.grid_delivered - r.grid_unused) > 1e-6:
+            q1_semantics_ok = False
+            violations.append(
+                f"slot {r.slot}: 合同量不等于实际交付量与未使用量之和"
+            )
 
-        expected_normal = r.price * (
-            r.grid_contract if require_q1_semantics else r.grid_delivered
-        )
+        # Q1/Q2 的正常费用都按计划合同量收取。Q3 多版本调整由独立账本核算。
+        expected_normal = r.price * r.grid_contract
         if abs(r.normal_cost - expected_normal) > 1e-6:
             violations.append(f"slot {r.slot}: 正常购电费用复算不符")
+        expected_emergency = 5.0 * r.price * r.grid_emergency
+        if abs(r.emergency_cost - expected_emergency) > 1e-6:
+            violations.append(f"slot {r.slot}: 紧急购电费用复算不符")
 
-    cost_normal = float(sum(r.normal_cost for r in recs))
-    cost_emergency = float(sum(r.emergency_cost for r in recs))
+    cost_normal = float(sum(r.price * r.grid_contract for r in recs))
+    cost_emergency = float(sum(5.0 * r.price * r.grid_emergency for r in recs))
     cost_up = float(sum(getattr(r, "up_cost", 0.0) for r in recs))
     cost_down = float(sum(getattr(r, "down_cost", 0.0) for r in recs))
 

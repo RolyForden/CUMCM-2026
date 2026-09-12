@@ -2,7 +2,7 @@
 
 阶段：SOLVING
 
-状态：原探针 41/41 保留为整改前基线；整改提交 `7464ccc` 的主探针 48/48、独立交叉验证 39/39 均通过。N4 已由 D003 解除；N1/N2 已按 D007 完成前置合成反例，Q3 纯合成结算账本测试 9/9 通过；N3 已完成只读因果验证但点到10分钟展开仍未裁决，继续阻塞预测驱动滚动窗口。
+状态：原探针 41/41 保留为整改前基线；整改提交 `7464ccc` 的主探针 48/48、独立交叉验证 39/39 均通过。第一问已完成。第二问执行与核算接口已完成第一轮整改，7/7 合成测试通过；库存越界处理、预测与跨日零点衔接仍待完成。第三问纯合成结算账本测试 9/9 通过。
 
 结论：人类已在D003选择方案A；Q1执行—核算—官方模板链已重新认证，主口径费用为35126.948590元。**Q1正式结果已完成系统验证并写入论文 LaTeX 正文（2026-09-12）。**
 
@@ -12,6 +12,7 @@
 - 不修改 D002 既有口径；D004-D006 保留为复审前裁决稿，冲突处由 D007 覆盖。
 - N1/N2 文档口径按 D007 修订后冻结；D007 前置合成反例 17/17 已通过。
 - Q2 三天窗口需 N1 接口测试通过且 Q2 光伏预测口径明确后才允许。
+- Q2 核算硬错误已修复、接口合成测试7/7通过；连续库存越上限时是否允许削减计划充电仍待人类裁决，因此尚未进入三天窗口。
 - Q3 纯合成结算账本测试已通过；仍不得接入附件3预测或预测驱动滚动。
 - Q3 预测驱动滚动窗口需 N3 重裁后才允许。
 
@@ -26,6 +27,7 @@
 - N1-N3 复审记录：DECISIONS.md D007；审查材料：`research/C_N1_N3_decision_review.md`；修订说明：`research/C_q2_surplus_contract_decision.md`、`research/C_q3_settlement_decision.md`、`research/C_forecast_mapping_decision.md`。
 - D007 前置反例与只读验证：`src/d007_prewindow_tests.py`，17/17；逐项输出：`experiments/d007_prewindow_results.json`；报告：`research/C_D007_prewindow_report.md`。
 - Q3 纯合成账本验证：`src/core/q3_ledger.py`、`src/q3_ledger_synthetic_tests.py`，9/9；逐项输出：`experiments/q3_ledger_synthetic_results.json`；报告：`research/C_Q3_pure_ledger_report.md`。
+- Q2执行与核算接口：`src/core/executor.py`、`src/core/accountant.py`、`src/q2_accounting_tests.py`，7/7；输出 `experiments/q2_accounting_results.json`；报告 `research/C_Q2_accounting_interface_report.md`。
 - Q1 定稿验证：`src/validate_q1.py`、`outputs/q1_validation/q1_validation_summary.json`、`research/C_q1_validation.md`；覆盖逐槽复算、导出一致性、显式互斥 MILP、参数敏感性和 60 次输入扰动。
 - Q1 正式结果生成审计：`src/generate_q1_result.py`、`outputs/q1_scheme_a/q1_audit.json`；生成期 16 项检查 + 重开 8 项检查均通过。
 - 论文 latex 模板已从已验证模板迁入 `paper/`（cumcmthesis.cls、字体、figures、code、ref.bib）；Q1 正文写入 `paper/数模通用模板.tex`，xelatex 编译通过（14 页无错误）。当前仓库不存在独立 `src/verify_q1_result.py` 及 `experiments/q1_cross_validation_*` 证据文件，故不再以“32/32独立交叉验证”作为当前证据。

@@ -8,9 +8,8 @@ TASK_C_probe_model_corrections.md §3.3/§5：
   target_slot, issue_time, plan_version, previous_version, quantity,
   increase_from_previous, decrease_from_previous。
 
-当前只实现 Q1 单版本执行（D002 P0-7 按计划执行）；Q2 的
-grid_unused 与 Q3 多次结算公式待人类确认，代码里只留接口与候选注释，
-不得作为已冻结事实。
+Q1 单版本执行保持原语义。Q2 按 D007 落实合同余电、紧急购电与计划
+放电削减；Q3 多次结算由独立版本账本处理。
 """
 
 from __future__ import annotations
@@ -57,8 +56,11 @@ class ExecRecord:
     soc_start: float
     soc_end: float
     residual: float          # 能量平衡残差（应为 ~0）
-    normal_cost: float       # price * grid_delivered（Q1 = price * grid_contract）
+    normal_cost: float       # Q1/Q2: price * grid_contract
     emergency_cost: float    # 5 倍紧急购电（Q1 恒 0）
+    discharge_planned: float | None = None
+    discharge_shortfall: float = 0.0
+    discharge_clipped: bool = False
 
 
 def execute_q1(
@@ -137,6 +139,101 @@ def execute_q1(
                 residual=residual,
                 normal_cost=price[t] * grid_contract[t],
                 emergency_cost=0.0,
+            )
+        )
+        E = E_next
+    return recs
+
+
+def execute_q2(
+    grid_contract: np.ndarray,
+    price: np.ndarray,
+    load_actual: np.ndarray,
+    pv_available: np.ndarray,
+    charge_planned: np.ndarray,
+    discharge_planned: np.ndarray,
+    soc0: float,
+    starts: list[datetime],
+    ends: list[datetime],
+    plan_issue_time: datetime,
+    params: BatteryParams = DEFAULT_BATTERY,
+) -> list[ExecRecord]:
+    """按 D002/D007 顺序回放第二问的实际运行。
+
+    电池充电计划保持不变。需求分配顺序为计划放电、合同电、实际光伏，
+    仍不足时紧急购电；这等价于过剩时先弃光、再形成未用合同电、最后
+    削减计划放电。若实际库存越界则明确失败，调用方不得静默修正计划。
+    """
+    n = len(grid_contract)
+    arrays = {
+        "price": price,
+        "load_actual": load_actual,
+        "pv_available": pv_available,
+        "charge_planned": charge_planned,
+        "discharge_planned": discharge_planned,
+    }
+    for name, values in arrays.items():
+        if len(values) != n:
+            raise ValueError(f"{name} 长度 {len(values)} != 计划长度 {n}")
+        if np.any(np.asarray(values, dtype=float) < -1e-9):
+            raise ValueError(f"{name} 不得为负")
+    if len(starts) != n or len(ends) != n:
+        raise ValueError("槽位起止时间长度与计划不一致")
+
+    E = float(soc0)
+    recs: list[ExecRecord] = []
+    for t in range(n):
+        demand = float(load_actual[t] + charge_planned[t])
+        discharge_actual = min(float(discharge_planned[t]), demand)
+        remaining = demand - discharge_actual
+
+        grid_delivered = min(float(grid_contract[t]), remaining)
+        grid_unused = float(grid_contract[t]) - grid_delivered
+        remaining -= grid_delivered
+
+        pv_used = min(float(pv_available[t]), remaining)
+        pv_curtail = float(pv_available[t]) - pv_used
+        remaining -= pv_used
+        grid_emergency = max(remaining, 0.0)
+
+        discharge_shortfall = float(discharge_planned[t]) - discharge_actual
+        E_next = (
+            E
+            + params.eta_charge * float(charge_planned[t])
+            - discharge_actual / params.eta_discharge
+        )
+        if E_next < params.soc_min - 1e-6 or E_next > params.soc_max + 1e-6:
+            raise ValueError(
+                f"slot {t}: 实际SOC越界 {E_next:.6f}，需要裁决是否允许削减计划充电"
+            )
+        residual = (
+            grid_delivered + grid_emergency + pv_used + discharge_actual
+            - float(load_actual[t]) - float(charge_planned[t])
+        )
+        recs.append(
+            ExecRecord(
+                slot=t,
+                interval_start=starts[t],
+                interval_end=ends[t],
+                price=float(price[t]),
+                load=float(load_actual[t]),
+                pv_available=float(pv_available[t]),
+                pv_used=pv_used,
+                pv_curtail=pv_curtail,
+                grid_contract=float(grid_contract[t]),
+                grid_delivered=grid_delivered,
+                grid_unused=grid_unused,
+                grid_emergency=grid_emergency,
+                charge=float(charge_planned[t]),
+                discharge=discharge_actual,
+                soc_start=E,
+                soc_end=E_next,
+                residual=residual,
+                normal_cost=float(price[t] * grid_contract[t]),
+                emergency_cost=float(5.0 * price[t] * grid_emergency),
+                discharge_planned=float(discharge_planned[t]),
+                discharge_shortfall=discharge_shortfall,
+                discharge_clipped=discharge_shortfall > 1e-9,
             )
         )
         E = E_next
