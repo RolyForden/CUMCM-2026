@@ -137,6 +137,11 @@ def simulate(
             )
             next_forecast = make_forecast(method, actuals, prior, next_day)
             next_plan = plan_day(next_forecast, price, next_estimated_soc)
+            # D009 桥接一致性：新计划起点就是估计的00:10库存。
+            if abs(float(next_plan.soc[0]) - float(next_estimated_soc)) > 1e-6:
+                raise AssertionError(
+                    f"{method} {next_day}新计划起点未等于00:10估计库存"
+                )
             emit(
                 {
                     "event": "plan_made",

@@ -53,6 +53,7 @@ class LpInputs:
     soc_final_slot: int | None = None  # 终端约束作用的槽位下标：
         # None → 全部 n 槽之后（E_n = soc_final，D002 P0-2 冻结口径）；
         # k → 前 k+1 槽之后（E_{k+1} = soc_final，用于敏感性对照 E_143=E_0）
+    terminal_value: float = 0.0  # 终端库存价值 元/kWh（0 时为 Q1/D002 原型）
     params: BatteryParams = field(default_factory=lambda: DEFAULT_BATTERY)
 
 
@@ -64,8 +65,9 @@ class LpSolution:
     charge: np.ndarray      # c_t 母线侧充电
     discharge: np.ndarray   # d_t 母线侧放电
     soc: np.ndarray         # E_t，长度 n+1（E[0]=soc0）
-    cost: float             # sum(price·grid)
-    primary_optimum: float  # 第一阶段真实最优费用
+    cost: float             # sum(price·grid)，纯购电费
+    primary_optimum: float  # 第一阶段真实最优目标值（含终端价值项）
+    objective: float        # 最终选择的真实目标值（购电费 − 终端价值）
     status: int
     message: str
     solver: str
@@ -87,9 +89,17 @@ def solve_lp(inp: LpInputs, solver: str = "highs-ds") -> LpSolution:
         return {"g": 0, "v": 1, "c": 2, "d": 3}[name] * n + t
 
     nv = 4 * n
-    c_obj = np.zeros(nv)
+    c_obj = np.zeros(nv)   # 正常购电费用（用于报告，永远是最小化目标的一部分）
     for t in range(n):
         c_obj[idx("g", t)] = inp.price[t]
+
+    # 终端库存价值：E_n = E_0 + Σ(η_c·c_s − d_s/η_d)，按 terminal_value 计价。
+    # 该项只影响优化目标；报告的 cost 仍为纯购电费。terminal_value=0 时与原型完全一致。
+    c_opt = c_obj.copy()
+    if inp.terminal_value != 0.0:
+        for t in range(n):
+            c_opt[idx("c", t)] -= inp.terminal_value * params.eta_charge
+            c_opt[idx("d", t)] += inp.terminal_value / params.eta_discharge
 
     A_ub = []
     b_ub = []
@@ -162,14 +172,14 @@ def solve_lp(inp: LpInputs, solver: str = "highs-ds") -> LpSolution:
 
     primary_optimum = float(res.fun) if res.success else np.nan
 
-    # 字典序：费用不劣于 tol 的解中最小化吞吐量 Σ(c+d)。
-    # 费用是上界约束，不得用等式强迫解比主目标贵固定容差。
+    # 字典序：真实目标（购电费 − 终端价值）不劣于 tol 的解中最小化吞吐量 Σ(c+d)。
+    # 费用上界用真实目标 c_opt 表达；报告费用仍为纯购电费 c_obj·x。
     if res.success:
         c2 = np.zeros(nv)
         for t in range(n):
             c2[idx("c", t)] = 1.0
             c2[idx("d", t)] = 1.0
-        A_ub2 = np.array(A_ub + [c_obj])
+        A_ub2 = np.array(A_ub + [c_opt])
         b_ub2 = np.array(list(b_ub) + [primary_optimum + LEX_TOL])
         res2 = linprog(
             c2,
@@ -182,7 +192,7 @@ def solve_lp(inp: LpInputs, solver: str = "highs-ds") -> LpSolution:
         )
         if res2.success:
             res = res2
-            res.fun = c_obj @ res.x  # 报告主目标费用
+            res.fun = float(c_opt @ res.x)  # 报告真实目标值
 
     if not res.success:
         return LpSolution(
@@ -222,7 +232,8 @@ def solve_lp(inp: LpInputs, solver: str = "highs-ds") -> LpSolution:
         charge=charge,
         discharge=discharge,
         soc=soc,
-        cost=float(res.fun),
+        cost=float(c_obj @ x),          # 纯购电费，与终端价值无关
+        objective=float(c_opt @ x),     # 优化器真实目标（购电费 − 终端价值）
         primary_optimum=primary_optimum,
         status=res.status,
         message=res.message,

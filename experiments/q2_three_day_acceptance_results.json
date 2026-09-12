@@ -1,8 +1,8 @@
 {
   "scope": "independent acceptance of the three-day continuous Q2 probe",
   "summary": {
-    "total": 29,
-    "passed": 29,
+    "total": 31,
+    "passed": 31,
     "failed": 0
   },
   "results": [
@@ -24,7 +24,7 @@
     {
       "name": "D-7: 观察者覆盖全部34天且无多余事件",
       "passed": true,
-      "actual": "{'plan_made': 33, 'day_completed': 34}"
+      "actual": "{'day_completed': 34, 'plan_made': 33}"
     },
     {
       "name": "D-7: 每日首末区间与槽位口径一致且跨日区间连续",
@@ -77,6 +77,11 @@
       "actual": "2025-02-03"
     },
     {
+      "name": "D-7: 新计划起点只由00:00已知库存与旧计划末槽动作估计（D009桥接）",
+      "passed": true,
+      "actual": "6000.000000000004"
+    },
+    {
       "name": "D-7: 三天窗口共3天",
       "passed": true,
       "actual": "['2025-02-01', '2025-02-02', '2025-02-03']"
@@ -89,7 +94,7 @@
     {
       "name": "same-weekday-4-decay-0.8: 观察者覆盖全部34天且无多余事件",
       "passed": true,
-      "actual": "{'plan_made': 33, 'day_completed': 34}"
+      "actual": "{'day_completed': 34, 'plan_made': 33}"
     },
     {
       "name": "same-weekday-4-decay-0.8: 每日首末区间与槽位口径一致且跨日区间连续",
@@ -140,6 +145,11 @@
       "name": "same-weekday-4-decay-0.8: 新计划在旧计划末槽执行前按D009顺序制定",
       "passed": true,
       "actual": "2025-02-03"
+    },
+    {
+      "name": "same-weekday-4-decay-0.8: 新计划起点只由00:00已知库存与旧计划末槽动作估计（D009桥接）",
+      "passed": true,
+      "actual": "6000.000000000004"
     },
     {
       "name": "same-weekday-4-decay-0.8: 三天窗口共3天",

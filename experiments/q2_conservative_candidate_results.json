@@ -1,0 +1,50 @@
+{
+  "scope": "Q2 conservative plan candidates: causality and monotonicity only",
+  "summary": {
+    "total": 8,
+    "passed": 8,
+    "failed": 0
+  },
+  "results": [
+    {
+      "name": "point 等级等于七天前点预测本身",
+      "passed": true,
+      "actual": "point"
+    },
+    {
+      "name": "point 不读取未来",
+      "passed": true,
+      "actual": "2025-01-26 00:10:00"
+    },
+    {
+      "name": "残差池按槽收集且只含已观测日",
+      "passed": true,
+      "actual": "3024"
+    },
+    {
+      "name": "追加决策时刻之后的实际值不改变残差池（无未来泄漏）",
+      "passed": true,
+      "actual": "True"
+    },
+    {
+      "name": "分位越高负荷计划越高（0.7≤0.8≤0.9）",
+      "passed": true,
+      "actual": "(np.True_, np.True_)"
+    },
+    {
+      "name": "0.8 分位相对点预测抬高负荷计划",
+      "passed": true,
+      "actual": "23.099883682671457"
+    },
+    {
+      "name": "所有分位调整后负荷与光伏非负",
+      "passed": true,
+      "actual": "('point', '0.7', '0.8', '0.9')"
+    },
+    {
+      "name": "残差不足的槽退回点预测而非静默填零",
+      "passed": true,
+      "actual": "4.965277777777778"
+    }
+  ]
+}

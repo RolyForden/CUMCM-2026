@@ -214,6 +214,39 @@ def main() -> int:
             plan_made[-1]["next_plan_day"],
         )
 
+        # D009 桥接一致性：新计划起点 = 00:00已知库存 + 旧计划末槽动作估计的00:10库存；
+        # 该估计不得使用00:00至00:10尚未发生的实际负荷或光伏。按 D008 容量边界
+        # 独立复算（充放电各自被物理剩余空间裁剪），不调用生产实现。
+        p = DEFAULT_BATTERY
+        bridge_ok = True
+        for o in plan_made:
+            actual_end = next(
+                (r["actual_soc_end"] for r in daily if r["date"] == o["day"]), None
+            )
+            charge_planned = o["planned_actions"][0]["charge_kwh"]
+            discharge_planned = o["planned_actions"][0]["discharge_kwh"]
+            if actual_end is None:
+                bridge_ok = False
+                continue
+            charge_actual = min(
+                charge_planned, max((p.soc_max - actual_end) / p.eta_charge, 0.0)
+            )
+            discharge_actual = min(
+                discharge_planned, max((actual_end - p.soc_min) * p.eta_discharge, 0.0)
+            )
+            expected = (
+                actual_end
+                + p.eta_charge * charge_actual
+                - discharge_actual / p.eta_discharge
+            )
+            if abs(o["next_plan_soc_start"] - expected) > 1e-6:
+                bridge_ok = False
+        check(
+            f"{method}: 新计划起点只由00:00已知库存与旧计划末槽动作估计（D009桥接）",
+            bridge_ok,
+            plan_made[0]["next_plan_soc_start"],
+        )
+
         # 三天窗口汇总与非负检查
         probe_rows = [r for r in daily if "2025-02-01" <= r["date"] <= "2025-02-03"]
         check(
