@@ -15,4 +15,4 @@
 - 完成标准：探针报告全绿 + 更新 `SESSION_HANDOFF.md`。
 - 历史状态：提交 `2250523` 曾得到 41/41；该结果保留在 `experiments/probe_timing.md`，但交叉验证随后发现结构缺陷，不能单独认证完整链路。
 - 当前状态：整改提交 `7464ccc` 主探针 48/48，独立交叉验证 39/39；整改后记录见 `experiments/probe_timing_remediated.md` 与 `research/C_probe_cross_validation.md`。
-- 硬闸门：N1–N4 未经人类裁决前，不启动 Q2–Q4 全年正式求解；N4 未确认前 Q1 仅为冻结口径 A 下的条件性结果。
+- 当前口径：N4已由D003裁决为方案A，Q1允许生成正式结果；N1–N3未经人类裁决前，不启动Q2–Q4全年正式求解。
