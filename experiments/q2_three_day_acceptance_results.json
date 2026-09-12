@@ -24,7 +24,7 @@
     {
       "name": "D-7: 观察者覆盖全部34天且无多余事件",
       "passed": true,
-      "actual": "{'day_completed': 34, 'plan_made': 33}"
+      "actual": "{'plan_made': 33, 'day_completed': 34}"
     },
     {
       "name": "D-7: 每日首末区间与槽位口径一致且跨日区间连续",
@@ -94,7 +94,7 @@
     {
       "name": "same-weekday-4-decay-0.8: 观察者覆盖全部34天且无多余事件",
       "passed": true,
-      "actual": "{'day_completed': 34, 'plan_made': 33}"
+      "actual": "{'plan_made': 33, 'day_completed': 34}"
     },
     {
       "name": "same-weekday-4-decay-0.8: 每日首末区间与槽位口径一致且跨日区间连续",
