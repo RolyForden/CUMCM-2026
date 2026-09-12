@@ -46,26 +46,34 @@ def _horizon(
     vintages: pd.DataFrame,
     price: np.ndarray,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    slots = build_day_slots(day)
-    base = _day_forecast(actuals, prior, day)
-    fallback = {
-        slot.interval_start: float(base.iloc[slot.slot_id].pv_forecast)
-        for slot in slots
-    }
+    horizon_slots = []
+    load_parts = []
+    pv_fallback = {}
+    price_parts = []
+    for k in range(ROLLING_FUTURE_DAYS + 1):
+        horizon_day = day + timedelta(days=k)
+        slots = build_day_slots(horizon_day)
+        forecast = _day_forecast(actuals, prior, horizon_day)
+        lo = start_slot if k == 0 else 0
+        selected = slots[lo:]
+        horizon_slots.extend(selected)
+        load_parts.append(forecast.load_forecast.to_numpy(dtype=float)[lo:] / 6.0)
+        price_parts.append(price[lo:] if k == 0 else price)
+        for slot in selected:
+            pv_fallback[slot.interval_start] = float(
+                forecast.iloc[slot.slot_id].pv_forecast
+            )
+
     issue = datetime.combine(day, datetime.min.time()) + timedelta(hours=issue_hour)
-    current_targets = [s.interval_start for s in slots[start_slot:]]
+    targets = [slot.interval_start for slot in horizon_slots]
     expanded = expand_issue_forecast(
-        vintages, issue, current_targets, method="linear", fallback=fallback
+        vintages, issue, targets, method="linear", fallback=pv_fallback
     )
-    loads = [base.load_forecast.to_numpy(dtype=float)[start_slot:] / 6.0]
-    pvs = [expanded.pv_forecast.to_numpy(dtype=float) / 6.0]
-    prices = [price[start_slot:]]
-    for k in range(1, ROLLING_FUTURE_DAYS + 1):
-        future = _day_forecast(actuals, prior, day + timedelta(days=k))
-        loads.append(future.load_forecast.to_numpy(dtype=float) / 6.0)
-        pvs.append(future.pv_forecast.to_numpy(dtype=float) / 6.0)
-        prices.append(price)
-    return np.concatenate(prices), np.concatenate(loads), np.concatenate(pvs)
+    return (
+        np.concatenate(price_parts),
+        np.concatenate(load_parts),
+        expanded.pv_forecast.to_numpy(dtype=float) / 6.0,
+    )
 
 
 def make_initial_plan(
