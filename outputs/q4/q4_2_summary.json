@@ -1,0 +1,9 @@
+{
+  "mode": "Q4-2",
+  "replay_days": 365,
+  "evaluation_days": 334,
+  "cost_normal": 12814582.520037426,
+  "cost_emergency": 4928742.358892524,
+  "cost_total": 17743324.87892995,
+  "versions": []
+}

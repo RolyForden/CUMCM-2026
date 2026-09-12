@@ -138,6 +138,7 @@ def main() -> int:
         for row, version in zip(q43_sources, versions):
             row["target_time"] = target_lookup[(version["date"], int(version["slot"]))]
         _write_frame(args.output / "q4_3_price_sources.csv", q43_sources)
+        q43.pop("price_sources", None)
         (args.output / "q4_3_summary.json").write_text(
             json.dumps(q43, ensure_ascii=False, indent=2), encoding="utf-8"
         )
@@ -153,6 +154,11 @@ def main() -> int:
     ).stdout.strip()
     q42_summary = json.loads((args.output / "q4_2_summary.json").read_text(encoding="utf-8"))
     q43_summary = json.loads((args.output / "q4_3_summary.json").read_text(encoding="utf-8"))
+    # 早期中断恢复文件可能仍含逐槽价格来源；正式汇总只保留指标，明细已有CSV。
+    q43_summary.pop("price_sources", None)
+    (args.output / "q4_3_summary.json").write_text(
+        json.dumps(q43_summary, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
     summary = {
         "model_commit": commit,
         "price_method": METHOD,

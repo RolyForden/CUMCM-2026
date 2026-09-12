@@ -1,0 +1,30 @@
+{
+  "model_commit": "0a7e71a901ed0ce6ca727ebc2b9e47480d339b3c",
+  "price_method": "same-weekday-weighted",
+  "evaluation_start": "2025-02-01",
+  "evaluation_end": "2025-12-31",
+  "q4_2": {
+    "mode": "Q4-2",
+    "replay_days": 365,
+    "evaluation_days": 334,
+    "cost_normal": 12814582.520037426,
+    "cost_emergency": 4928742.358892524,
+    "cost_total": 17743324.87892995,
+    "versions": []
+  },
+  "q4_3": {
+    "mode": "Q4-3",
+    "update_hours": [
+      6,
+      12,
+      18
+    ],
+    "replay_days": 365,
+    "evaluation_days": 334,
+    "initial_contract_cost_actual": 12964681.976244627,
+    "adjustment_cashflow_actual": 381722.3832787667,
+    "emergency_cost_actual": 3259691.0841800966,
+    "total_cost_actual": 16606095.44370349
+  },
+  "elapsed_seconds_this_run": 1.750462532043457
+}
