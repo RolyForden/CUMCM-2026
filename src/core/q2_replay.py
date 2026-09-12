@@ -101,14 +101,72 @@ def build_forecast(
     actuals: pd.DataFrame,
     prior: pd.DataFrame,
     day: date,
+    decision_time: datetime | None = None,
 ) -> pd.DataFrame:
-    decision = datetime.combine(day, datetime.min.time())
+    """Build one target day's forecast from one real decision-time information set.
+
+    ``day`` is the target day, not necessarily the day on which the plan is made.
+    The optional ``decision_time`` keeps old callers compatible while allowing a
+    multi-day horizon to freeze every target day to the same real information set.
+    """
+    decision = decision_time or datetime.combine(day, datetime.min.time())
     history = actuals[actuals["observed_at"] <= decision].copy()
     if day <= COLD_START_END:
         return forecast_cold_start(history, prior, day, decision)
-    return conservative_plan_forecast(
-        strategy.method, history, day, decision, strategy.level, strategy.lookback_days
-    )
+    try:
+        return conservative_plan_forecast(
+            strategy.method, history, day, decision, strategy.level, strategy.lookback_days
+        )
+    except ValueError:
+        # A D-7 rolling horizon has one causal edge case: the farthest target
+        # slots can map back to values whose intervals have not ended at the
+        # real decision time.  Fall back slot-by-slot to D-14, D-21, ... and,
+        # during genuine cold start, finally to Attachment 1's typical-day
+        # prior.  Never advance the decision time to the target day.
+        if strategy.method != "D-7" or strategy.level != "point":
+            raise
+        prior_by_slot = prior.set_index("slot")
+        lookup = history.set_index("valid_time") if not history.empty else None
+        rows: list[dict] = []
+        for slot in build_day_slots(day):
+            source = None
+            source_lag = None
+            if lookup is not None:
+                lag = 7
+                while lag <= 7 * 60:
+                    source_time = slot.interval_start - timedelta(days=lag)
+                    if source_time in lookup.index:
+                        candidate = lookup.loc[source_time]
+                        if candidate.observed_at <= decision:
+                            source = candidate
+                            source_lag = lag
+                            break
+                    lag += 7
+            if source is None:
+                load_value = float(prior_by_slot.loc[slot.slot_id, "load_forecast"])
+                pv_value = float(prior_by_slot.loc[slot.slot_id, "pv_forecast"])
+                source_max = datetime.min
+                method = "D-7-fallback:attachment1-prior"
+            else:
+                load_value = float(source.load_actual)
+                pv_value = float(source.pv_actual)
+                source_max = source.observed_at
+                method = f"D-7-fallback:D-{source_lag}"
+            rows.append(
+                {
+                    "date": day,
+                    "slot": slot.slot_id,
+                    "valid_time": slot.interval_start,
+                    "issue_time": decision,
+                    "load_forecast": load_value,
+                    "pv_forecast": pv_value,
+                    "source_max_observed_at": source_max,
+                    "method": method,
+                    "plan_level": "point",
+                    "residual_slots_used": 0,
+                }
+            )
+        return pd.DataFrame(rows)
 
 
 def plan_day(
@@ -125,8 +183,15 @@ def plan_day(
         if horizon < 1:
             raise ValueError("滚动视野必须为正整数")
         loads, pvs = [], []
+        decision = datetime.combine(day, datetime.min.time())
         for k in range(horizon):
-            forecast = build_forecast(strategy, actuals, prior, day + timedelta(days=k))
+            forecast = build_forecast(
+                strategy,
+                actuals,
+                prior,
+                day + timedelta(days=k),
+                decision_time=decision,
+            )
             loads.append(forecast.load_forecast.to_numpy(dtype=float) / 6.0)
             pvs.append(forecast.pv_forecast.to_numpy(dtype=float) / 6.0)
         solution = solve_lp(

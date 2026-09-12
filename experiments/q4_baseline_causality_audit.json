@@ -1,0 +1,14 @@
+{
+  "scope": "Jan-1 rolling-7d causality audit; no formal result rewritten",
+  "outer_decision": "2025-01-01T00:00:00",
+  "legacy_first_day_grid_max_abs_diff_kwh": 166.6666666666688,
+  "legacy_first_day_charge_max_abs_diff_kwh": 166.6666666666688,
+  "legacy_actual_soc_end_kwh": 8549.999999999998,
+  "strict_actual_soc_end_kwh": 8700.0,
+  "soc_end_difference_kwh": -150.00000000000182,
+  "future_information_changes_executed_plan": true,
+  "current_first_day_vs_strict_max_abs_diff_kwh": 0.0,
+  "historical_defect_detected": true,
+  "current_fix_matches_strict_reference": true,
+  "verdict": "PASS"
+}

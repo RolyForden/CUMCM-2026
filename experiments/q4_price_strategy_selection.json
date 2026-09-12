@@ -1,0 +1,23 @@
+{
+  "selection_window": "2025-01-15..2025-01-30",
+  "information_rule": "每次优化仅使用当时可得价格；真实价格只做事后结算",
+  "candidates": [
+    {
+      "method": "D-7",
+      "q4_2_cost_actual": 1035695.1575882559,
+      "q4_3_cost_actual": 1033692.1787993932,
+      "combined_actual_cost": 2069387.3363876492,
+      "evaluation_days": 16
+    },
+    {
+      "method": "same-weekday-weighted",
+      "q4_2_cost_actual": 1033646.9620288557,
+      "q4_3_cost_actual": 1031901.5751098254,
+      "combined_actual_cost": 2065548.537138681,
+      "evaluation_days": 16
+    }
+  ],
+  "selected_method": "same-weekday-weighted",
+  "selection_rule": "两条正式分支的一月实际结算费之和最小",
+  "elapsed_seconds": 145.34444618225098
+}

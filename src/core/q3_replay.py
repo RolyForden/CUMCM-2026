@@ -33,8 +33,15 @@ class Q3DayPlan:
     versions: dict[int, list[Q3PlanVersion]]
 
 
-def _day_forecast(actuals: pd.DataFrame, prior: pd.DataFrame, day: date) -> pd.DataFrame:
-    return build_forecast(Q2_STRATEGY, actuals, prior, day)
+def _day_forecast(
+    actuals: pd.DataFrame,
+    prior: pd.DataFrame,
+    day: date,
+    decision_time: datetime | None = None,
+) -> pd.DataFrame:
+    return build_forecast(
+        Q2_STRATEGY, actuals, prior, day, decision_time=decision_time
+    )
 
 
 def _horizon(
@@ -46,6 +53,7 @@ def _horizon(
     vintages: pd.DataFrame,
     price: np.ndarray,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    issue = datetime.combine(day, datetime.min.time()) + timedelta(hours=issue_hour)
     horizon_slots = []
     load_parts = []
     pv_fallback = {}
@@ -53,7 +61,9 @@ def _horizon(
     for k in range(ROLLING_FUTURE_DAYS + 1):
         horizon_day = day + timedelta(days=k)
         slots = build_day_slots(horizon_day)
-        forecast = _day_forecast(actuals, prior, horizon_day)
+        # Every load/PV fallback in this horizon is cut off at the one real
+        # issue time.  The target day must never masquerade as a later decision.
+        forecast = _day_forecast(actuals, prior, horizon_day, issue)
         lo = start_slot if k == 0 else 0
         selected = slots[lo:]
         horizon_slots.extend(selected)
@@ -64,7 +74,6 @@ def _horizon(
                 forecast.iloc[slot.slot_id].pv_forecast
             )
 
-    issue = datetime.combine(day, datetime.min.time()) + timedelta(hours=issue_hour)
     targets = [slot.interval_start for slot in horizon_slots]
     expanded = expand_issue_forecast(
         vintages, issue, targets, method="linear", fallback=pv_fallback

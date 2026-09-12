@@ -1,0 +1,111 @@
+{
+  "scope": "Q4 price layer only; no optimizer and no full-year replay",
+  "summary": {
+    "total": 15,
+    "passed": 15,
+    "failed": 0
+  },
+  "january_sequential_comparison": {
+    "D-1": {
+      "mae": 0.07937718531468532,
+      "rmse": 0.12178146306603274,
+      "predicted_slots": 2288,
+      "days_with_any_coverage": 16,
+      "full_144_slot_days": 0,
+      "evaluation_days": "2025-01-15..2025-01-30"
+    },
+    "D-7": {
+      "mae": 0.038403906249999994,
+      "rmse": 0.04896244371043199,
+      "predicted_slots": 2304,
+      "days_with_any_coverage": 16,
+      "full_144_slot_days": 16,
+      "evaluation_days": "2025-01-15..2025-01-30"
+    },
+    "same-weekday-weighted": {
+      "mae": 0.033910669783012715,
+      "rmse": 0.043629260641591255,
+      "predicted_slots": 2304,
+      "days_with_any_coverage": 16,
+      "full_144_slot_days": 16,
+      "evaluation_days": "2025-01-15..2025-01-30"
+    }
+  },
+  "results": [
+    {
+      "name": "附件4读取为365乘144长表",
+      "passed": true,
+      "actual": "52560"
+    },
+    {
+      "name": "附件4目标时刻唯一",
+      "passed": true,
+      "actual": "52560"
+    },
+    {
+      "name": "一月一日完整使用附件1先验",
+      "passed": true,
+      "actual": "{'cold-start:attachment1-prior': 144}"
+    },
+    {
+      "name": "一月二日只用已观测同槽均值且末槽回退先验",
+      "passed": true,
+      "actual": "{'cold-start:observed-slot-mean': 143, 'cold-start:attachment1-prior': 1}"
+    },
+    {
+      "name": "七日视野一次生成1008槽",
+      "passed": true,
+      "actual": "1008"
+    },
+    {
+      "name": "七日视野全部沿用真实决策时刻",
+      "passed": true,
+      "actual": "<DatetimeArray>\n['2025-02-01 00:00:00']\nLength: 1, dtype: datetime64[ns]"
+    },
+    {
+      "name": "七日视野没有未来来源",
+      "passed": true,
+      "actual": "2025-02-01 00:00:00"
+    },
+    {
+      "name": "七天来源不可用时按十四天等同周回退",
+      "passed": true,
+      "actual": "{'D-7': 1007, 'D-7:fallback-D-14': 1}"
+    },
+    {
+      "name": "槽143按次日零点处理且来源已经完整观测",
+      "passed": true,
+      "actual": "{'target': '2025-02-02 00:00:00', 'source': '2025-01-26 00:00:00'}"
+    },
+    {
+      "name": "昨天同刻末槽来源尚未发生时明确拒绝",
+      "passed": true,
+      "actual": "True"
+    },
+    {
+      "name": "多日视野不得把未来目标日当新决策时刻",
+      "passed": true,
+      "actual": "True"
+    },
+    {
+      "name": "同星期加权生成完整七日视野",
+      "passed": true,
+      "actual": "1008"
+    },
+    {
+      "name": "同星期加权没有未来来源",
+      "passed": true,
+      "actual": "2025-02-01 00:00:00"
+    },
+    {
+      "name": "一月顺序比较覆盖三个候选",
+      "passed": true,
+      "actual": "{'D-1': {'mae': 0.07937718531468532, 'rmse': 0.12178146306603274, 'predicted_slots': 2288, 'days_with_any_coverage': 16, 'full_144_slot_days': 0, 'evaluation_days': '2025-01-15..2025-01-30'}, 'D-7': {'mae': 0.038403906249999994, 'rmse': 0.04896244371043199, 'predicted_slots': 2304, 'days_with_any_coverage': 16, 'full_144_slot_days': 16, 'evaluation_days': '2025-01-15..2025-01-30'}, 'same-weekday-weighted': {'mae': 0.033910669783012715, 'rmse': 0.043629260641591255, 'predicted_slots': 2304, 'days_with_any_coverage': 16, 'full_144_slot_days': 16, 'evaluation_days': '2025-01-15..2025-01-30'}}"
+    },
+    {
+      "name": "一月候选比较未使用二月至十二月",
+      "passed": true,
+      "actual": "{'D-1': {'mae': 0.07937718531468532, 'rmse': 0.12178146306603274, 'predicted_slots': 2288, 'days_with_any_coverage': 16, 'full_144_slot_days': 0, 'evaluation_days': '2025-01-15..2025-01-30'}, 'D-7': {'mae': 0.038403906249999994, 'rmse': 0.04896244371043199, 'predicted_slots': 2304, 'days_with_any_coverage': 16, 'full_144_slot_days': 16, 'evaluation_days': '2025-01-15..2025-01-30'}, 'same-weekday-weighted': {'mae': 0.033910669783012715, 'rmse': 0.043629260641591255, 'predicted_slots': 2304, 'days_with_any_coverage': 16, 'full_144_slot_days': 16, 'evaluation_days': '2025-01-15..2025-01-30'}}"
+    }
+  ]
+}
