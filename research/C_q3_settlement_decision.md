@@ -61,3 +61,14 @@ cost_emergency = 5 * price_actual[target_slot] * grid_emergency
 - `100 -> 80 -> 100`：电价1时费用为120。
 - 非法修改已执行槽：必须拒绝。
 - 重复收费检测：若再对 `q_final` 收普通合同费，测试必须失败。
+
+## 实施状态（2026-09-12）
+
+纯合成账本内核已单独实现并测试：
+
+- 代码：`src/core/q3_ledger.py`
+- 测试：`src/q3_ledger_synthetic_tests.py`
+- 结果：`experiments/q3_ledger_synthetic_results.json`，9/9 通过
+- 报告：`research/C_Q3_pure_ledger_report.md`
+
+该结果只证明“多次改计划怎么收费”的账本内核通过，不代表完整 Q3 完成；不得据此接入附件3预测、滚动窗口或全年运行。

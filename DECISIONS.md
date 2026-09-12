@@ -179,4 +179,4 @@ D007后当前闸门：N1/N2只允许先做合成反例和单元测试；Q2三天
 - **D007/N3 决定：** 撤回D006的“预报1小时覆盖发布后立即一小时”。附件3原始24列先保存为点预测：`valid_time = issue_time + lead_hour`。点预测如何展开到10分钟槽位另行裁决；重裁前不得实现正式Q3预测适配器，也不得运行预测驱动Q3滚动窗口。
 - **D007/终端SOC 决定：** Q2/Q3探针可临时要求计划层 `E144_plan = E0_actual`，只为防止有限窗口末端耗空。执行层 `E144_actual` 不强制等于 `E0_actual`，下一日必须从实际 `E144_actual` 继续。全年正式主模型必须在滚动视野、终端价值、每日回初值三者间做费用、可行率和SOC轨迹对照后再定。
 - **当前闸门：** N1/N2文档口径按本条修订后冻结；允许N1/N2合成反例和单元测试。Q2三天窗口需N1反例通过且Q2光伏预测口径明确后才允许。Q3纯结算账本测试需N2反例通过后才允许。Q3预测驱动滚动窗口需N3重裁后才允许。Q2-Q4全年运行继续禁止。
-- **实施状态（2026-09-12）：** D007 前置反例与只读验证已完成，`src/d007_prewindow_tests.py` 17/17 通过，机器结果见 `experiments/d007_prewindow_results.json`，报告见 `research/C_D007_prewindow_report.md`。因此 N2 纯结算账本测试放行；Q2 三天窗口仍需 N1 接口测试与 Q2 光伏预测口径；Q3 预测驱动滚动窗口仍需 N3 点到10分钟展开重裁。
+- **实施状态（2026-09-12）：** D007 前置反例与只读验证已完成，`src/d007_prewindow_tests.py` 17/17 通过，机器结果见 `experiments/d007_prewindow_results.json`，报告见 `research/C_D007_prewindow_report.md`。Q3 纯合成结算账本测试也已完成，`src/q3_ledger_synthetic_tests.py` 9/9 通过，机器结果见 `experiments/q3_ledger_synthetic_results.json`，报告见 `research/C_Q3_pure_ledger_report.md`。Q2 三天窗口仍需 N1 接口测试与 Q2 光伏预测口径；Q3 预测驱动滚动窗口仍需 N3 点到10分钟展开重裁。
