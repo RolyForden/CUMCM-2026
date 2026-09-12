@@ -1,4 +1,6 @@
-# C 题槽位适配器与最小 LP 修正执行单
+# C 题槽位适配器与最小 LP 修正执行单（历史任务）
+
+> 状态：已完成并经过二次整改。当前有效代码提交为 `7464ccc`，主探针48/48、独立交叉验证39/39；以 `tasks/TASK_C_probe_cross_validation.md` 和 `research/C_probe_cross_validation.md` 为准。下文保留原始要求用于追溯，不得据此恢复旧接口或旧T4结论。
 
 ## 1. 给执行 Agent 的上下文
 

@@ -12,6 +12,7 @@
 
 ## 整改结果
 
+- 已同步 `DECISIONS.md` 的实施记录、`research/C_method_map.md` 的模型符号与基线要求，以及历史任务/报告的失效标记；D002 人类决定和 N1–N4 内容未被改判。
 - 主探针 `src/probe_timing.py`：48/48，通过。
 - 独立交叉验证 `src/probe_cross_validation.py`：39/39，通过。
 - Q1 双引擎费用：`35126.948589390` 元；历史锚点仍在容差内。

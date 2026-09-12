@@ -1,4 +1,6 @@
-# C 题探针报告：槽位适配器 + 最小 LP + 独立核算（41/41 全绿）
+# C 题探针报告：槽位适配器 + 最小 LP + 独立核算（整改前历史基线：41/41）
+
+> **历史状态说明：** 本报告对应提交 `2250523`，其41/41不能认证完整链路。结构缺陷、整改内容和当前有效的48/48主探针、39/39独立验证见 `research/C_probe_cross_validation.md` 与 `experiments/probe_timing_remediated.md`。下文保留原结果用于追溯，不作为当前PASS证据。
 
 - 日期：2026-09-12。执行单：`tasks/TASK_C_probe_timing.md` + `tasks/TASK_C_probe_model_corrections.md`。
 - 口径：DECISIONS.md D002（13 项冻结）。求解器：scipy HiGHS dual simplex（主）+ IPM（对拍），Python 3.13.9 / scipy 1.16.3 / numpy 2.2.6。
@@ -41,4 +43,4 @@
 
 ## 结论
 
-探针四条验收线（TASK_C_probe_timing.md）全部满足，且 TASK_C_probe_model_corrections.md §6 新增的弃光来源、禁吞购电、单槽脉冲、跨日回读四项硬闸门全部通过。**Q1 内核可信，可以进入 Q1 正式结果与模板填写；Q2–Q4 全年运行仍需上述待确认项裁决后开启。**
+**整改前当时结论（现已撤销，不得继续引用）：** 探针四条验收线当时被判断为全部满足，并据此写下“Q1内核可信”。后续独立反例证明该证据不足；当前裁决只以 `research/C_probe_cross_validation.md` 为准。
