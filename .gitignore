@@ -20,3 +20,12 @@ Thumbs.db
 
 # Local scratch
 tmp/
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.bbl
+*.blg
+*.toc
+*.synctex.gz

@@ -37,7 +37,7 @@
    - 新增 `src/validate_q1.py` 和最小单元测试；结果位于 `outputs/q1_validation/`，图位于 `figures/q1_*.png`。
    - 验证报告 `research/C_q1_validation.md`；论文正文 `paper/q1_section.md`。
    - 当前环境 Python 3.11.2 / SciPy 1.16.1 仍复现正式费用，旧 48/39 探针无回归。
-3. 人类裁决N1–N3后，只先做对应小窗口和账本反例，不直接跑全年。
+3. ~~人类裁决N1–N3后，只先做对应小窗口和账本反例，不直接跑全年。~~ **论文模板迁移与 Q1 入 tex（2026-09-12）**：已验证 latex 模板迁至 `paper/`（含字体），Q1 正文写入 `paper/数模通用模板.tex`（摘要/问题重述/假设/符号/Q1 节/检验/文件列表），`paper/q1_section.md` 已删除；xelatex 编译通过（14 页无错误），PDF 数值抽查全部命中。
 4. 后续代码继续使用 `BatteryParams`、分离的因果数据接口和独立核算器，不恢复旧全局耦合。
 
 ## 不要重复或回退
