@@ -24,8 +24,8 @@
 
 - Q1的LP—执行—核算—模板链，在D002参数和D003方案A下重新认证为可信；35126.948590元为正式主口径结果。
 - Q1定稿验证已完成：附件与CSV逐槽复算误差不超过`1.82e-12`量级；显式互斥MILP费用差`7.28e-12`元；相对无储能节省`26.8981%`；效率是最敏感参数（费用约±3.8%）。正式CSV未修改。
-- Q1 正式结果独立交叉验证 `src/verify_q1_result.py`：32/32 通过（独立 MILP 路径费用 35126.948589290 元，与 LP 差 1e-7 元；产物逐槽复算、模板重开回读、外部锚点一致）；证据 `experiments/q1_cross_validation_report.md`、`experiments/q1_cross_validation_results.json`。
-- Q1 正文已迁入论文模板：已验证 latex 模板迁至 `paper/`（含字体），内容写入 `paper/数模通用模板.tex`（摘要问题一/问题重述/假设/符号/Q1 节/检验/文件列表），`paper/q1_section.md` 已删除；xelatex 编译通过（14 页无错误）。
+- Q1 正式结果当前可复现证据为：`outputs/q1_scheme_a/q1_audit.json`（生成期16项 + 重开8项全过）、`src/validate_q1.py`、`outputs/q1_validation/q1_validation_summary.json`、`research/C_q1_validation.md`。当前仓库不存在 `src/verify_q1_result.py` 及 `experiments/q1_cross_validation_*`，不得再引用“32/32独立交叉验证”为当前证据。
+- Q1 正文已迁入论文模板：已验证 latex 模板迁至 `paper/`（含字体），内容写入 `paper/数模通用模板.tex`（摘要问题一/问题重述/假设/符号/Q1 节/检验/文件列表）；xelatex 编译通过（14 页无错误）。
 - 禁止进入 Q2–Q4 全年正式运行。
 - N1阻塞Q2执行器；N2阻塞Q3多次调整账本；N3阻塞附件3首小时预测适配。N4已解除。
 
@@ -37,9 +37,9 @@
    - 主口径费用 **35126.948589390 元**；`probe_timing.py` 48/48、`probe_cross_validation.py` 39/39 复跑无回归。
 2. ~~系统验证 Q1 并完成论文正文。~~ **已完成（2026-09-12）**：
    - 新增 `src/validate_q1.py` 和最小单元测试；结果位于 `outputs/q1_validation/`，图位于 `figures/q1_*.png`。
-   - 验证报告 `research/C_q1_validation.md`；论文正文 `paper/q1_section.md`。
+   - 验证报告 `research/C_q1_validation.md`；论文正文 `paper/数模通用模板.tex`。
    - 当前环境 Python 3.11.2 / SciPy 1.16.1 仍复现正式费用，旧 48/39 探针无回归。
-3. ~~人类裁决N1–N3后，只先做对应小窗口和账本反例，不直接跑全年。~~ **论文模板迁移与 Q1 入 tex（2026-09-12）**：已验证 latex 模板迁至 `paper/`（含字体），Q1 正文写入 `paper/数模通用模板.tex`（摘要/问题重述/假设/符号/Q1 节/检验/文件列表），`paper/q1_section.md` 已删除；xelatex 编译通过（14 页无错误），PDF 数值抽查全部命中。
+3. ~~人类裁决N1–N3后，只先做对应小窗口和账本反例，不直接跑全年。~~ **论文模板迁移与 Q1 入 tex（2026-09-12）**：已验证 latex 模板迁至 `paper/`（含字体），Q1 正文写入 `paper/数模通用模板.tex`（摘要/问题重述/假设/符号/Q1 节/检验/文件列表）；xelatex 编译通过（14 页无错误），PDF 数值抽查全部命中。
 4. 后续代码继续使用 `BatteryParams`、分离的因果数据接口和独立核算器，不恢复旧全局耦合。
 
 ## 不要重复或回退

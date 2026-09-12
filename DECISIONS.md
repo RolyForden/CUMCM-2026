@@ -135,4 +135,4 @@
 - **对照：** `E_143=E_0` 的 `34881.454457` 元只作时间边界敏感性，不写入正式结果模板。
 - **理由：** 方案A完整覆盖官方输入和模板的144槽，并避免最后一槽在没有终端库存价值时无约束消耗电池；Q2–Q4继续按同一144槽周期传递 `E_144(d)=E_0(d+1)`。
 - **影响：** N4解除；允许生成Q1正式结果并撰写其墙钟解释。N1–N3仍未裁决，Q2–Q4全年正式求解继续禁止。
-- **实施状态（2026-09-12）：** Q1 正式结果已按方案A生成并通过三重验证——生成期审计（16 项）+ 独立重开核验（8 项）+ 独立 MILP 交叉验证（`src/verify_q1_result.py`，32/32，MILP 费用 35126.948589290 元与 LP 差 1e-7 元）。产物 `outputs/q1_scheme_a/`（result1.xlsm、q1_dispatch.csv、q1_paper_tables.json、q1_audit.json）；报告 `experiments/q1_cross_validation_report.md`。Q1 正文已写入 `paper/数模通用模板.tex`（latex 模板已从已验证的外部模板迁入 `paper/`），编译 14 页无错误。此为实施事实记录，不改动本条目决策面。
+- **实施状态（2026-09-12）：** Q1 正式结果已按方案A生成并通过当前仓库可复现验证：生成期审计（16 项）+ 独立重开核验（8 项）均通过；`src/validate_q1.py` 完成逐槽复算、导出一致性、显式互斥 MILP、参数敏感性和 60 次输入扰动验证。产物 `outputs/q1_scheme_a/`（result1.xlsm、q1_dispatch.csv、q1_paper_tables.json、q1_audit.json）；验证报告 `research/C_q1_validation.md`，机器结果 `outputs/q1_validation/q1_validation_summary.json`。Q1 正文已写入 `paper/数模通用模板.tex`（latex 模板已从已验证的外部模板迁入 `paper/`），编译 14 页无错误。当前仓库不存在 `src/verify_q1_result.py` 及 `experiments/q1_cross_validation_*`，不将“32/32独立交叉验证”列为当前证据。此为实施事实记录，不改动本条目决策面。
