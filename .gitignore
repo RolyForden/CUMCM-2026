@@ -23,6 +23,7 @@ tmp/
 
 # Rebuildable data caches (regenerated from data/raw by scripts)
 experiments/q2_actuals_cache.csv
+experiments/q3_actuals_cache.csv
 
 # LaTeX build artifacts
 *.aux

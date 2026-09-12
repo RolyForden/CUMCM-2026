@@ -10,11 +10,10 @@ import pandas as pd
 
 from core import accountant, data_io
 from core.executor import ExecRecord, estimate_bridge_soc, execute_q2
-from core.lp_kernel import LpInputs, solve_lp
 from core.q2_replay import Strategy, build_forecast
 from core.q3_forecast import expand_issue_forecast
 from core.q3_ledger import Q3PlanVersion, settle_q3_slot
-from core.q3_optimizer import solve_adjustment_lp
+from core.q3_optimizer import solve_adjustment_lp, solve_standard_sparse
 from core.slot_adapter import build_day_slots
 
 
@@ -78,7 +77,9 @@ def make_initial_plan(
     price: np.ndarray,
 ) -> Q3DayPlan:
     hp, hl, hv = _horizon(day, 0, 0, actuals, prior, vintages, price)
-    solution = solve_lp(LpInputs(price=hp, load=hl, pv_available=hv, soc0=soc0, soc_final=soc0))
+    solution = solve_standard_sparse(
+        price=hp, load=hl, pv_available=hv, soc0=soc0, soc_final=soc0
+    )
     if not np.isfinite(solution.grid).all():
         raise AssertionError(f"{day} Q3 0:00初始计划不可行: {solution.message}")
     issue = datetime.combine(day, datetime.min.time())

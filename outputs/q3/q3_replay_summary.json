@@ -1,0 +1,26 @@
+{
+  "update_hours": [
+    6,
+    12,
+    18
+  ],
+  "replay_days": 365,
+  "evaluation_days": 334,
+  "initial_contract_cost": 12317125.817747546,
+  "up_cost": 600179.8639905932,
+  "down_credit": 244805.9937717529,
+  "adjustment_cashflow": 355373.8702188402,
+  "emergency_cost": 3133035.336715028,
+  "total_cost": 15805535.024681395,
+  "increase_kwh": 618743.0345853482,
+  "decrease_kwh": 754187.9163408822,
+  "emergency_kwh": 809158.0168040466,
+  "unused_kwh": 304721.3558384309,
+  "infeasible_days": 0,
+  "soc_min": 1200.0,
+  "soc_max": 10800.0,
+  "soc_end_final": 8674.34962962963,
+  "elapsed_seconds": 232.1471884250641,
+  "record_count": 48096,
+  "version_count": 121242
+}
