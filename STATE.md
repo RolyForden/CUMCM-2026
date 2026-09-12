@@ -21,6 +21,8 @@
 - 审查报告：`research/C_probe_cross_validation.md`。
 - N4 人类裁决记录：DECISIONS.md D003；说明材料：`research/C_time_boundary_decision.md`。
 - Q1 定稿验证：`src/validate_q1.py`、`outputs/q1_validation/q1_validation_summary.json`、`research/C_q1_validation.md`；论文正文：`paper/q1_section.md`。
+- Q1 正式结果独立交叉验证：`src/verify_q1_result.py` 32/32 全过（独立 MILP 费用 35126.948589290 元与 LP 差 1e-7 元；产物逐槽复算 + 模板重开回读 + 外部锚点）；报告：`experiments/q1_cross_validation_report.md`，逐项输出 `experiments/q1_cross_validation_results.json`。
+- 论文 latex 模板已从已验证模板迁入 `paper/`（cumcmthesis.cls、字体、figures、code、ref.bib）；Q1 正文写入 `paper/数模通用模板.tex`，xelatex 编译通过（14 页无错误），`paper/q1_section.md` 已删除。
 
 ## 下一步
 
