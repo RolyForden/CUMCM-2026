@@ -1,0 +1,249 @@
+{
+  "environment": {
+    "python": "3.13.9",
+    "numpy": "2.2.6",
+    "scipy": "1.16.3",
+    "openpyxl": "3.1.5"
+  },
+  "summary": {
+    "total": 39,
+    "passed": 39,
+    "failed": 0
+  },
+  "results": [
+    {
+      "name": "效率-执行器充电100",
+      "passed": true,
+      "expected": "5090",
+      "actual": "5090.0"
+    },
+    {
+      "name": "效率-执行器再放电81",
+      "passed": true,
+      "expected": "5000",
+      "actual": "5000.0"
+    },
+    {
+      "name": "效率-独立核算器",
+      "passed": true,
+      "expected": "True",
+      "actual": "[]"
+    },
+    {
+      "name": "效率-LP状态100到90到81",
+      "passed": true,
+      "expected": "(100.0, 5090.0, 81.0, 5000.0)",
+      "actual": "(np.float64(99.99999987654321), np.float64(5089.999999888889), np.float64(80.9999999), np.float64(5000.0))"
+    },
+    {
+      "name": "字典序-零场景费用",
+      "passed": true,
+      "expected": "0.0",
+      "actual": "0.0"
+    },
+    {
+      "name": "字典序-零场景最小吞吐",
+      "passed": true,
+      "expected": "0.0",
+      "actual": "0.0"
+    },
+    {
+      "name": "字典序-单槽费用不加1e-6",
+      "passed": true,
+      "expected": "50.0",
+      "actual": "50.0"
+    },
+    {
+      "name": "字典序-第二阶段费用上界",
+      "passed": true,
+      "expected": "<= 50.0000001",
+      "actual": "50.0"
+    },
+    {
+      "name": "日期-1月1日与1月2日不同",
+      "passed": true,
+      "expected": "different",
+      "actual": "different"
+    },
+    {
+      "name": "日期-1月2日人工三槽抽查",
+      "passed": true,
+      "expected": "[3622.5509, 6627.88, 2919.12]",
+      "actual": "[3622.5509, 6627.88, 2919.12]"
+    },
+    {
+      "name": "日期-不存在日期拒绝",
+      "passed": true,
+      "expected": "ValueError",
+      "actual": "ValueError"
+    },
+    {
+      "name": "日期-重复日期拒绝",
+      "passed": true,
+      "expected": "ValueError",
+      "actual": "ValueError"
+    },
+    {
+      "name": "日期-多于144点拒绝",
+      "passed": true,
+      "expected": "ValueError",
+      "actual": "ValueError"
+    },
+    {
+      "name": "防泄漏-一月历史进入",
+      "passed": true,
+      "expected": "history through Jan",
+      "actual": "4463 rows"
+    },
+    {
+      "name": "防泄漏-max(observed_at)<=decision",
+      "passed": true,
+      "expected": "<= 2025-02-01 00:00:00",
+      "actual": "2025-02-01 00:00:00"
+    },
+    {
+      "name": "防泄漏-2月1日未来真值未进入",
+      "passed": true,
+      "expected": "False",
+      "actual": "False"
+    },
+    {
+      "name": "防泄漏-0点不能使用当日6点预报",
+      "passed": true,
+      "expected": "<= 2025-02-01 00:00:00",
+      "actual": "2025-02-01 00:00:00"
+    },
+    {
+      "name": "防泄漏-执行回放可读完整当日",
+      "passed": true,
+      "expected": "144",
+      "actual": "144"
+    },
+    {
+      "name": "执行器-弃光值原样传递",
+      "passed": true,
+      "expected": "used=20,curtail=80",
+      "actual": "used=20.0,curtail=80.0"
+    },
+    {
+      "name": "核算器-合法弃光通过",
+      "passed": true,
+      "expected": "True",
+      "actual": "[]"
+    },
+    {
+      "name": "核算器-空记录拒绝",
+      "passed": true,
+      "expected": "ValueError",
+      "actual": "ValueError"
+    },
+    {
+      "name": "核算器-SOC断链拒绝",
+      "passed": true,
+      "expected": "False",
+      "actual": "['slot 0->1: SOC 链断裂', 'slot 1->2: SOC 链断裂']"
+    },
+    {
+      "name": "核算器-重复槽拒绝",
+      "passed": true,
+      "expected": "False",
+      "actual": "['槽位编号重复', '槽位必须按升序连续排列']"
+    },
+    {
+      "name": "核算器-跳号拒绝",
+      "passed": true,
+      "expected": "False",
+      "actual": "['槽位必须按升序连续排列']"
+    },
+    {
+      "name": "核算器-逆序拒绝",
+      "passed": true,
+      "expected": "False",
+      "actual": "['槽位必须按升序连续排列', 'slot 2->1: 时间区间不连续', 'slot 1->0: 时间区间不连续']"
+    },
+    {
+      "name": "核算器-同时充放电拒绝",
+      "passed": true,
+      "expected": "simultaneous=1 and rejected",
+      "actual": "simultaneous=1; []"
+    },
+    {
+      "name": "核算器-目标费用独立一致",
+      "passed": true,
+      "expected": "570.3703704703704",
+      "actual": "570.3703704703704"
+    },
+    {
+      "name": "基线-无储能同终端SOC可行",
+      "passed": true,
+      "expected": "True",
+      "actual": "[]"
+    },
+    {
+      "name": "基线-费用不低于LP",
+      "passed": true,
+      "expected": ">=570.3703704703704",
+      "actual": "950.0"
+    },
+    {
+      "name": "T4-独立互斥MILP物理不可行",
+      "passed": true,
+      "expected": "infeasible",
+      "actual": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)"
+    },
+    {
+      "name": "模板-官方副本144槽回读",
+      "passed": true,
+      "expected": "[0.125, 1.125, 2.125]",
+      "actual": "[0.125, 1.125, 2.125]"
+    },
+    {
+      "name": "模板-工作表名称顺序隐藏状态保持",
+      "passed": true,
+      "expected": "[('Sheet1', 'hidden', 4, 2), ('Sheet2', 'hidden', 1, 1), ('计划购电量', 'visible', 145, 2)]",
+      "actual": "[('Sheet1', 'hidden', 4, 2), ('Sheet2', 'hidden', 1, 1), ('计划购电量', 'visible', 145, 2)]"
+    },
+    {
+      "name": "模板-非目标单元格保持",
+      "passed": true,
+      "expected": "unchanged",
+      "actual": "unchanged"
+    },
+    {
+      "name": "模板-VBA容器保留",
+      "passed": true,
+      "expected": "True",
+      "actual": "True"
+    },
+    {
+      "name": "模板-错误标签拒绝",
+      "passed": true,
+      "expected": "ValueError",
+      "actual": "ValueError"
+    },
+    {
+      "name": "模板-少一槽拒绝",
+      "passed": true,
+      "expected": "ValueError",
+      "actual": "ValueError"
+    },
+    {
+      "name": "模板-多一槽拒绝",
+      "passed": true,
+      "expected": "ValueError",
+      "actual": "ValueError"
+    },
+    {
+      "name": "Q1-双引擎一致",
+      "passed": true,
+      "expected": "35126.94858938963",
+      "actual": "35126.94858938963"
+    },
+    {
+      "name": "Q1-历史锚点保持",
+      "passed": true,
+      "expected": "35126.948589",
+      "actual": "35126.94858938963"
+    }
+  ]
+}
