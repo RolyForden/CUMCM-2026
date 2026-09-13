@@ -54,6 +54,13 @@ def sync_sources() -> int:
     for path in sorted((ROOT / "src" / "plots").glob("*.py")):
         shutil.copy2(path, dst / "plots" / path.name)
         count += 1
+    # 图1 的 TikZ 源，供 render_framework_figure.py 独立重渲染
+    for name in ("framework_tikz.tex", "framework_standalone.tex"):
+        src = ROOT / "paper" / "figures" / name
+        if not src.exists():
+            raise FileNotFoundError(f"图1 源文件缺失: {src}")
+        shutil.copy2(src, dst / name)
+        count += 1
     return count
 
 

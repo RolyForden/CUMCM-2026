@@ -13,14 +13,20 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PKG = ROOT / "支撑材料"
 
-# 论文正文实际引用的六张图
+# 论文正文实际引用的图（PNG 预览版；正式矢量版为同目录 PDF）
 FIGURES = (
+    "framework.png",
+    "q1_dispatch.png",
+    "q2_yearly_series.png",
+    "q2_monthly_cost.png",
+    "q3_forecast_error.png",
+    "q3_cost_waterfall.png",
+    "q3_monthly_cumulative.png",
+    "q3_typical_day_dispatch_20250923.png",
+    "q4_price_forecast.png",
+    "q4_cost_comparison.png",
     "q1_sensitivity_robustness.png",
     "q1_alternative_validation.png",
-    "q3_two_stage_benefit.png",
-    "q3_cost_and_updates.png",
-    "q3_typical_day_dispatch_20250923.png",
-    "q4_cost_comparison.png",
 )
 
 RESULTS = {
@@ -37,12 +43,23 @@ def sync_sources() -> int:
     if dst.exists():
         shutil.rmtree(dst)
     (dst / "core").mkdir(parents=True)
+    (dst / "plots").mkdir(parents=True)
     count = 0
     for path in sorted((ROOT / "src").glob("*.py")):
         shutil.copy2(path, dst / path.name)
         count += 1
     for path in sorted((ROOT / "src" / "core").glob("*.py")):
         shutil.copy2(path, dst / "core" / path.name)
+        count += 1
+    for path in sorted((ROOT / "src" / "plots").glob("*.py")):
+        shutil.copy2(path, dst / "plots" / path.name)
+        count += 1
+    # 图1 的 TikZ 源，供 render_framework_figure.py 独立重渲染
+    for name in ("framework_tikz.tex", "framework_standalone.tex"):
+        src = ROOT / "paper" / "figures" / name
+        if not src.exists():
+            raise FileNotFoundError(f"图1 源文件缺失: {src}")
+        shutil.copy2(src, dst / name)
         count += 1
     return count
 

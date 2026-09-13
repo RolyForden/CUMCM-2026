@@ -16,6 +16,21 @@
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric, arrows.meta, positioning}
 
+% 浮动体排版参数：允许 LaTeX 灵活安置图表，避免 [H] 造成的页末大片空白
+\renewcommand{\topfraction}{0.95}
+\renewcommand{\bottomfraction}{0.95}
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\floatpagefraction}{0.75}
+\setcounter{topnumber}{3}
+\setcounter{bottomnumber}{3}
+\setcounter{totalnumber}{5}
+
+% 行距压缩：原 1.38 偏松；收紧正文行距以满足 30 页限制，同时保持可读性
+\renewcommand*{\baselinestretch}{1.30}
+
+% 抑制 appendix 的标题页，避免生成整页空白
+\AtBeginDocument{\renewcommand{\appendixpage}{}}
+
 \tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=red!20]
 \tikzstyle{process} = [rectangle, minimum width=3.5cm, minimum height=1cm, text centered, draw=black, fill=blue!20]
 \tikzstyle{decision} = [diamond, aspect=2, minimum width=3.5cm, minimum height=1cm, text centered, draw=black, fill=green!20]
@@ -152,7 +167,12 @@
 
 如图~\ref{fig:overall_framework}所示，四问共用同一储能物理内核，后续问题仅逐步增加预测信息、滚动决策和结算机制：问题一在完整日内信息下求解带周期库存约束的确定性 LP；问题二引入历史信息与 D-7 因果预测，叠加 7 日滚动视野和 5 倍紧急购电；问题三接入附件 3 的 0:00、6:00、12:00、18:00 预报，对未执行区间重优化并按版本结算；问题四以历史波动电价形成因果价格预测，用预测价制定计划、真实价事后结算。物理内核、执行逻辑与费用结算规则保持不变，改变的只是信息的可得性、决策的范围与结算层。
 
+\begin{figure}[htbp]
+\centering
 \input{figures/framework_tikz.tex}
+\caption{四问统一建模框架及信息递进关系}
+\label{fig:overall_framework}
+\end{figure}
 
 
 \subsection{问题一的分析}
@@ -235,7 +255,7 @@
 
 
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \caption{全文主要符号}
 	\begin{tabularx}{\textwidth}{cL}
@@ -324,7 +344,7 @@ E_0=E_{144}=6000. \label{eq:q1_terminal}
 
 表 \ref{tab:q1_grid} 给出题面指定时段的购电量，完整144槽结果保存在随文提交的正式结果文件中。
 
-\begin{table}[H]
+\begin{table}[htbp]
 	\centering
 	\caption{问题一指定时间段购电量及全天购电量、购电费}
 	\begin{tabularx}{\textwidth}{@{}LrLrLr@{}}
@@ -342,7 +362,7 @@ E_0=E_{144}=6000. \label{eq:q1_terminal}
 
 图~\ref{fig:q1_dispatch}给出这组正式结果在典型日内的协同关系：子图 (a) 中计划购电在夜间低价段和傍晚高价段抬升，正午时段随光伏出力上升而回落；子图 (b) 显示储能在 0:00--4:00 低价段与正午光伏富余时段充电、在上午与傍晚负荷高峰放电；子图 (c) 的储电量始终位于 1200--10800 kWh 区间内，并在日末回到周期约束对应的水平。三者共同说明储能的作用来自日内时间差套利，而非期末透支。
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.82\textwidth]{figures/q1_dispatch.pdf}
 \caption{问题一典型日购电—光伏—储能协同调度结果}
@@ -351,7 +371,7 @@ E_0=E_{144}=6000. \label{eq:q1_terminal}
 
 表 \ref{tab:q1_cd} 为与结果模板逐行对应，按每 24 个槽位汇总充放电量，不另做十分钟平移。表中改用槽位编号，避免将这些位置块误称为严格墙钟区间；例如槽 0--23 实际覆盖 00:10--04:10，并不等同于题面 0:00--4:00。第三问起的指定日期分块改用逐槽真实时间戳聚合，见附录。
 
-\begin{table}[H]
+\begin{table}[htbp]
 	\centering
 	\caption{问题一按模板位置分块的储能充放电量}
 	\begin{tabularx}{\textwidth}{@{}LrrLrr@{}}
@@ -477,7 +497,7 @@ g_t^{\mathrm{unused}}=\hat g_t-g_t^{\mathrm{deliv}}\ge0.
 
 \textbf{全年正式结果。} 表 \ref{tab:q2_result} 给出 D-7 点预测与滚动 7 天视野下的全年费用分项。334 天全部可行，最大能量平衡残差在 $10^{-9}$ 量级以内，跨日储电量连续 334 天无断裂。
 
-\begin{table}[H]
+\begin{table}[htbp]
 	\centering
 	\caption{问题二全年正式结果（2025-02-01 至 12-31，334 天）}
 	\begin{tabularx}{\textwidth}{Lr}
@@ -501,7 +521,7 @@ g_t^{\mathrm{unused}}=\hat g_t-g_t^{\mathrm{deliv}}\ge0.
 
 \textbf{预测方法的费用比较。} 预测误差指标各自强调不同性质，单一误差值不宜脱离实际决策目标解释\cite{hyndman2006accuracy}。本文在同一滚动 7 天视野下比较两种因果预测（表 \ref{tab:q2_forecast}）。虽然同星期日衰减平均在 1 月 15 日至 30 日的只读误差对比中负荷 MAE 更低（118.19 kW 对 142.05 kW），但其全年实际总费用为 17\,295\,362.55 元，比 D-7 的 16\,886\,077.67 元高约 409\,285 元。该结果说明预测误差大小不能单独决定策略优劣，业务价值必须用统一核算器下的实际费用衡量。这里的费用是同一年度对候选方法的顺序回放比较，不是选模后的独立未来年份评价，因而只据此确定本文采用的预测方法，不外推为普遍最优方法。
 
-\begin{table}[H]
+\begin{table}[htbp]
 	\centering
 	\caption{两种因果预测的费用与误差对比：费用为2025-02-01至12-31的334天回放，MAE为01-15至01-30的只读窗口（滚动7天视野）}
 	\setlength{\tabcolsep}{4pt}
@@ -518,7 +538,7 @@ g_t^{\mathrm{unused}}=\hat g_t-g_t^{\mathrm{deliv}}\ge0.
 
 \textbf{联合分位扰动候选。} 分位数方法可用于表达不同的低估与高估代价\cite{koenker1978quantiles}。本文另测一个仅使用历史残差的候选：负荷与光伏分别叠加同一 $0.7/0.8/0.9$ 上分位残差。由于上调负荷与上调光伏对计划净负荷的作用方向相反，这一叠加并非缺电风险意义下的单向保守策略。在 2 月至 4 月、滚动3天的对照窗口内，点预测总费用最低（约 $3\,569\,713$ 元）；三个联合分位候选分别约为 $3\,904\,288$、$4\,004\,029$、$4\,151\,856$ 元，且正常购电费略低而紧急购电量更高（表 \ref{tab:q2_level}）。因此本文只得出“这组联合边际扰动候选在该窗口表现较差”，不能据此否定净负荷分位、负荷上调且光伏下调等其他稳健设计；正式方案仍采用点预测。
 
-\begin{table}[H]
+\begin{table}[htbp]
 	\centering
 	\caption{保守程度对费用的影响（2 月至 4 月窗口，同星期日衰减平均）}
 	\begin{tabularx}{\textwidth}{Lrrr}
@@ -542,7 +562,7 @@ g_t^{\mathrm{unused}}=\hat g_t-g_t^{\mathrm{deliv}}\ge0.
 
 图~\ref{fig:q2_yearly_series}把上述文字结论展开为全年时序：子图 (a) 的 14 日滚动均值显示 6 月至 8 月与 12 月是全年费用高台，春季与秋季相对平稳；子图 (b) 的逐日紧急购电量在 5 月下旬至 7 月上旬明显抬升，最高点出现在 6 月 1 日（22\,831.6 kWh），与夏季预测误差经 5 倍罚价放大的机制一致。原始逐日值与滚动均值并列显示，可见高费用并非个别尖峰造成，而是整个夏季区间的系统性抬升。
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.86\textwidth]{figures/q2_yearly_series.pdf}
 \caption{问题二全年逐日费用与紧急购电变化}
@@ -551,7 +571,7 @@ g_t^{\mathrm{unused}}=\hat g_t-g_t^{\mathrm{deliv}}\ge0.
 
 图~\ref{fig:q2_monthly_cost}按自然月汇总同一批正式结果，将正常合同费与紧急购电费分层显示。2 月至 4 月紧急购电占比低于 24\%，6 月升至 43\%、7 月为 32\%，冬季 11 月、12 月再度回升，说明夏季紧急购电占比的抬升来自季节性的负荷与光伏波动，而冬季费用抬升则主要来自合同购电基数的增加。11 个月加总为 16\,886\,077.67 元，其中紧急购电费 4\,695\,256.64 元，与表~\ref{tab:q2_result}一致。
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.86\textwidth]{figures/q2_monthly_cost.pdf}
 \caption{问题二各月正常合同费用与紧急购电费用构成}
@@ -604,9 +624,9 @@ g_t^{\mathrm{unused}}=\hat g_t-g_t^{\mathrm{deliv}}\ge0.
 
 对相邻整点预报作分段线性插值；发布时刻的左端锚点只取此前已经发布的批次，2025 年 1 月 1 日 0:00 无历史锚点的首小时回退附件 1 先验。用不进入正式评价期的一月选择展开方法：4429 个可比较槽上，线性展开的 MAE、RMSE 分别为 61.93 kW、133.09 kW，前值保持分别为 242.04 kW、463.22 kW，故采用线性展开。当前批次跨午夜仍有效的 24 小时预测完整保留，超过覆盖范围后才回退严格因果的 D-7 光伏基线；负荷预测仍沿用问题二的 D-7 方法。
 
-图~\ref{fig:q3_forecast_error}按同一展开口径给出各发布时点在实际滚动决策中可获得预报的绝对误差分布。子图 (a) 中 0:00 与 6:00 窗口的误差上界明显高于 12:00 窗口，18:00 窗口覆盖 18:00--24:00、白天时段少，多数槽预报与实际均为零，因而分布集中在零附近。子图 (b) 的 MAE 由 0:00 的 197.5 kW 降至 12:00 的 84.2 kW，中位绝对误差在 6:00 反而高于 0:00，说明误差随预报临近总体改善但并非逐级单调下降。需要强调，各发布时点的剩余窗口长度不同，本图反映的是各时点可获得预报的误差分布，不等价于同一 lead time 预测器的优劣比较；误差下降也不自动等价于经济收益，更新时点的价值仍须由表~\ref{tab:q3_ablation}的统一费用账本判断。
+图~\ref{fig:q3_forecast_error}给出各发布时点在实际滚动决策中可获得预测的误差分布：样本口径为“该时点之后、当天尚未执行的全部有效时段”的绝对误差（正式评价期全部有效槽，样本量分别为 48\,096、36\,406、24\,382、12\,358）。0:00 口径包含大量夜间零出力槽位，误差被稀释；6:00 之后样本集中到白昼时段，0:00 与 6:00 的 MAE 分别为 197.49 kW 与 157.31 kW，12:00 与 18:00 进一步降至 84.19 kW 与 10.32 kW。该图不是同一提前量下的严格预测器比较，而是反映各发布时点可用预报质量的分布；预测误差下降也不自动等价于经济收益，更新时点的价值最终仍由统一费用账本（表~\ref{tab:q3_ablation}与图~\ref{fig:q3_cost_waterfall}）判断。
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.9\textwidth]{figures/q3_forecast_error.pdf}
 \caption{不同日内发布时点下光伏预报绝对误差分布}
@@ -670,7 +690,7 @@ C_3=\sum_t p_tq_t^{(0)}
 
 题面指定的四个日期汇总见表~\ref{tab:required_dates_summary}。0:00和24:00储电量、六个四小时分块均由逐槽记录的真实时间戳重新聚合，而不是按槽位位置切块；详细分块见附录表~\ref{tab:required_dates_blocks}，全部10分钟计划及紧急购电区间保存在正式结果文件中。
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \caption{问题二、三四个指定日期结果摘要}
 \begin{tabularx}{\textwidth}{@{}llrrrr@{}}
@@ -694,7 +714,7 @@ C_3=\sum_t p_tq_t^{(0)}
 
 图~\ref{fig:q3_cost_waterfall}以瀑布图分解这 108.03 万元节省的来源：53.54 万元来自 0:00 阶段更换附件 3 预报及相应初始计划，34.17 万元和 20.33 万元分别来自 6:00 与 12:00 的日内追加更新，18:00 更新仅使费用回升 2.90 元（图中以红色标注真实数值）。将 0:00 阶段单列，是为了避免把预报来源变化与日内滚动更新的收益混为一谈。
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.88\textwidth]{figures/q3_cost_waterfall.pdf}
 \caption{问题三相对问题二的费用改善来源分解}
@@ -704,7 +724,7 @@ C_3=\sum_t p_tq_t^{(0)}
 %% Q3_UPDATE_ABLATION_BEGIN
 \textbf{更新时点消融。} 保持数据、执行器、结算器和预测展开完全一致，依次加入6:00、12:00和18:00批次，结果见表~\ref{tab:q3_ablation}。6:00使总费用下降341695.91元、紧急购电量下降159601.56 kWh；12:00在此基础上再降低203250.02元和70515.50 kWh。18:00相较截至12:00的方案反而轻微增加2.90元和0.27 kWh，费用变化低于0.001\%、电量变化低于百万分之一。因此，6:00与12:00预报具有明确经济价值，18:00在当前数据上不具实质边际收益；没有证据支持再引入更密集的其他发布时间。由于附件未提供其他发布时间的预报，本文不对其作无法验证的收益推断。
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \caption{日内光伏预报更新时点的逐级消融}
 \begin{tabular}{lrrrr}
@@ -720,7 +740,7 @@ C_3=\sum_t p_tq_t^{(0)}
 \label{tab:q3_ablation}
 \end{table}
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.92\textwidth]{figures/q3_monthly_cumulative.pdf}
 \caption{问题二与问题三的月度费用及累计经济收益}
@@ -731,7 +751,7 @@ C_3=\sum_t p_tq_t^{(0)}
 
 图~\ref{fig:q3_typical_day}以四个题定日期中问题二至问题三费用改善最大的9月23日为例，展示预报发布、合同调整、紧急购电和SOC的联动。6:00与12:00之后合同曲线随新信息调整，储能在光伏富余时充电、晚高峰放电；橙红色紧急购电面积对应预测偏差未被合同与储能覆盖的缺口。子图 (c) 显示储电量在重优化边界处仍连续，且全日未越过 1200--10800 kWh 的物理上下限。
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.86\textwidth]{figures/q3_typical_day_dispatch_20250923.pdf}
 \caption{2025年9月23日问题三滚动调度机制}
@@ -778,7 +798,7 @@ C_3=\sum_t p_tq_t^{(0)}
 
 图~\ref{fig:q4_price_forecast}以正式评价期内价格标准差最接近全年中位数的典型波动日 2025-02-25 为例，展示预测价与真实结算价的差异。子图 (a) 中 0:00 因果预测价整体跟随真实价的日内形态，但在 8:00、12:00 与 18:00 前后的价格跳变处出现系统性滞后；子图 (b) 的误差以高估为主，且在价格快速上行段最为集中。该图仅用于事后展示预测误差，正式计划优化仍只读取决策时点可获得的历史价格，未把未来真实价送入优化器。
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.86\textwidth]{figures/q4_price_forecast.pdf}
 \caption{波动电价下典型日预测价格与真实结算价格对比}
@@ -808,7 +828,7 @@ C_{4-2}=\sum_t p_t q_t^{(0)}+\sum_t5p_tg_t^{\mathrm{emg}}.
 
 两条分支均从2025年1月1日顺序预热库存，2月1日至12月31日共334天进入正式评价。价格方法确定后才运行正式窗口。表~\ref{tab:q4_result}给出独立核算器复算的费用与电量。
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \caption{波动电价下两条正式策略的全年结果}
 \begin{tabular}{lrr}
@@ -830,7 +850,7 @@ C_{4-2}=\sum_t p_t q_t^{(0)}+\sum_t5p_tg_t^{\mathrm{emg}}.
 
 第三问式比第二问式节省1\,137\,229.44元，降幅6.4093\%；紧急购电量减少393\,501.32 kWh，降幅32.7207\%。这一差异是更换光伏预报来源并加入日内更新后的合并效果：紧急购电费明显下降，其中一部分被381\,722.38元的上调净现金流抵消，其余形成净节省。现有对照不能把全部差额单独归因于日内更新。图~\ref{fig:q4_cost}显示，第三问式的月度节省主要集中在 6 月、9 月至 11 月，8 月与 4 月次之，2 月因价格预测偏差反而略高于第二问式；全部月份均按真实波动价格结算，而非用预测价格替代账单。
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.84\textwidth]{figures/q4_cost_comparison.pdf}
 \caption{波动电价下两条策略的逐月实际结算费用}
@@ -858,7 +878,7 @@ C_{4-2}=\sum_t p_t q_t^{(0)}+\sum_t5p_tg_t^{\mathrm{emg}}.
 
 本文从数据口径、物理可行、经济核算、决策增益和提交一致五个方面检验结果。前两层核对数据与物理约束是否满足，第三层排除费用重算或漏算，第四层判断新增机制是否真正降低成本，第五层核对论文结论与提交文件的一致。检验项目按本题主要风险取舍，见表~\ref{tab:validation_layers}。
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \caption{验证体系}
 \begin{tabularx}{\textwidth}{@{}lLLL@{}}
@@ -883,7 +903,7 @@ C_{4-2}=\sum_t p_t q_t^{(0)}+\sum_t5p_tg_t^{\mathrm{emg}}.
 
 对负荷和光伏施加有界时间相关扰动后，模型仍可行，相对无储能基线的节省率保持在 $23.97\%$--$29.80\%$。该检验只说明问题一结论对局部输入变化不敏感，不外推为问题二至四预测策略的全年稳健性。图~\ref{fig:q1_sens}的子图 (a) 显示只有效率口径变化超过 $3\%$，初始储电量与最大功率变化均在 $\pm0.35\%$ 以内；子图 (b) 显示三个扰动幅度下的费用分布都以基准值为中心，未出现随扰动幅度系统性偏移。
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.86\textwidth]{figures/q1_sensitivity_robustness.pdf}
 	\caption{参数敏感性与输入稳健性}
@@ -896,7 +916,7 @@ C_{4-2}=\sum_t p_t q_t^{(0)}+\sum_t5p_tg_t^{\mathrm{emg}}.
 
 进一步建立显式保留145个储电量状态、用二进制变量强制充放电互斥的MILP。其费用为$35126.948589$元，与主LP的差异处于浮点误差量级；两个模型均无同时充放电。逐槽动作因同价时段的多重最优而可能不同，但总费用、全天购电量和终端库存一致。因此主结果同时得到物理账本、简单无储能基线和替代优化模型支持。图~\ref{fig:q1_alt}的子图 (a) 中逐槽购电量几乎全部落在 $y=x$ 参考线上，仅个别槽因同价多重最优偏离而总购电量一致；子图 (b) 中两条储电量轨迹全程重合，说明连续 LP 与显式互斥 MILP 给出相同的物理调度。
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.86\textwidth]{figures/q1_alternative_validation.pdf}
 	\caption{主模型与替代模型验证}
@@ -1003,7 +1023,7 @@ q3\_replay.py & 四时点顺序回放与合同版本记录 \\
 generate\_q3\_result.py & Q3全年正式结果生成 \\
 finalize\_q3\_result.py & Q3官方结果模板生成 \\
 plots/plot\_*.py & 论文图绘制脚本（图2--图12） \\
-figures/framework\_tikz.tex & 四问统一建模框架图（图1，TikZ） \\
+figures/framework\_tikz.tex & 四问统一建模框架图（图1，TikZ，正文与交付图同源） \\
 validate\_q3\_result.py & Q3物理、账本与工作簿独立验证 \\
 q4\_price.py & Q4严格因果电价预测 \\
 q4\_energy.py & Q4复用Q2/Q3能量预测的因果适配器 \\

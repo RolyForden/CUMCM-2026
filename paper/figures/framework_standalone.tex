@@ -1,0 +1,12 @@
+% 独立编译入口：把 framework_tikz.tex 渲染为 framework.pdf / framework.png。
+% 与正文 \input 同源，保证交付图与论文图完全一致。
+%   xelatex framework_standalone.tex   （生成 PDF）
+%   pdftocairo -png -r 300 framework_standalone.pdf framework
+% 由 src/render_framework_figure.py 自动调用。
+\documentclass[tikz,border=6pt]{standalone}
+\usepackage{amsmath}
+\usepackage[UTF8]{ctex}
+\setCJKmainfont{Microsoft YaHei}
+\begin{document}
+\input{framework_tikz.tex}
+\end{document}
