@@ -29,16 +29,16 @@
 ## F0 四问统一建模框架及信息递进关系
 
 - 文件：`paper/figures/framework.pdf` / `.png`
-- 类型：框架图（TikZ 生成，无需数值数据）。上层为四问共用的物理内核、执行器与
-  独立核算器，并嵌入问题一"日内调度示意解"（分时电价柱 + 储能轨迹，仅示意
-  结构、不取正式数值）；下层为四问逐级增加的信息集、滚动机制与结算方式，每问
-  附信息可得性条或双价格通道条。
-- 源文件：`paper/figures/framework_tikz.tex`（正文第 2 章 2.1 直接 `\input`）；
-  独立渲染入口 `paper/figures/framework_standalone.tex`。
-- 生成脚本：`src/render_framework_figure.py`（xelatex 编译 + pdftocairo 转 300 dpi PNG）。
+- 类型：框架图（作者设计稿位图，无需数值数据）。分五栏：问题输入、统一物理内核、
+  执行与核算、四问递进、统一原则；各栏嵌入真实方法对象（约束式、日内价格—储能
+  示意解、信息可得性条、双价格通道），不使用纯文字方框。
+- 源文件：`paper/figures/framework.png`（作者提供的原始设计稿位图，2172×724）。
+  正文第 2 章 2.1 以 `\includegraphics{figures/framework.pdf}` 引用。
+- 生成脚本：`src/render_framework_figure.py`（由原始位图导出 300 dpi 的 `framework.pdf`，
+  与 PNG 同源，不改变图像内容）。
 - 数据：无。结构来自论文第 2 章与各问建模口径。
 - 交叉核验：与 2.1 总体建模思路、第 5–8 章模型设定一致；不引入任何数值结论。
-  正文与支撑材料图同源，由同一份 `framework_tikz.tex` 生成。
+  正文图与支撑材料 `论文图/framework.png` 同源。
 
 ---
 

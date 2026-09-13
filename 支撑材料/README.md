@@ -4,13 +4,12 @@
 
 ## 目录
 
-- `源码/`：项目 `src/` 中全部 Python 源文件，保留 `core/`、`plots/` 子目录结构；
-  另含图1 的 TikZ 源 `framework_tikz.tex` 与独立入口 `framework_standalone.tex`。
+- `源码/`：项目 `src/` 中全部 Python 源文件，保留 `core/`、`plots/` 子目录结构。
 - `正式结果/`：五份已经填写并核验的正式结果工作簿。
 - `官方附件/`：附件1至附件5原始输入和官方空模板。当前官网题包的完整附件2为 `附件2.xlsx`，同时含“小区负载”和“光伏发电实际功率”工作表。
 - `论文图/`：论文使用的十二张 PNG 结果图（与正文图 1–12 一一对应）。其中图 1
-  `framework.png` 由 `paper/figures/framework_tikz.tex` 经
-  `python src/render_framework_figure.py` 渲染，与正文 `\input` 完全同源。
+  `framework.png` 为作者设计稿位图，`paper/figures/framework.pdf` 由
+  `python src/render_framework_figure.py` 从同一张位图导出，正文与交付图同源。
 - `AI 工具使用详情.pdf`：AI辅助范围、提问方式、采纳原则和人工核验说明。
 - `requirements.txt`：主要 Python 运行依赖。
 - `SHA256SUMS.txt`：包内文件完整性校验值。
@@ -43,7 +42,7 @@ python src/finalize_q3_result.py
 python src/generate_q4_results.py
 python src/finalize_q4_results.py
 python src/extract_required_dates.py        # 抽取四个指定日期摘要
-python src/render_framework_figure.py       # 由 figures/framework_tikz.tex 渲染图1（需 xelatex、pdftocairo）
+python src/render_framework_figure.py       # 由 figures/framework.png 导出 300 dpi 的 framework.pdf
 ```
 
 主要验证入口：
