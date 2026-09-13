@@ -33,23 +33,85 @@ Do not create sensitivity analyses, accuracy values, comparison baselines, model
 5. Check competition compliance, then mathematical consistency, then evidence traceability, then language economy.
 6. Before final delivery, run the review checklist below. For LaTeX papers, compile and inspect the output if the task includes final paper editing.
 
-## Paper Architecture
+## Paper Structure 【强制】
 
-Use the official page order from the current rules. For the paper body, prefer this structure unless the problem makes a narrower structure clearer:
+Follow the fixed page order and chapter skeleton below. Page order and page limits come from the official rules; the chapter skeleton and three-level flow are project-mandated for consistency with national-award papers. Do not add, remove, reorder chapters, or promote sub-sections to chapters.
 
-- 摘要 and 关键词.
-- 问题重述: restate tasks, constraints, and required outputs without copying long problem text.
-- 问题分析: translate each real task into mathematical objects, variables, objectives, constraints, and method choices; show why the selected model fits.
-- 模型假设: list only assumptions that affect modeling or interpretation, and state their reasonableness or impact.
-- 符号说明: define recurring variables once; include units where useful.
-- 数据处理: describe only cleaning, transformation, feature construction, visualization, or validation that affects modeling.
-- 模型建立与求解: organize by subproblem, but preserve cross-question dependency and reuse of variables/results.
-- 结果分析 and 模型检验: explain why the numbers answer the question, whether they are reasonable, and how they were checked.
-- 敏感性/稳健性分析: include only when actually run or analytically justified.
-- 模型评价、改进与推广: give evidence-backed strengths, limitations, applicability, and possible extensions.
-- AI 工具使用声明, 参考文献, 附录, according to official placement.
+### Page order 【强制·官方】
 
-Avoid adding decorative sections that do not help answer the problem. If a section has no verified content, leave a clear TODO rather than padding.
+纸质版：第 1 页 承诺书 → 第 2 页 编号专用页 → 第 3 页 摘要专用页 → 第 4 页起 正文 → 附录（与正文装订在一起）。
+
+电子版：第一页必须是摘要专用页；承诺书与编号专用页不得出现在电子版与支撑材料中。
+
+### Fixed chapter skeleton 【强制】
+
+正文（计入 30 页）按下列顺序：
+
+| 章 | 标题 | 内容要求 |
+|----|------|----------|
+| 一 | 问题重述 | 背景 + 逐问复述任务、约束、所需输出；不照抄大段题面 |
+| 二 | 问题分析 | 一问一节 `2.k 问题 k 的分析`：核心难点 → 与前问递进 → 拟用方法族 |
+| 三 | 模型假设 | 只列影响建模/解释的假设，并说明其合理性或影响 |
+| 四 | 符号说明 | 复现变量定义一次；有用的量给单位 |
+| 五 | 模型建立与求解 | 全文主体，按问分节（见下三级流水） |
+| 六 | 敏感性/稳健性分析 | 仅在真正运行或可解析论证时保留；参数扰动、不确定度 |
+| 七 | 模型评价、改进与推广 | 优点/不足/改进与推广，须绑定证据 |
+| — | AI 工具使用声明 | 置于参考文献之前（见 [references/official-rules.md](references/official-rules.md)） |
+| — | 参考文献 | 正文引用处标注；末尾按科技论文规范列出 |
+
+附录（不计入 30 页）：支撑材料文件列表 + 建模所用全部完整可运行源程序；无程序时注明「本论文没有用到程序」。
+
+数据处理若为独立建模步骤，作为第五章开篇小节，不单列章。
+
+### 三级流水（第五章每问）【强制】
+
+每问二级标题统一为 `问题 k 模型的建立与求解`，其下三级标题固定按序（可裁剪但顺序不乱）：
+
+1. 问题背景与目标
+2. 模型建立（定义 → 机理/约束方程 → 目标函数）
+3. 求解算法（原理 1–2 句 + `·` 一步一行步骤）
+4. 计算结果（表/关键图紧随）
+5. 结果分析（独立小节；禁止只有表图、没有分析）
+
+### 结构忌讳
+
+- 禁止把「逐图说明 / 可复现性 / 方法比较 / 自检清单」升为独立章节；并入第五章或第七章。
+- 禁止空洞标题（相关工作、进一步讨论、补充说明）。
+- 二级/三级标题依赖自动编号，标题内不要手写「5.1」「5.1.1」，避免双重编号与嵌套复杂公式。
+- 章节只为「看起来完整」而存在时删除；无已验证内容时写 `TODO` 而非注水。
+
+## 版面与页数硬约束
+
+【强制·官方】以下条款来自 2026 修订稿，交付前逐条核对（细则见 [references/official-rules.md](references/official-rules.md)）。
+
+### 页数与顺序
+- 摘要专用页含标题+关键词，原则上 ≤1 页；电子版第 1 页必须是摘要页。
+- 正文自问题重述起至参考文献止，≤30 页，不要目录；附录页数不限且不计入 30 页。
+- 摘要页与附录独立于 30 页；禁用「摘要+正文合计 ≤30」旧口径。
+
+### 版面
+- 页边距上、下、左、右各 ≥2.5 cm；从左侧装订。
+- 页码自摘要页起，页脚中部，阿拉伯数字从 1 连续编号。
+- 字号、字体、行距、颜色官方不做统一要求；项目模板有规定则服从模板，但不得违反上述硬条款。
+
+### 交付文件
+- 论文为单一 PDF/Word（建议 PDF），≤20 MB，不压缩，含附录且与纸质版一致。
+- 支撑材料压缩为一个 RAR/ZIP，≤20 MB；文件列表写入附录；无支撑材料须在附录注明「本论文没有支撑材料」。
+- 全文（含附录、源码、支撑材料、AI 使用详情）不得出现队名/校名/赛区/绝对个人路径等身份信息。
+
+【项目硬指标】以下为落实上述铁律的内部可操作阈值，非官方原文，但本项目按硬性执行：
+
+| 项 | 硬指标 |
+|----|--------|
+| 摘要篇幅 | ≥800 汉字，结果导向 |
+| 数据图 | ≥18 张（依工作量裁剪时须在正文说明） |
+| 流程图+概念图 | 合计 ≥5；总览图须含各主单元一级子动作 |
+| 简单图配额 | 折线+柱+帕累托 合计 ≤7 |
+| 图宽 | 默认 0.70–0.78\textwidth；宽图 ≤0.88\textwidth |
+| 连续空白 | 任一页 ≲1/4 页；禁大 `\vspace`/`\vfill`、禁整页堆图留白 |
+| 图后解释 | ≥3–5 句实质分析（指向数值/比较/含义/局限） |
+| 编号公式 | 建议 ≥30；低于此值须逐问排查论述是否不足，禁止装饰公式凑数 |
+| 每问齐备 | 机理→推导→求解→结果→图释→边界 六段齐备 |
 
 ## Section Rules
 
@@ -80,14 +142,26 @@ Do not copy, paraphrase closely, or splice wording from reference papers. Their 
 ## Review Checklist
 
 【赛事规范】
-- Official page order, page limits, electronic/paper differences, appendix/support-material rules, AI-use statement, and anonymity are satisfied.
-- No participant, school, region, local username, absolute personal path, or hidden identity clue appears in the paper, appendix, code listings, support materials, or AI-use details.
-- The PDF/Word file and support archive comply with current size and content requirements.
+- 页序正确：电子版第 1 页为摘要页；承诺书/编号页只出现在纸质版，不在电子版与支撑材料中。
+- 页数：摘要专用页 ≤1 页；正文 ≤30 页且无目录；附录不计入。
+- 页边距各 ≥2.5 cm；页码自摘要页起、页脚中部、阿拉伯数字从 1 连续。
+- 电子版为单一 PDF/Word、≤20 MB、不压缩、与纸质版一致；支撑材料一个 RAR/ZIP ≤20 MB。
+- 附录含支撑材料文件列表 + 全部可运行源程序；无程序/无支撑材料时按规范明文注明。
+- AI 使用声明置于参考文献前；用了 AI 则附 `AI 工具使用详情.pdf`。
+- 匿名：摘要页、正文、附录、源码 listing、支撑材料、AI 详情中无队名/校名/赛区/绝对个人路径/邮箱/电话/用户名等身份线索。
 
 【结构】
+- 章节为固定八章 + AI 声明 + 参考文献，无增删/重排；数据处理未单列为章。
+- 第五章每问三级流水「背景→建立→求解→结果→结果分析」按序齐备，结果分析独立成节。
+- 标题靠自动编号，无手写「5.1」、无嵌套复杂公式。
 - Each subproblem has a complete argument chain: problem -> method -> model -> solution -> result -> validation -> conclusion.
 - Cross-question dependencies are explicit; repeated setup is not duplicated.
 - No section exists only to make the paper look complete.
+
+【版面】
+- 无单页连续空白超过约 1/4 页；无大 `\vspace`/`\vfill`、无整页堆图留白。
+- 图宽在 0.70–0.88\textwidth 区间；图型与 manifest 一致。
+- 图后 ≥3–5 句实质解释；无空图、无「仅见图 X」。
 
 【数学】
 - All variables are defined once, units are consistent, objectives and constraints match the problem, and formulas are referenced and explained.
