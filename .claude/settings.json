@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python src/generate_q1_result.py *)",
+      "Bash(python src/generate_q2_result.py *)",
+      "Bash(python src/generate_q3_result.py *)",
+      "Bash(python src/generate_q4_results.py *)",
+      "Bash(python src/finalize_q3_result.py *)",
+      "Bash(python src/finalize_q4_results.py *)",
+      "Bash(python src/validate_q1.py *)",
+      "Bash(python src/validate_q3_result.py *)",
+      "Bash(python src/validate_q4_results.py *)",
+      "Bash(python src/validate_official_attachment2.py *)",
+      "Bash(python src/extract_required_dates.py *)",
+      "Bash(python src/plot_q3_evidence_figures.py *)",
+      "Bash(python src/plot_q3_results.py *)",
+      "Bash(python src/q2_three_day_acceptance.py *)",
+      "Bash(python src/test_wallclock_output.py *)",
+      "Bash(python tmp/*)",
+      "Bash(xelatex *)",
+      "Bash(latexmk *)",
+      "Bash(pdftoppm *)",
+      "Bash(pdftotext *)",
+      "Bash(tasklist *)"
+    ]
+  }
+}

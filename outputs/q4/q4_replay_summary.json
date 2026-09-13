@@ -1,5 +1,5 @@
 {
-  "model_commit": "0a7e71a901ed0ce6ca727ebc2b9e47480d339b3c",
+  "model_commit": "cfa4ae68f14047465fcfc254faf21b90c6f33434",
   "price_method": "same-weekday-weighted",
   "evaluation_start": "2025-02-01",
   "evaluation_end": "2025-12-31",
@@ -26,5 +26,5 @@
     "emergency_cost_actual": 3259691.0841800966,
     "total_cost_actual": 16606095.44370349
   },
-  "elapsed_seconds_this_run": 1.750462532043457
+  "elapsed_seconds_this_run": 868.0546417236328
 }

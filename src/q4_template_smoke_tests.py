@@ -64,11 +64,25 @@ def main() -> int:
                         "total_cost_actual": 0.0})
         day += timedelta(days=1)
 
+    # 评价期首日00:00--00:10属于前一计划日槽143，必须显式提供。
+    boundary42 = [{
+        **dispatch42[0], "date": "2025-01-31", "slot": 143,
+        "interval_start": "2025-02-01T00:00:00",
+        "interval_end": "2025-02-01T00:10:00",
+    }]
+    boundary43 = [{
+        **dispatch43[0], "date": "2025-01-31", "slot": 143,
+        "interval_start": "2025-02-01T00:00:00",
+        "interval_end": "2025-02-01T00:10:00",
+    }]
+
     with tempfile.TemporaryDirectory(prefix="cumcm_q4_template_") as raw:
         out = Path(raw)
         pd.DataFrame(dispatch42).to_csv(out / "q4_2_dispatch.csv", index=False)
+        pd.DataFrame(boundary42).to_csv(out / "q4_2_wallclock_boundary.csv", index=False)
         pd.DataFrame(daily42).to_csv(out / "q4_2_daily_summary.csv", index=False)
         pd.DataFrame(dispatch43).to_csv(out / "q4_3_dispatch.csv", index=False)
+        pd.DataFrame(boundary43).to_csv(out / "q4_3_wallclock_boundary.csv", index=False)
         pd.DataFrame(daily43).to_csv(out / "q4_3_daily_summary.csv", index=False)
         pd.DataFrame(versions).to_csv(out / "q4_3_versions.csv", index=False)
         pd.DataFrame(sources).to_csv(out / "q4_price_vintages.csv", index=False)

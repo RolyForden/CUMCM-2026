@@ -85,12 +85,42 @@ def _read_wide(path: str | Path, sheet: str, day: date) -> pd.DataFrame:
     )
 
 
+@lru_cache(maxsize=None)
+def _resolve_official_attachment2(raw_dir: str) -> Path:
+    """定位同时含负荷和光伏实测表的官方附件2。
+
+    官网当前题包为 xlsx；兼容早期 xlsm 文件名，但绝不再
+    回退到 substitute 目录，避免支撑包出现隐式外部依赖。
+    """
+    required = {"小区负载", "光伏发电实际功率"}
+    inspected: list[str] = []
+    for name in ("附件2.xlsx", "附件2.xlsm"):
+        path = Path(raw_dir) / "official" / name
+        if not path.exists():
+            continue
+        wb = openpyxl.load_workbook(path, read_only=True, data_only=True)
+        sheets = set(wb.sheetnames)
+        wb.close()
+        inspected.append(f"{path}: {sorted(sheets)}")
+        if required <= sheets:
+            return path
+    detail = "；".join(inspected) if inspected else "未找到附件2.xlsx/xlsm"
+    raise FileNotFoundError(
+        "data/raw/official 中缺少同时含‘小区负载’和"
+        f"‘光伏发电实际功率’的官方附件2：{detail}"
+    )
+
+
+def _official_attachment2_path() -> Path:
+    return _resolve_official_attachment2(str(RAW.resolve()))
+
+
 def attachment2_load(day: date) -> pd.DataFrame:
-    return _read_wide(RAW / "official/附件2.xlsm", "小区负载", day)
+    return _read_wide(_official_attachment2_path(), "小区负载", day)
 
 
 def attachment2_pv(day: date) -> pd.DataFrame:
-    return _read_wide(RAW / "substitute/附件2.xlsx", "光伏发电实际功率", day)
+    return _read_wide(_official_attachment2_path(), "光伏发电实际功率", day)
 
 
 def attachment4(day: date) -> pd.DataFrame:

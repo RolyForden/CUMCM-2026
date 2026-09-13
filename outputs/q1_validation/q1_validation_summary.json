@@ -1,10 +1,10 @@
 {
   "status": "PASS",
   "environment": {
-    "python": "3.11.2",
-    "numpy": "2.3.2",
-    "scipy": "1.16.1",
-    "pandas": "2.3.1"
+    "python": "3.13.9",
+    "numpy": "2.2.6",
+    "scipy": "1.16.3",
+    "pandas": "2.3.3"
   },
   "scope": "D003 scheme A; validation does not alter the production model or CSV",
   "traditional_kfold": "not applicable: Q1 is deterministic optimization with no fitted predictor or estimated parameter",
@@ -243,7 +243,7 @@
     }
   ],
   "figures": [
-    "figures/q1_alternative_validation.png",
-    "figures/q1_sensitivity_robustness.png"
+    "paper/figures/q1_alternative_validation.png",
+    "paper/figures/q1_sensitivity_robustness.png"
   ]
 }

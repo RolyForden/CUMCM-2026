@@ -272,6 +272,7 @@ def replay_q42(
     )
     daily: list[dict] = []
     output: list[dict] = []
+    wallclock_boundary_records: list[dict] = []
     while day <= end:
         truth = _truth_for_day(actuals, day)
         first = _execute(
@@ -300,6 +301,10 @@ def replay_q42(
             "actual_soc_start": actual_soc, "actual_soc_end": records[-1].soc_end,
             "audit_ok": audit.ok,
         })
+        if collect_records and day == evaluation_start - timedelta(days=1):
+            wallclock_boundary_records = [
+                _record_row(day, records[-1], plan.price_meta.iloc[records[-1].slot])
+            ]
         if collect_records and day >= evaluation_start:
             output.extend(_record_row(day, rec, plan.price_meta.iloc[rec.slot]) for rec in records)
         if progress is not None:
@@ -316,6 +321,7 @@ def replay_q42(
         "cost_emergency": float(sum(r["cost_emergency"] for r in evaluated)),
         "cost_total": float(sum(r["cost_total"] for r in evaluated)),
         "daily": daily, "records": output if collect_records else [], "versions": [],
+        "wallclock_boundary_records": wallclock_boundary_records if collect_records else [],
         "price_sources": [
             {
                 "issue_time": row["decision_time"],
@@ -610,6 +616,7 @@ def replay_q43(
     daily: list[dict] = []
     output_records: list[dict] = []
     output_versions: list[dict] = []
+    wallclock_boundary_records: list[dict] = []
     while day <= end:
         truth = _truth_for_day(actuals, day)
         records: list[ExecRecord] = []
@@ -663,6 +670,8 @@ def replay_q43(
             "total_cost_actual": settled["total_cost_actual"], "audit_ok": audit.ok,
         }
         daily.append(row)
+        if collect_records and day == evaluation_start - timedelta(days=1):
+            wallclock_boundary_records = [settled["records"][-1]]
         if collect_records and day >= evaluation_start:
             output_records.extend(settled["records"])
             output_versions.extend(settled["versions"])
@@ -688,6 +697,7 @@ def replay_q43(
         "daily": daily,
         "records": output_records if collect_records else [],
         "versions": output_versions if collect_records else [],
+        "wallclock_boundary_records": wallclock_boundary_records if collect_records else [],
         "price_sources": [
             {
                 "issue_time": row["decision_time"],

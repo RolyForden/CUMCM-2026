@@ -111,11 +111,34 @@ def main() -> int:
                                    abs(float(pws.cell(i,146).value)-float(g.initial_contract.sum())),
                                    abs(float(aws.cell(i,146).value)-float(g.final_contract.sum())))
             total_max=max(total_max,abs(float(pws.cell(i,147).value)-daily.loc[day,"initial_contract_cost"]),abs(float(aws.cell(i,147).value)-daily.loc[day,"total_cost"]))
+        boundary_path = OUT / "q3_wallclock_boundary.csv"
+        if not boundary_path.exists():
+            wb.close()
+            raise FileNotFoundError(
+                "缺少q3_wallclock_boundary.csv，不能独立核验2月1日墙钟边界"
+            )
+        wallclock_rows = pd.concat(
+            [pd.read_csv(boundary_path), ordered], ignore_index=True, sort=False
+        )
+        wallclock_rows["interval_start"] = pd.to_datetime(wallclock_rows["interval_start"])
+        wallclock_rows["interval_end"] = pd.to_datetime(wallclock_rows["interval_end"])
         cdws = wb["充放电量"]
-        for i, (day, g) in enumerate(ordered.groupby("date"), 2):
-            g = g.sort_values("slot")
+        for i, day in enumerate(sorted(ordered.date.unique()), 2):
+            midnight = pd.Timestamp(str(day))
+            next_midnight = midnight + pd.Timedelta(days=1)
+            g = wallclock_rows[
+                (wallclock_rows.interval_start >= midnight)
+                & (wallclock_rows.interval_end <= next_midnight)
+            ].sort_values("interval_start")
+            expected_starts = list(pd.date_range(midnight, periods=144, freq="10min"))
+            if len(g) != 144 or g.interval_start.tolist() != expected_starts:
+                raise AssertionError(f"Q3 {day} 独立墙钟时间轴不完整")
             for block in range(6):
-                block_rows = g[(g.slot >= 24*block) & (g.slot < 24*(block+1))]
+                left = midnight + pd.Timedelta(hours=4*block)
+                right = left + pd.Timedelta(hours=4)
+                block_rows = g[
+                    (g.interval_start >= left) & (g.interval_end <= right)
+                ]
                 cd_max = max(cd_max,
                              abs(float(cdws.cell(i, 2+2*block).value)-float(block_rows.charge_actual.sum())),
                              abs(float(cdws.cell(i, 3+2*block).value)-float(block_rows.discharge_actual.sum())))

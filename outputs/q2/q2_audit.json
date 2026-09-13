@@ -3,7 +3,7 @@
   "level": "point",
   "terminal": "rolling-7d",
   "template_sha256": "c4103457426f9e4f3733a8d484e3b7031ebb8cc879361f3553f42b0be2caf376",
-  "result2_sha256": "99cb347f73e644309896e27bfbcfe6e2610e155f9aef300db22a2fe1cd9eb3ac",
+  "result2_sha256": "f40b92bf6711c75436831194c54002b8e533e6dd456f09007130d5661cb8c695",
   "evaluation_days": 334,
   "cost_normal": 12190821.026133068,
   "cost_emergency": 4695256.643451871,

@@ -393,13 +393,38 @@ def _check_workbook(
     checks["workbook_table_dates"] = table_dates_ok
     checks["workbook_table_values"] = bool(sheet_specs) and table_error < TOL
 
+    boundary_branch = {"result4-2": "q4_2", "result4-3": "q4_3"}[name]
+    boundary_path = output_dir / f"{boundary_branch}_wallclock_boundary.csv"
+    if not boundary_path.exists():
+        workbook.close()
+        template.close()
+        raise FileNotFoundError(
+            f"缺少{boundary_path.name}，不能独立核验2月1日墙钟边界"
+        )
+    wallclock_rows = pd.concat(
+        [pd.read_csv(boundary_path), dispatch], ignore_index=True, sort=False
+    )
+    wallclock_rows["interval_start"] = pd.to_datetime(wallclock_rows["interval_start"])
+    wallclock_rows["interval_end"] = pd.to_datetime(wallclock_rows["interval_end"])
     cd_error = 0.0
     cd = workbook["充放电量"] if "充放电量" in workbook.sheetnames else None
     if cd is not None:
-        for row, (day_iso, group) in enumerate(dispatch.groupby("date", sort=True), start=2):
-            group = group.sort_values("slot")
+        for row, day_iso in enumerate(EXPECTED_DAYS, start=2):
+            midnight = pd.Timestamp(day_iso)
+            next_midnight = midnight + pd.Timedelta(days=1)
+            group = wallclock_rows[
+                (wallclock_rows.interval_start >= midnight)
+                & (wallclock_rows.interval_end <= next_midnight)
+            ].sort_values("interval_start")
+            expected_starts = list(pd.date_range(midnight, periods=144, freq="10min"))
+            if len(group) != 144 or group.interval_start.tolist() != expected_starts:
+                raise AssertionError(f"{name} {day_iso} 独立墙钟时间轴不完整")
             for block in range(6):
-                part = group[(group.slot >= 24 * block) & (group.slot < 24 * (block + 1))]
+                left = midnight + pd.Timedelta(hours=4 * block)
+                right = left + pd.Timedelta(hours=4)
+                part = group[
+                    (group.interval_start >= left) & (group.interval_end <= right)
+                ]
                 cd_error = max(
                     cd_error,
                     abs(float(cd.cell(row, 2 + 2 * block).value) - float(part.charge_actual.sum())),

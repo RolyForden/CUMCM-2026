@@ -15,7 +15,8 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from generate_q2_result import build_cd_blocks, merge_emergency_intervals
+from generate_q2_result import merge_emergency_intervals
+from core.wallclock_output import aggregate_wallclock_days
 
 OUT = ROOT / "outputs/q3"
 TEMPLATE = ROOT / "data/raw/official/附件5/result3.xlsm"
@@ -32,6 +33,22 @@ def sha256(path: Path) -> str:
 def main() -> int:
     dispatch = pd.read_csv(OUT / "q3_dispatch.csv")
     daily = pd.read_csv(OUT / "q3_daily_summary.csv").set_index("date")
+    boundary_path = OUT / "q3_wallclock_boundary.csv"
+    if not boundary_path.exists():
+        raise FileNotFoundError(
+            "缺少q3_wallclock_boundary.csv：现有正式CSV无法可靠恢复2月1日00:00边界，"
+            "拒绝猜测或沿用错位分块"
+        )
+    boundary = pd.read_csv(boundary_path)
+    days = sorted(dispatch.date.unique())
+    wallclock = {
+        summary.day.isoformat(): summary
+        for summary in aggregate_wallclock_days(
+            dispatch.to_dict("records"),
+            [date.fromisoformat(str(day)) for day in days],
+            boundary_records=boundary.to_dict("records"),
+        )
+    }
     target = OUT / "result3.xlsm"
     shutil.copy2(TEMPLATE, target)
     wb = openpyxl.load_workbook(target, keep_vba=True)
@@ -39,7 +56,6 @@ def main() -> int:
     if len(tables) != 2:
         wb.close(); raise ValueError(f"result3模板的计划/调整工作表数量={len(tables)}")
     plan_ws, adjusted_ws = (wb[tables[0]], wb[tables[1]])
-    days = sorted(dispatch.date.unique())
     if len(days) != 334:
         wb.close(); raise ValueError("Q3正式记录不是334天")
     by_day: dict[str, list[dict]] = {}
@@ -71,13 +87,11 @@ def main() -> int:
     header = ["日期"] + [x for label in block_labels for x in (f"{label}充电量", f"{label}放电量")] + ["0:00储电量", "24:00储电量"]
     for c, value in enumerate(header, 1): cd.cell(1, c, value)
     for i, day_iso in enumerate(days, 2):
-        rows = sorted(by_day[day_iso], key=lambda r: r["slot"])
-        compact = [{**r, "charge": r["charge_actual"], "discharge": r["discharge_actual"]} for r in rows]
-        charges, discharges = build_cd_blocks(compact)
+        summary = wallclock[str(day_iso)]
         cd.cell(i, 1, day_iso)
-        for b in range(6):
-            cd.cell(i, 2+2*b, charges[b]); cd.cell(i, 3+2*b, discharges[b])
-        cd.cell(i, 14, float(rows[0]["soc_start"])); cd.cell(i, 15, float(rows[-1]["soc_end"]))
+        for b, block in enumerate(summary.blocks):
+            cd.cell(i, 2+2*b, block.charge); cd.cell(i, 3+2*b, block.discharge)
+        cd.cell(i, 14, summary.soc_0000); cd.cell(i, 15, summary.soc_2400)
 
     em = wb.create_sheet("紧急购电量")
     for c, value in enumerate(("日期", "紧急购电时间段", "紧急购电量"), 1): em.cell(1, c, value)

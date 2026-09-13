@@ -61,6 +61,7 @@ def _completed(output: Path, branch: str) -> bool:
         output / f"{branch}_dispatch.csv",
         output / f"{branch}_daily_summary.csv",
         output / f"{branch}_price_sources.csv",
+        output / f"{branch}_wallclock_boundary.csv",
     ]
     if branch == "q4_3":
         required.append(output / "q4_3_versions.csv")
@@ -99,6 +100,10 @@ def main() -> int:
             evaluation_start=EVAL_START, price_method=METHOD,
             collect_records=True, progress=progress("q4_2"),
         )
+        _write_frame(
+            args.output / "q4_2_wallclock_boundary.csv",
+            q42.pop("wallclock_boundary_records"),
+        )
         _write_frame(args.output / "q4_2_dispatch.csv", q42.pop("records"))
         _write_frame(
             args.output / "q4_2_daily_summary.csv",
@@ -115,6 +120,10 @@ def main() -> int:
             actuals, prices, q43_energy, START, END,
             evaluation_start=EVAL_START, price_method=METHOD,
             collect_records=True, progress=progress("q4_3"),
+        )
+        _write_frame(
+            args.output / "q4_3_wallclock_boundary.csv",
+            q43.pop("wallclock_boundary_records"),
         )
         _write_frame(args.output / "q4_3_dispatch.csv", q43.pop("records"))
         versions = q43.pop("versions")

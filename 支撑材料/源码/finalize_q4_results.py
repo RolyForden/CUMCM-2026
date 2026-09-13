@@ -23,6 +23,8 @@ from zipfile import ZipFile
 import openpyxl
 import pandas as pd
 
+from core.wallclock_output import WallclockDaySummary, aggregate_wallclock_days
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUT = ROOT / "outputs/q4"
@@ -143,7 +145,29 @@ def _merge_emergency_intervals(dispatch: pd.DataFrame) -> list[dict[str, Any]]:
     return rows
 
 
-def _add_support_sheets(workbook: openpyxl.Workbook, dispatch: pd.DataFrame) -> tuple[int, int]:
+def _load_wallclock_summaries(
+    output_dir: Path, branch: str, dispatch: pd.DataFrame
+) -> dict[str, WallclockDaySummary]:
+    boundary_path = output_dir / f"{branch}_wallclock_boundary.csv"
+    if not boundary_path.exists():
+        raise FileNotFoundError(
+            f"缺少{boundary_path.name}：现有正式CSV无法可靠恢复2月1日00:00边界，"
+            "拒绝猜测或沿用错位分块"
+        )
+    boundary = pd.read_csv(boundary_path)
+    summaries = aggregate_wallclock_days(
+        dispatch.to_dict("records"),
+        [date.fromisoformat(day) for day in EXPECTED_DAYS],
+        boundary_records=boundary.to_dict("records"),
+    )
+    return {summary.day.isoformat(): summary for summary in summaries}
+
+
+def _add_support_sheets(
+    workbook: openpyxl.Workbook,
+    dispatch: pd.DataFrame,
+    wallclock: dict[str, WallclockDaySummary],
+) -> tuple[int, int]:
     for name in ("充放电量", "紧急购电量"):
         if name in workbook.sheetnames:
             raise ValueError(f"官方模板已存在{name}，拒绝覆盖")
@@ -155,15 +179,14 @@ def _add_support_sheets(workbook: openpyxl.Workbook, dispatch: pd.DataFrame) -> 
     header.extend(("0:00储电量", "24:00储电量"))
     for column, value in enumerate(header, start=1):
         cd.cell(1, column, value)
-    for row, (day_iso, group) in enumerate(dispatch.groupby("date", sort=True), start=2):
-        group = group.sort_values("slot")
+    for row, day_iso in enumerate(EXPECTED_DAYS, start=2):
+        summary = wallclock[day_iso]
         cd.cell(row, 1, day_iso)
-        for block in range(6):
-            part = group[(group.slot >= 24 * block) & (group.slot < 24 * (block + 1))]
-            cd.cell(row, 2 + 2 * block, float(part.charge_actual.sum()))
-            cd.cell(row, 3 + 2 * block, float(part.discharge_actual.sum()))
-        cd.cell(row, 14, float(group.iloc[0].soc_start))
-        cd.cell(row, 15, float(group.iloc[-1].soc_end))
+        for block, values in enumerate(summary.blocks):
+            cd.cell(row, 2 + 2 * block, values.charge)
+            cd.cell(row, 3 + 2 * block, values.discharge)
+        cd.cell(row, 14, summary.soc_0000)
+        cd.cell(row, 15, summary.soc_2400)
 
     emergency = _merge_emergency_intervals(dispatch)
     em = workbook.create_sheet("紧急购电量")
@@ -217,6 +240,7 @@ def _finalize_q4_2(output_dir: Path) -> dict[str, Any]:
     daily = _daily_frame(
         output_dir / "q4_2_daily_summary.csv", {"date", "cost_normal", "cost_total"}
     )
+    wallclock = _load_wallclock_summaries(output_dir, "q4_2", dispatch)
     template = TEMPLATE_DIR / "result4-2.xlsm"
     target = output_dir / "result4-2.xlsm"
     shutil.copy2(template, target)
@@ -228,7 +252,7 @@ def _finalize_q4_2(output_dir: Path) -> dict[str, Any]:
         workbook.close()
         raise ValueError(f"result4-2可见正式表异常：{visible}")
     _write_table(workbook[visible[0]], dispatch, "grid_contract", daily, "cost_normal")
-    cd_rows, emergency_count = _add_support_sheets(workbook, dispatch)
+    cd_rows, emergency_count = _add_support_sheets(workbook, dispatch, wallclock)
     workbook.save(target)
     workbook.close()
     return {
@@ -256,6 +280,7 @@ def _finalize_q4_3(output_dir: Path) -> dict[str, Any]:
         output_dir / "q4_3_daily_summary.csv",
         {"date", "initial_contract_cost_actual", "total_cost_actual"},
     )
+    wallclock = _load_wallclock_summaries(output_dir, "q4_3", dispatch)
     versions = output_dir / "q4_3_versions.csv"
     if not versions.exists() or pd.read_csv(versions, nrows=1).empty:
         raise ValueError("缺少非空的q4_3_versions.csv，不能只凭最终计划生成第三问对应结果")
@@ -272,7 +297,7 @@ def _finalize_q4_3(output_dir: Path) -> dict[str, Any]:
         raise ValueError(f"result4-3原始计划/最终计划表异常：hidden={hidden}, visible={visible}")
     _write_table(workbook[hidden[0]], dispatch, "initial_contract", daily, "initial_contract_cost_actual")
     _write_table(workbook[visible[0]], dispatch, "final_contract", daily, "total_cost_actual")
-    cd_rows, emergency_count = _add_support_sheets(workbook, dispatch)
+    cd_rows, emergency_count = _add_support_sheets(workbook, dispatch, wallclock)
     workbook.save(target)
     workbook.close()
     return {

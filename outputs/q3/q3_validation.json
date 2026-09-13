@@ -31,11 +31,11 @@
     "max_cross_day_soc_error": 0.0,
     "max_interval_gap_seconds": 0.0,
     "workbook_cell_max_error": 4.547473508864641e-13,
-    "workbook_quantity_total_max_error": 7.275957614183426e-11,
+    "workbook_quantity_total_max_error": 1.4551915228366852e-11,
     "workbook_cost_total_max_error": 7.275957614183426e-12,
     "workbook_charge_discharge_max_error": 7.275957614183426e-12,
     "workbook_emergency_quantity_max_error": 1.8189894035458565e-12,
     "workbook_emergency_interval_count": 6407,
-    "total_cost": 15805751.774900636
+    "total_cost": 15805751.774900615
   }
 }

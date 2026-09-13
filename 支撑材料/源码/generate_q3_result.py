@@ -33,6 +33,7 @@ def load_actuals() -> pd.DataFrame:
         if frame.date.min() == START and frame.date.max() == END:
             return frame
     frame = load_window_actuals(START, END)
+    CACHE.parent.mkdir(parents=True, exist_ok=True)
     frame.to_csv(CACHE, index=False)
     return frame
 
@@ -70,9 +71,11 @@ def main() -> int:
         raise AssertionError("Q3全年回放天数或可行性失败")
     records = result.pop("records")
     versions = result.pop("versions")
+    boundary_records = result.pop("wallclock_boundary_records")
     daily = result.pop("daily")
     write_csv(output / "q3_dispatch.csv", records)
     write_csv(output / "q3_versions.csv", versions)
+    write_csv(output / "q3_wallclock_boundary.csv", boundary_records)
     write_csv(output / "q3_daily_summary.csv", [r for r in daily if r["date"] >= EVAL_START.isoformat()])
     summary = {**result, "elapsed_seconds": time.time()-t0, "record_count": len(records), "version_count": len(versions)}
     (output / "q3_replay_summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")

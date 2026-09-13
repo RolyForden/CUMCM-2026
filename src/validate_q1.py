@@ -378,6 +378,12 @@ def verify_exports(dispatch: pd.DataFrame, workbook_path: Path, paper_tables_pat
 
 
 def make_figures(dispatch: pd.DataFrame, alt: dict, sensitivity: pd.DataFrame, robustness: pd.DataFrame, figure_dir: Path) -> list[str]:
+    import sys
+
+    sys.path.insert(0, str(PROJECT_ROOT / "src"))
+    from core.figure_style import configure_chinese_font
+
+    configure_chinese_font()
     figure_dir.mkdir(parents=True, exist_ok=True)
     paths = []
     grid_main = dispatch["grid_delivered"].to_numpy(dtype=float)
@@ -387,12 +393,12 @@ def make_figures(dispatch: pd.DataFrame, alt: dict, sensitivity: pd.DataFrame, r
     axes[0].scatter(grid_main, alt["grid"], s=14, alpha=0.7)
     bound = max(float(grid_main.max()), float(alt["grid"].max()))
     axes[0].plot([0, bound], [0, bound], "k--", linewidth=1)
-    axes[0].set(xlabel="Production LP grid (kWh)", ylabel="Explicit MILP grid (kWh)", title="Per-slot purchase comparison")
-    axes[1].plot(soc_main, label="Production LP", linewidth=1.8)
-    axes[1].plot(alt["soc"], "--", label="Explicit MILP", linewidth=1.4)
+    axes[0].set(xlabel="计划LP购电量（kWh）", ylabel="显式互斥MILP购电量（kWh）", title="逐槽购电量对比")
+    axes[1].plot(soc_main, label="主LP", linewidth=1.8)
+    axes[1].plot(alt["soc"], "--", label="显式互斥MILP", linewidth=1.4)
     axes[1].axhline(1200, color="grey", linewidth=0.8)
     axes[1].axhline(10800, color="grey", linewidth=0.8)
-    axes[1].set(xlabel="State index", ylabel="SOC (kWh)", title="SOC trajectory")
+    axes[1].set(xlabel="时步索引", ylabel="储电量（kWh）", title="储电量轨迹")
     axes[1].legend(frameon=False)
     path = figure_dir / "q1_alternative_validation.png"
     fig.savefig(path, dpi=220)
@@ -403,11 +409,11 @@ def make_figures(dispatch: pd.DataFrame, alt: dict, sensitivity: pd.DataFrame, r
     plot_data = sensitivity[sensitivity["scenario"] != "base"]
     axes[0].barh(plot_data["scenario"], plot_data["cost_change_vs_base_pct"])
     axes[0].axvline(0, color="black", linewidth=0.8)
-    axes[0].set(xlabel="Cost change vs base (%)", title="Parameter sensitivity")
+    axes[0].set(xlabel="费用相对基准变化（%）", title="参数敏感性")
     groups = [g["cost_yuan"].to_numpy() for _, g in robustness.groupby("noise_level_pct")]
     labels = [f"{level:g}%" for level in sorted(robustness["noise_level_pct"].unique())]
     axes[1].boxplot(groups, tick_labels=labels, showmeans=True)
-    axes[1].set(xlabel="Correlated input perturbation", ylabel="Optimal cost (yuan)", title="Input robustness")
+    axes[1].set(xlabel="负荷与光伏相关扰动幅度", ylabel="最优费用（元）", title="输入稳健性")
     path = figure_dir / "q1_sensitivity_robustness.png"
     fig.savefig(path, dpi=220)
     plt.close(fig)

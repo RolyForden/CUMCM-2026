@@ -11,6 +11,9 @@ import numpy as np
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+from core.figure_style import configure_chinese_font  # noqa: E402
+
 OUT = ROOT / "outputs/q4"
 FIG = ROOT / "paper/figures/q4_cost_comparison.png"
 
@@ -80,12 +83,13 @@ def main() -> int:
     monthly.to_csv(OUT / "q4_monthly_costs.csv")
     x = np.arange(len(monthly))
     width = 0.38
+    configure_chinese_font()
     fig, ax = plt.subplots(figsize=(10, 5.2))
-    ax.bar(x - width / 2, monthly.q4_2_cost / 1e6, width, label="Daily plan")
-    ax.bar(x + width / 2, monthly.q4_3_cost / 1e6, width, label="Intraday updates")
-    ax.set_xticks(x, [str(month) for month in monthly.index])
-    ax.set_xlabel("Month")
-    ax.set_ylabel("Actual settlement cost (million yuan)")
+    ax.bar(x - width / 2, monthly.q4_2_cost / 1e6, width, label="第二问式：每日计划")
+    ax.bar(x + width / 2, monthly.q4_3_cost / 1e6, width, label="第三问式：日内更新")
+    ax.set_xticks(x, [f"{month}月" for month in monthly.index])
+    ax.set_xlabel("月份")
+    ax.set_ylabel("实际结算费用（百万元）")
     ax.grid(axis="y", alpha=0.25)
     ax.legend(frameon=False)
     fig.tight_layout()

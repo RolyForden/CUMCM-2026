@@ -280,6 +280,7 @@ def replay(
     daily: list[dict] = []
     observations: list[dict] = []
     all_records: list = []
+    wallclock_boundary_records: list[dict] = []
     active_strategy = strategy_for(day)
 
     def emit(event: dict) -> None:
@@ -354,6 +355,17 @@ def replay(
         )
         records = first + bridge
         audit = accountant.audit(records, require_q1_semantics=False)
+        if collect_records and day == evaluation_start - timedelta(days=1):
+            rec = records[-1]
+            wallclock_boundary_records = [{
+                "date": day.isoformat(), "slot": rec.slot,
+                "grid_contract": rec.grid_contract,
+                "grid_emergency": rec.grid_emergency,
+                "charge": rec.charge, "discharge": rec.discharge,
+                "soc_start": rec.soc_start, "soc_end": rec.soc_end,
+                "interval_start": rec.interval_start.isoformat(),
+                "interval_end": rec.interval_end.isoformat(),
+            }]
         if collect_records and day >= evaluation_start:
             # 以计划所属日 day 标记，而非 interval_start.date()：slot 143 的
             # 区间落在次日，但属于当天的计划，不能串到次日分组。
@@ -462,4 +474,5 @@ def replay(
     }
     if collect_records:
         result["records"] = all_records
+        result["wallclock_boundary_records"] = wallclock_boundary_records
     return result

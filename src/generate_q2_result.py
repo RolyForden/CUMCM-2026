@@ -37,6 +37,7 @@ from core.q2_replay import (
     replay,
 )
 from core.slot_adapter import build_day_slots
+from core.wallclock_output import aggregate_wallclock_days
 
 DEFAULT_TEMPLATE = ROOT / "data/raw/official/附件5/result2.xlsm"
 DEFAULT_OUTPUT = ROOT / "outputs/q2"
@@ -70,6 +71,7 @@ def load_actuals() -> "pd.DataFrame":
         if cached["date"].min() == START and cached["date"].max() == EVAL_END:
             return cached
     actuals = load_window_actuals(START, EVAL_END)
+    CACHE.parent.mkdir(parents=True, exist_ok=True)
     actuals.to_csv(CACHE, index=False)
     return actuals
 
@@ -144,7 +146,14 @@ def build_cd_blocks(records: list[dict]) -> tuple[list[float], list[float]]:
     return charges, discharges
 
 
-def write_result2(template: Path, output: Path, records: list[dict], daily_normal: dict[str, float]) -> None:
+def write_result2(
+    template: Path,
+    output: Path,
+    records: list[dict],
+    daily_normal: dict[str, float],
+    *,
+    wallclock_boundary_records: list[dict],
+) -> None:
     keep_vba = str(template).lower().endswith(".xlsm")
     wb = openpyxl.load_workbook(template, keep_vba=keep_vba)
 
@@ -170,6 +179,20 @@ def write_result2(template: Path, output: Path, records: list[dict], daily_norma
     if days != expected_days:
         wb.close()
         raise ValueError("执行记录未覆盖 2025-02-01 至 12-31 全部 334 天")
+    try:
+        wallclock = {
+            summary.day.isoformat(): summary
+            for summary in aggregate_wallclock_days(
+                records,
+                [date.fromisoformat(day) for day in days],
+                boundary_records=wallclock_boundary_records,
+                charge_field="charge",
+                discharge_field="discharge",
+            )
+        }
+    except Exception:
+        wb.close()
+        raise
 
     for i, day_iso in enumerate(days):
         row = i + 2
@@ -197,14 +220,13 @@ def write_result2(template: Path, output: Path, records: list[dict], daily_norma
     for c, text in enumerate(header, start=1):
         cd.cell(row=1, column=c, value=text)
     for i, day_iso in enumerate(days):
-        day_records = sorted(by_day[day_iso], key=lambda r: r["slot"])
-        charges, discharges = build_cd_blocks(day_records)
+        summary = wallclock[day_iso]
         cd.cell(row=i + 2, column=1, value=day_iso)
-        for b in range(6):
-            cd.cell(row=i + 2, column=2 + 2 * b, value=charges[b])
-            cd.cell(row=i + 2, column=3 + 2 * b, value=discharges[b])
-        cd.cell(row=i + 2, column=14, value=float(day_records[0]["soc_start"]))
-        cd.cell(row=i + 2, column=15, value=float(day_records[-1]["soc_end"]))
+        for b, block in enumerate(summary.blocks):
+            cd.cell(row=i + 2, column=2 + 2 * b, value=block.charge)
+            cd.cell(row=i + 2, column=3 + 2 * b, value=block.discharge)
+        cd.cell(row=i + 2, column=14, value=summary.soc_0000)
+        cd.cell(row=i + 2, column=15, value=summary.soc_2400)
 
     # 紧急购电量：日期 | 时间段 | 购电量；同一天多段时日期只写首行
     em = wb.create_sheet("紧急购电量")
@@ -266,7 +288,7 @@ def read_back(output: Path) -> dict[str, Any]:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--method", default="same-weekday-4-decay-0.8")
+    parser.add_argument("--method", default="D-7")
     parser.add_argument("--level", default="point")
     parser.add_argument("--terminal", default="rolling")
     parser.add_argument("--terminal-param", type=float, default=7.0)
@@ -288,6 +310,7 @@ def main() -> int:
         raise AssertionError("全年回放存在核算失败日")
 
     records = row["records"]
+    boundary_records = row["wallclock_boundary_records"]
     if len(records) != 334 * 144:
         raise AssertionError(f"执行记录槽数 {len(records)} != {334*144}")
 
@@ -296,7 +319,10 @@ def main() -> int:
 
     output = args.output
     result2 = output / "result2.xlsm"
-    write_result2(args.template, result2, records, daily_normal)
+    write_result2(
+        args.template, result2, records, daily_normal,
+        wallclock_boundary_records=boundary_records,
+    )
     audit = read_back(result2)
 
     # 逐槽 CSV
@@ -310,6 +336,11 @@ def main() -> int:
         writer.writeheader()
         for rec in records:
             writer.writerow({k: rec[k] for k in writer.fieldnames})
+
+    with (output / "q2_wallclock_boundary.csv").open("w", newline="", encoding="utf-8") as fh:
+        writer = csv.DictWriter(fh, fieldnames=list(boundary_records[0]))
+        writer.writeheader()
+        writer.writerows(boundary_records)
 
     # 逐日汇总
     with (output / "q2_daily_summary.csv").open("w", newline="", encoding="utf-8") as fh:

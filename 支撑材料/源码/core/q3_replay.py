@@ -258,6 +258,7 @@ def replay(
     daily = []
     all_records: list[dict] = []
     all_versions: list[dict] = []
+    wallclock_boundary_records: list[dict] = []
     day = start
     while day <= evaluation_end:
         truth = actuals[actuals.date == day].sort_values("slot")
@@ -303,6 +304,17 @@ def replay(
             **{k: v for k, v in settled.items() if k != "ledgers"},
         }
         daily.append(row)
+
+        if collect_records and day == evaluation_start - timedelta(days=1):
+            rec = records[-1]
+            wallclock_boundary_records = [{
+                "date": day.isoformat(), "slot": rec.slot,
+                "interval_start": rec.interval_start.isoformat(),
+                "interval_end": rec.interval_end.isoformat(),
+                "charge_actual": rec.charge,
+                "discharge_actual": rec.discharge,
+                "soc_start": rec.soc_start, "soc_end": rec.soc_end,
+            }]
 
         if collect_records and day >= evaluation_start:
             for rec in records:
@@ -372,4 +384,5 @@ def replay(
     if collect_records:
         result["records"] = all_records
         result["versions"] = all_versions
+        result["wallclock_boundary_records"] = wallclock_boundary_records
     return result
