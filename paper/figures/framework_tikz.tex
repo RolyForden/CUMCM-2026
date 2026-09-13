@@ -1,0 +1,96 @@
+% F0 四问统一建模框架及信息递进关系
+% 由本文件 \input 到论文第 2 章 2.1 末尾。
+% 结构：上层为四问共用的物理内核与执行/核算层，下层为四问逐级增加的信息与机制。
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  font=\small,
+  io/.style={rectangle, draw=black!55, line width=0.5pt, rounded corners=1.5pt,
+             fill=black!6, inner sep=4pt, align=center},
+  kern/.style={rectangle, draw=teal!70, line width=0.6pt, rounded corners=1.5pt,
+               fill=teal!10, inner sep=5pt, align=center},
+  execbox/.style={rectangle, draw=violet!70, line width=0.6pt, rounded corners=1.5pt,
+                  fill=violet!8, inner sep=4pt, align=center},
+  qA/.style={rectangle, draw=teal!45, line width=0.5pt, rounded corners=1.5pt,
+             fill=teal!5, inner sep=4pt},
+  qB/.style={rectangle, draw=teal!55, line width=0.5pt, rounded corners=1.5pt,
+             fill=teal!11, inner sep=4pt},
+  qC/.style={rectangle, draw=teal!68, line width=0.5pt, rounded corners=1.5pt,
+             fill=teal!17, inner sep=4pt},
+  qD/.style={rectangle, draw=teal!80, line width=0.5pt, rounded corners=1.5pt,
+             fill=teal!23, inner sep=4pt},
+  flow/.style={-{Stealth[length=2.2mm,width=1.6mm]}, line width=0.7pt,
+               draw=black!65},
+  qtab/.style={font=\footnotesize, row sep=1.5pt, column sep=0pt},
+]
+% ---------- 第一层：四问共同物理内核 ----------
+\node[io, text width=11.4cm, minimum height=0.75cm] (in) at (6.2,10.2)
+  {输入：负荷 $L_t$\quad 光伏 $V_t$\quad 电价 $p_t$\quad 储能初始状态 $E_0$};
+
+\node[kern, text width=11.4cm, minimum height=1.55cm] (core) at (6.2,8.62)
+  {{\bfseries 统一确定性 LP 物理内核}\\[3pt]
+   母线能量平衡 $\cdot$ 光伏消纳/弃光 $\cdot$ SOC 递推 $\cdot$ 容量与功率约束};
+
+\node[io, text width=11.4cm, minimum height=0.75cm] (out) at (6.2,7.15)
+  {输出：计划购电 $g_t$\quad 充放电 $c_t,d_t$\quad 储电量 $E_t$};
+
+\node[execbox, text width=11.4cm, minimum height=0.75cm] (exec) at (6.2,6.0)
+  {{\bfseries 统一执行器 $+$ 独立核算器}（逐槽复算，计划/执行/结算可追溯）};
+
+\draw[flow] (in) -- (core);
+\draw[flow] (core) -- (out);
+\draw[flow] (out) -- (exec);
+
+% ---------- 分界：四问逐级增加的信息与机制 ----------
+\draw[black!35, dashed, line width=0.5pt] (0.15,5.15) -- (12.25,5.15);
+\node[fill=white, inner sep=2pt, font=\small\bfseries, text=black!70] at (6.2,5.15)
+  {四问逐级增加的信息集、滚动机制与结算方式};
+
+% ---------- 第二层：Q1--Q4（tabular 保证盒子尺寸正确） ----------
+\node[qA] (q1) at (1.62,3.15) {%
+  \begin{tabular}{@{}c@{}}
+    \textbf{问题一}\\
+    \hline
+    完整日内确定性信息\\
+    $\downarrow$\\
+    单日周期库存约束
+  \end{tabular}};
+\node[qB] (q2) at (4.88,3.15) {%
+  \begin{tabular}{@{}c@{}}
+    \textbf{问题二}\\
+    \hline
+    历史信息 $\rightarrow$ D-7 预测\\
+    7 日滚动 $+$ 跨日 SOC\\
+    紧急购电 $5p_t$
+  \end{tabular}};
+\node[qC] (q3) at (8.14,3.15) {%
+  \begin{tabular}{@{}c@{}}
+    \textbf{问题三}\\
+    \hline
+    附件3 0/6/12/18 预报\\
+    未执行区间重优化\\
+    上调 $1.5\times$/下调 $0.5\times$
+  \end{tabular}};
+\node[qD] (q4) at (11.40,3.15) {%
+  \begin{tabular}{@{}c@{}}
+    \textbf{问题四}\\
+    \hline
+    历史波动电价 $\rightarrow$ 预测\\
+    预测价定计划\\
+    真实价事后结算
+  \end{tabular}};
+
+% 由执行/核算层指向四问
+\foreach \q in {q1,q2,q3,q4} {
+  \draw[flow] (exec.south) -- ++(0,-0.45) -| (\q.north);
+}
+
+% 底部结论条
+\node[draw=black!45, line width=0.5pt, rounded corners=1.5pt, fill=black!4,
+      inner sep=4pt, text width=11.4cm, align=center] at (6.2,1.15)
+  {\bfseries 物理内核、执行逻辑与费用结算规则保持不变；\\
+   各问改变的只是输入信息的可得性、滚动决策的范围与费用结算层。};
+\end{tikzpicture}
+\caption{四问统一建模框架及信息递进关系}
+\label{fig:overall_framework}
+\end{figure}
