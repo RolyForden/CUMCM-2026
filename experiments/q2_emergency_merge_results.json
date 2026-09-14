@@ -1,0 +1,35 @@
+{
+  "scope": "emergency purchase interval merging; cross-midnight boundary",
+  "summary": {
+    "total": 5,
+    "passed": 5,
+    "failed": 0
+  },
+  "results": [
+    {
+      "name": "相邻非零槽合并为一段、断开处分开",
+      "passed": true,
+      "actual": "[('01:50', '02:20', 120.0), ('03:30', '03:40', 60.0)]"
+    },
+    {
+      "name": "槽142与槽143跨午夜合并为一段",
+      "passed": true,
+      "actual": "{'start': '23:50', 'end_label': '00:10+1', 'quantity': 150.0, 'slot_first': 142, 'slot_last': 143}"
+    },
+    {
+      "name": "仅槽143时起点标为00:00+1",
+      "passed": true,
+      "actual": "{'start': '00:00+1', 'end_label': '00:10+1', 'quantity': 25.0, 'slot_first': 143, 'slot_last': 143}"
+    },
+    {
+      "name": "无紧急购电时不产生区间",
+      "passed": true,
+      "actual": "0"
+    },
+    {
+      "name": "全天连续非零合并为唯一一段",
+      "passed": true,
+      "actual": "{'start': '00:10', 'end_label': '00:10+1', 'quantity': 144.0, 'slot_first': 0, 'slot_last': 143}"
+    }
+  ]
+}

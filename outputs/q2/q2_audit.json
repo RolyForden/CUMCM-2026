@@ -1,0 +1,42 @@
+{
+  "method": "D-7",
+  "level": "point",
+  "terminal": "rolling-7d",
+  "template_sha256": "c4103457426f9e4f3733a8d484e3b7031ebb8cc879361f3553f42b0be2caf376",
+  "result2_sha256": "f40b92bf6711c75436831194c54002b8e533e6dd456f09007130d5661cb8c695",
+  "evaluation_days": 334,
+  "cost_normal": 12190821.026133068,
+  "cost_emergency": 4695256.643451871,
+  "cost_total": 16886077.66958494,
+  "grid_emergency_kwh": 1199863.4471374485,
+  "grid_unused_kwh": 315194.5101166667,
+  "infeasible_days": 0,
+  "all_audits_ok": true,
+  "emergency_intervals": 5876,
+  "readback": {
+    "plan_rows": 334,
+    "plan_min": 0.0,
+    "plan_max": 1720.888333333333,
+    "cd_rows": 335,
+    "cd_cols": 15,
+    "em_rows": 5877,
+    "sheets": {
+      "Sheet1": {
+        "state": "hidden"
+      },
+      "Sheet2": {
+        "state": "hidden"
+      },
+      "计划购电量 (2)": {
+        "state": "visible"
+      },
+      "充放电量": {
+        "state": "visible"
+      },
+      "紧急购电量": {
+        "state": "visible"
+      }
+    },
+    "vba_names": []
+  }
+}

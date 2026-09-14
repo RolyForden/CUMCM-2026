@@ -1,0 +1,128 @@
+{
+  "official_pv_comparison": {
+    "cells": 52560,
+    "max_abs_error": 0.0
+  },
+  "official_local_comparison": [
+    {
+      "attachment": 1,
+      "official_rows": 145,
+      "local_rows": 145,
+      "equal_rows": 145
+    },
+    {
+      "attachment": 2,
+      "official_rows": 366,
+      "local_rows": 366,
+      "equal_rows": 366
+    },
+    {
+      "attachment": 3,
+      "official_rows": 1461,
+      "local_rows": 1461,
+      "equal_rows": 1461
+    },
+    {
+      "attachment": 4,
+      "official_rows": 366,
+      "local_rows": 366,
+      "equal_rows": 366
+    }
+  ],
+  "official_attachment2_sheets": [
+    "小区负载",
+    "光伏发电实际功率"
+  ],
+  "soc_checks": {
+    "q2": {
+      "rows": 48096,
+      "days": 334,
+      "max_soc_adjacent_gap": 0.0,
+      "max_soc_equation_error": 4.547473508864641e-12,
+      "soc_min": 1200.0,
+      "soc_max": 10800.0,
+      "simultaneous_charge_discharge_rows": 0,
+      "midnight_export": {
+        "max_24h_vs_24h10_difference_kwh": 0.0,
+        "affected_days": 0,
+        "worst_date": "2025-02-01",
+        "wall_clock_24h_soc": 9120.980555555563,
+        "exported_24h10_soc": 9120.980555555563
+      },
+      "max_emergency_reconstruction_error": 3.552713678800501e-13,
+      "independent_total_cost": 16886077.669584937,
+      "cost_difference_vs_daily": 0.0
+    },
+    "q3": {
+      "rows": 48096,
+      "days": 334,
+      "max_soc_adjacent_gap": 0.0,
+      "max_soc_equation_error": 4.547473508864641e-12,
+      "soc_min": 1200.0,
+      "soc_max": 10800.0,
+      "simultaneous_charge_discharge_rows": 0,
+      "midnight_export": {
+        "max_24h_vs_24h10_difference_kwh": 0.0,
+        "affected_days": 0,
+        "worst_date": "2025-02-01",
+        "wall_clock_24h_soc": 9120.983648148149,
+        "exported_24h10_soc": 9120.983648148149
+      },
+      "max_emergency_reconstruction_error": 3.410605131648481e-13,
+      "max_raw_load_error": 2.2737367544323206e-13,
+      "max_raw_pv_error": 2.2737367544323206e-13
+    },
+    "q4_2": {
+      "rows": 48096,
+      "days": 334,
+      "max_soc_adjacent_gap": 0.0,
+      "max_soc_equation_error": 4.547473508864641e-12,
+      "soc_min": 1200.0,
+      "soc_max": 10800.0,
+      "simultaneous_charge_discharge_rows": 0,
+      "midnight_export": {
+        "max_24h_vs_24h10_difference_kwh": 849.6222222222223,
+        "affected_days": 79,
+        "worst_date": "2025-08-09",
+        "wall_clock_24h_soc": 9061.203685185184,
+        "exported_24h10_soc": 8211.581462962962
+      },
+      "max_emergency_reconstruction_error": 3.552713678800501e-13,
+      "max_raw_load_error": 2.2737367544323206e-13,
+      "max_raw_pv_error": 2.2737367544323206e-13,
+      "independent_total_cost": 17743324.87892995,
+      "cost_difference_vs_daily": 0.0
+    },
+    "q4_3": {
+      "rows": 48096,
+      "days": 334,
+      "max_soc_adjacent_gap": 0.0,
+      "max_soc_equation_error": 4.547473508864641e-12,
+      "soc_min": 1200.0,
+      "soc_max": 10800.0,
+      "simultaneous_charge_discharge_rows": 0,
+      "midnight_export": {
+        "max_24h_vs_24h10_difference_kwh": 849.6222222222241,
+        "affected_days": 79,
+        "worst_date": "2025-08-09",
+        "wall_clock_24h_soc": 9061.256314814813,
+        "exported_24h10_soc": 8211.634092592589
+      },
+      "max_emergency_reconstruction_error": 3.410605131648481e-13,
+      "max_raw_load_error": 2.2737367544323206e-13,
+      "max_raw_pv_error": 2.2737367544323206e-13
+    }
+  },
+  "q2_stats": {
+    "cost_total": 16886077.669584937,
+    "cost_normal": 12190821.026133068,
+    "cost_emergency": 4695256.643451871,
+    "grid_emergency_kwh": 1199863.4471374485,
+    "charge_shortfall_kwh": 7296.55794238723,
+    "discharge_shortfall_kwh": 52464.06248333339,
+    "soc_end_min": 1818.6760185185208,
+    "soc_end_max": 10586.321592592589,
+    "soc_end_median": 8664.630870370373
+  },
+  "support_missing_pv_dependency": true
+}

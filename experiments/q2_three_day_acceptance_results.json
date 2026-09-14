@@ -1,0 +1,165 @@
+{
+  "scope": "independent acceptance of the three-day continuous Q2 probe",
+  "summary": {
+    "total": 31,
+    "passed": 31,
+    "failed": 0
+  },
+  "results": [
+    {
+      "name": "两方法回放天数一致且为1月31天加2月三天",
+      "passed": true,
+      "actual": "[34, 34]"
+    },
+    {
+      "name": "回放日期连续覆盖1月1日至2月3日",
+      "passed": true,
+      "actual": "2025-01-01"
+    },
+    {
+      "name": "每个自然日完成144槽核算",
+      "passed": true,
+      "actual": "每个自然日核算通过"
+    },
+    {
+      "name": "D-7: 观察者覆盖全部34天且无多余事件",
+      "passed": true,
+      "actual": "{'plan_made': 33, 'day_completed': 34}"
+    },
+    {
+      "name": "D-7: 每日首末区间与槽位口径一致且跨日区间连续",
+      "passed": true,
+      "actual": "2025-01-01T00:10:00"
+    },
+    {
+      "name": "D-7: 日间实际库存连续且1月1日从6000 kWh起",
+      "passed": true,
+      "actual": "10800.0"
+    },
+    {
+      "name": "D-7: 每日库存始终在1200至10800 kWh之间",
+      "passed": true,
+      "actual": "[(1200.0, 10800.0)]"
+    },
+    {
+      "name": "D-7: 充放电功率不超过上限",
+      "passed": true,
+      "actual": "[(833.3333333333333, 833.3333333333333)]"
+    },
+    {
+      "name": "D-7: 核算器未报库存越界或功率越界",
+      "passed": true,
+      "actual": "True"
+    },
+    {
+      "name": "D-7: 无实际同时充放电",
+      "passed": true,
+      "actual": "0"
+    },
+    {
+      "name": "D-7: 费用为正常与紧急分项之和（生产脚本汇总一致）",
+      "passed": true,
+      "actual": "181713.85104120633"
+    },
+    {
+      "name": "D-7: 每个决策时点的预测输入满足 observed_at ≤ decision_time",
+      "passed": true,
+      "actual": "2025-01-02T00:00:00"
+    },
+    {
+      "name": "D-7: 计划覆盖新一天144槽（连续33个计划事件，末日前一天不预排2月4日）",
+      "passed": true,
+      "actual": "33"
+    },
+    {
+      "name": "D-7: 新计划在旧计划末槽执行前按D009顺序制定",
+      "passed": true,
+      "actual": "2025-02-03"
+    },
+    {
+      "name": "D-7: 新计划起点只由00:00已知库存与旧计划末槽动作估计（D009桥接）",
+      "passed": true,
+      "actual": "6000.000000000004"
+    },
+    {
+      "name": "D-7: 三天窗口共3天",
+      "passed": true,
+      "actual": "['2025-02-01', '2025-02-02', '2025-02-03']"
+    },
+    {
+      "name": "D-7: 三天窗口逐日核算全部通过",
+      "passed": true,
+      "actual": "True"
+    },
+    {
+      "name": "same-weekday-4-decay-0.8: 观察者覆盖全部34天且无多余事件",
+      "passed": true,
+      "actual": "{'plan_made': 33, 'day_completed': 34}"
+    },
+    {
+      "name": "same-weekday-4-decay-0.8: 每日首末区间与槽位口径一致且跨日区间连续",
+      "passed": true,
+      "actual": "2025-01-01T00:10:00"
+    },
+    {
+      "name": "same-weekday-4-decay-0.8: 日间实际库存连续且1月1日从6000 kWh起",
+      "passed": true,
+      "actual": "10800.0"
+    },
+    {
+      "name": "same-weekday-4-decay-0.8: 每日库存始终在1200至10800 kWh之间",
+      "passed": true,
+      "actual": "[(1200.0, 10800.0)]"
+    },
+    {
+      "name": "same-weekday-4-decay-0.8: 充放电功率不超过上限",
+      "passed": true,
+      "actual": "[(833.3333333333333, 833.3333333333333)]"
+    },
+    {
+      "name": "same-weekday-4-decay-0.8: 核算器未报库存越界或功率越界",
+      "passed": true,
+      "actual": "True"
+    },
+    {
+      "name": "same-weekday-4-decay-0.8: 无实际同时充放电",
+      "passed": true,
+      "actual": "0"
+    },
+    {
+      "name": "same-weekday-4-decay-0.8: 费用为正常与紧急分项之和（生产脚本汇总一致）",
+      "passed": true,
+      "actual": "181713.85104120633"
+    },
+    {
+      "name": "same-weekday-4-decay-0.8: 每个决策时点的预测输入满足 observed_at ≤ decision_time",
+      "passed": true,
+      "actual": "2025-01-02T00:00:00"
+    },
+    {
+      "name": "same-weekday-4-decay-0.8: 计划覆盖新一天144槽（连续33个计划事件，末日前一天不预排2月4日）",
+      "passed": true,
+      "actual": "33"
+    },
+    {
+      "name": "same-weekday-4-decay-0.8: 新计划在旧计划末槽执行前按D009顺序制定",
+      "passed": true,
+      "actual": "2025-02-03"
+    },
+    {
+      "name": "same-weekday-4-decay-0.8: 新计划起点只由00:00已知库存与旧计划末槽动作估计（D009桥接）",
+      "passed": true,
+      "actual": "6000.000000000004"
+    },
+    {
+      "name": "same-weekday-4-decay-0.8: 三天窗口共3天",
+      "passed": true,
+      "actual": "['2025-02-01', '2025-02-02', '2025-02-03']"
+    },
+    {
+      "name": "same-weekday-4-decay-0.8: 三天窗口逐日核算全部通过",
+      "passed": true,
+      "actual": "True"
+    }
+  ]
+}

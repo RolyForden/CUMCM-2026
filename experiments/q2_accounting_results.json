@@ -1,0 +1,50 @@
+{
+  "scope": "Q2 frozen accounting semantics only",
+  "summary": {
+    "total": 8,
+    "passed": 8,
+    "failed": 0
+  },
+  "results": [
+    {
+      "name": "合同100实供50仍按100收费",
+      "passed": true,
+      "actual": "[]"
+    },
+    {
+      "name": "紧急购电进入能量平衡且按五倍收费",
+      "passed": true,
+      "actual": "[]"
+    },
+    {
+      "name": "合同量恒等式错误被拒绝",
+      "passed": true,
+      "actual": "['slot 0: 合同量不等于实际交付量与未使用量之和']"
+    },
+    {
+      "name": "按实供量少算正常费用被拒绝",
+      "passed": true,
+      "actual": "['slot 0: 正常购电费用复算不符']"
+    },
+    {
+      "name": "紧急费用不是五倍时被拒绝",
+      "passed": true,
+      "actual": "['slot 0: 紧急购电费用复算不符']"
+    },
+    {
+      "name": "两槽连续执行通过独立核算",
+      "passed": true,
+      "actual": "[]"
+    },
+    {
+      "name": "削减放电导致后续库存偏高时安全少充电",
+      "passed": true,
+      "actual": "[]"
+    },
+    {
+      "name": "零点桥接估计只按旧计划且实际偏差留给执行器",
+      "passed": true,
+      "actual": "estimate=9910.0, actual=10000.0"
+    }
+  ]
+}

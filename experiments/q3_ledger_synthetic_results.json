@@ -1,0 +1,65 @@
+{
+  "status": "PASS",
+  "scope": "Q3 pure synthetic settlement ledger only; no attachment 3, no forecast adapter, no rolling window",
+  "summary": {
+    "total": 9,
+    "passed": 9,
+    "failed": 0
+  },
+  "results": [
+    {
+      "name": "Q3-ledger-no-adjust",
+      "passed": true,
+      "expected": "total=100, initial=100, adjustment=0, q_final=100",
+      "actual": "total=100.0, initial=100.0, adjustment=0.0, q_final=100.0"
+    },
+    {
+      "name": "Q3-ledger-up-only",
+      "passed": true,
+      "expected": "100 + 1.5*(120-100) = 130",
+      "actual": "total=130.0, adjustment=30.0, increase=20.0"
+    },
+    {
+      "name": "Q3-ledger-down-only",
+      "passed": true,
+      "expected": "100 - 0.5*(100-80) = 90",
+      "actual": "total=90.0, adjustment=-10.0, decrease=20.0"
+    },
+    {
+      "name": "Q3-ledger-100-80-100",
+      "passed": true,
+      "expected": "100 - 10 + 30 = 120",
+      "actual": "total=120.0, adjustment=20.0"
+    },
+    {
+      "name": "Q3-ledger-reject-q-final-double-charge",
+      "passed": true,
+      "expected": "ValueError",
+      "actual": "ValueError"
+    },
+    {
+      "name": "Q3-ledger-reject-executed-slot-edit",
+      "passed": true,
+      "expected": "ValueError",
+      "actual": "ValueError"
+    },
+    {
+      "name": "Q4-ledger-price-forecast-vs-actual",
+      "passed": true,
+      "expected": "optimizer=260 with forecast price 2; accountant=390 with actual price 3",
+      "actual": "optimizer=260.0, accountant=390.0"
+    },
+    {
+      "name": "Q3-ledger-emergency-separated",
+      "passed": true,
+      "expected": "normal=2*100=200, emergency=5*2*5=50, total=250",
+      "actual": "normal=200.0, emergency=50.0, total=250.0"
+    },
+    {
+      "name": "Q3-ledger-reject-version-gap",
+      "passed": true,
+      "expected": "ValueError",
+      "actual": "ValueError"
+    }
+  ]
+}

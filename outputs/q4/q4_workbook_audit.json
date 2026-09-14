@@ -1,0 +1,81 @@
+{
+  "result4-2": {
+    "template": "data\\raw\\official\\附件5\\result4-2.xlsm",
+    "template_sha256": "a6463b38db68addd8e82d08cb2887b919fd253302f7d501bd5f0991491c81c24",
+    "result_sha256": "82554772684de086ae1a9eab6e02f6d9277440ef9483bd82d15884161e0d7012",
+    "template_vba_sha256": null,
+    "result_vba_sha256": null,
+    "original_sheets": [
+      {
+        "name": "Sheet1",
+        "state": "hidden",
+        "rows": 4,
+        "columns": 2
+      },
+      {
+        "name": "Sheet2",
+        "state": "hidden",
+        "rows": 1,
+        "columns": 1
+      },
+      {
+        "name": "计划购电量",
+        "state": "hidden",
+        "rows": 335,
+        "columns": 147
+      },
+      {
+        "name": "计划购电量 (2)",
+        "state": "visible",
+        "rows": 335,
+        "columns": 147
+      }
+    ],
+    "quantity_sheet": "计划购电量 (2)",
+    "quantity_semantics": "0:00制定的合同购电计划",
+    "cost_semantics": "普通合同购电费；紧急购电在单独工作表列示",
+    "charge_discharge_rows": 335,
+    "emergency_intervals": 5486
+  },
+  "result4-3": {
+    "template": "data\\raw\\official\\附件5\\result4-3.xlsm",
+    "template_sha256": "d5a7eabdb5c0b74a3fbc0b6dcc7735643cd897ca77efb34575d87038cb8daee3",
+    "result_sha256": "b6fbfd4e5c78416b0242d2a2c351dd01c6fecbc8b826ea5967626652c765d308",
+    "template_vba_sha256": null,
+    "result_vba_sha256": null,
+    "original_sheets": [
+      {
+        "name": "Sheet1",
+        "state": "hidden",
+        "rows": 4,
+        "columns": 2
+      },
+      {
+        "name": "Sheet2",
+        "state": "hidden",
+        "rows": 1,
+        "columns": 1
+      },
+      {
+        "name": "计划购电量",
+        "state": "hidden",
+        "rows": 335,
+        "columns": 147
+      },
+      {
+        "name": "计划购电量 (3)",
+        "state": "visible",
+        "rows": 335,
+        "columns": 147
+      }
+    ],
+    "initial_plan_sheet": "计划购电量",
+    "final_plan_sheet": "计划购电量 (3)",
+    "final_plan_sheet_semantics": "各槽最后一次已生效的调整后合同量；保留官方原名",
+    "initial_cost_semantics": "0:00初始计划按目标槽真实价格计费",
+    "final_cost_semantics": "初始计划、逐次调整与紧急购电的实际总费用",
+    "charge_discharge_rows": 335,
+    "emergency_intervals": 6406
+  },
+  "all_vba_preserved": true
+}

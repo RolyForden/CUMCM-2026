@@ -1,0 +1,60 @@
+{
+  "scope": "Q2 forecast candidates and causality only; no final model selected",
+  "summary": {
+    "total": 10,
+    "passed": 10,
+    "failed": 0
+  },
+  "results": [
+    {
+      "name": "七天前基线给出完整144槽",
+      "passed": true,
+      "actual": "144"
+    },
+    {
+      "name": "七天前基线没有读取未来",
+      "passed": true,
+      "actual": "2025-01-26 00:10:00"
+    },
+    {
+      "name": "同星期衰减基线给出完整144槽",
+      "passed": true,
+      "actual": "144"
+    },
+    {
+      "name": "同星期衰减基线没有读取未来",
+      "passed": true,
+      "actual": "2025-01-26 00:10:00"
+    },
+    {
+      "name": "凌晨决策时昨天同刻末槽尚未观测则拒绝末槽偷看",
+      "passed": true,
+      "actual": "True"
+    },
+    {
+      "name": "历史输入混入未来观测时拒绝",
+      "passed": true,
+      "actual": "True"
+    },
+    {
+      "name": "一月一日无历史时完整使用典型日先验",
+      "passed": true,
+      "actual": "{'cold-start:attachment1-prior': 144}"
+    },
+    {
+      "name": "一月二日已观测槽用历史且未完成末槽用先验",
+      "passed": true,
+      "actual": "{'cold-start:available-history-slot-mean': 143, 'cold-start:attachment1-prior': 1}"
+    },
+    {
+      "name": "滚动视野无已观测同星期来源时使用典型日先验",
+      "passed": true,
+      "actual": "{'same-weekday-4-decay-0.8:attachment1-prior': 144}"
+    },
+    {
+      "name": "已有同星期来源时继续使用历史衰减平均",
+      "passed": true,
+      "actual": "{'same-weekday-4-decay-0.8': 143, 'same-weekday-4-decay-0.8:attachment1-prior': 1}"
+    }
+  ]
+}

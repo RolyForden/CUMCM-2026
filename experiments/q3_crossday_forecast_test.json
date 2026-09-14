@@ -1,0 +1,17 @@
+{
+  "scope": "Q3 18:00 vintage retained after midnight",
+  "target_time": "2025-02-02T12:00:00",
+  "expected_kw": 7444.3125,
+  "actual_kw": 7444.3125,
+  "summary": {
+    "total": 4,
+    "passed": 4,
+    "failed": 0
+  },
+  "checks": {
+    "seven_day_horizon_length": true,
+    "cross_midnight_value_from_current_vintage": true,
+    "cross_midnight_source_is_not_fallback": true,
+    "source_issue_is_causal": true
+  }
+}

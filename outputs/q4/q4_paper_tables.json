@@ -1,0 +1,64 @@
+{
+  "evaluation_days": 334,
+  "price_method": "same-weekday-weighted",
+  "q4_2": {
+    "cost_normal": 12814582.520037426,
+    "cost_emergency": 4928742.358892523,
+    "cost_total": 17743324.87892995,
+    "emergency_kwh": 1202608.491740908,
+    "grid_unused_kwh": 315104.4094012242,
+    "price_forecast_mae": 0.04672441141317185,
+    "price_forecast_rmse": 0.06649344219781772
+  },
+  "q4_3": {
+    "initial_contract_cost": 12964681.976244627,
+    "adjustment_cashflow": 381722.38327876676,
+    "emergency_cost": 3259691.0841800966,
+    "cost_total": 16606095.44370349,
+    "adjustment_up_kwh": 617426.9581827542,
+    "adjustment_down_kwh": 758273.7231262052,
+    "emergency_kwh": 809107.167971399,
+    "grid_unused_kwh": 305069.585907652,
+    "price_forecast_mae_final_vintage": 0.04672441141317185
+  },
+  "q4_3_vs_q4_2": {
+    "saving": 1137229.435226461,
+    "saving_percent": 6.409336711051892,
+    "emergency_reduction_kwh": 393501.323769509,
+    "emergency_reduction_percent": 32.720650691554034
+  },
+  "oracle": {
+    "meaning": "使用未来真实负荷、光伏和电价的一次性全窗口LP，不可执行，只作下界",
+    "fairness": "每条分支分别固定为其正式回放的期初和期末SOC",
+    "q4_2": {
+      "soc0": 7362.162166666665,
+      "soc_final": 8074.349629629631,
+      "oracle_cost": 12783515.84312499,
+      "max_energy_residual": 3.410605131648481e-13,
+      "max_soc_residual": 1.8189894035458565e-12,
+      "simultaneous_charge_discharge_slots": 0,
+      "solver": "highs-ds-sparse",
+      "causal_cost": 17743324.87892995,
+      "causal_oracle_gap": 4959809.035804961,
+      "causal_oracle_gap_percent": 38.798473727181715
+    },
+    "q4_3": {
+      "soc0": 7366.818280864198,
+      "soc_final": 8074.349629629631,
+      "oracle_cost": 12783514.18284779,
+      "max_energy_residual": 3.410605131648481e-13,
+      "max_soc_residual": 1.8189894035458565e-12,
+      "simultaneous_charge_discharge_slots": 0,
+      "solver": "highs-ds-sparse",
+      "causal_cost": 16606095.44370349,
+      "causal_oracle_gap": 3822581.260855699,
+      "causal_oracle_gap_percent": 29.90242906746743
+    },
+    "elapsed_seconds": 34.842458963394165
+  },
+  "independent_validation": {
+    "total": 78,
+    "passed": 78,
+    "failed": 0
+  }
+}

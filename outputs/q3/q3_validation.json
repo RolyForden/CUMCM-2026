@@ -1,0 +1,41 @@
+{
+  "summary": {
+    "total": 19,
+    "passed": 19,
+    "failed": 0
+  },
+  "checks": {
+    "shape_334x144": true,
+    "energy_balance": true,
+    "soc_transition": true,
+    "soc_bounds": true,
+    "power_bounds": true,
+    "no_simultaneous": true,
+    "contract_identity": true,
+    "pv_identity": true,
+    "slot_order": true,
+    "cross_day_soc": true,
+    "interval_continuity": true,
+    "version_sequence_and_timing": true,
+    "version_dispatch_match": true,
+    "daily_ledger": true,
+    "workbook_sheets": true,
+    "workbook_values": true,
+    "workbook_charge_discharge": true,
+    "workbook_emergency_intervals": true,
+    "summary_total": true
+  },
+  "metrics": {
+    "max_energy_residual": 7.958078640513122e-13,
+    "max_soc_residual": 5.4569682106375694e-12,
+    "max_cross_day_soc_error": 0.0,
+    "max_interval_gap_seconds": 0.0,
+    "workbook_cell_max_error": 4.547473508864641e-13,
+    "workbook_quantity_total_max_error": 1.4551915228366852e-11,
+    "workbook_cost_total_max_error": 7.275957614183426e-12,
+    "workbook_charge_discharge_max_error": 7.275957614183426e-12,
+    "workbook_emergency_quantity_max_error": 1.8189894035458565e-12,
+    "workbook_emergency_interval_count": 6407,
+    "total_cost": 15805751.774900615
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "template_sha256": "71d1fe31ee5c500800abb7dc84609ee7bfd33472f89886e58da7bdb0eb95dd8d",
+  "result3_sha256": "78c3da7faf5631a8bfb4f4908429bf09b3f61ca83ac052a5045e4cb709277811",
+  "days": 334,
+  "plan_sheet": "计划购电量",
+  "adjusted_sheet": "调整购电量",
+  "emergency_intervals": 6407,
+  "sheets_added": [
+    "充放电量",
+    "紧急购电量"
+  ]
+}

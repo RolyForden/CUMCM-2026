@@ -1,0 +1,2 @@
+date,slot,grid_contract,grid_emergency,charge,discharge,soc_start,soc_end,interval_start,interval_end
+2025-01-31,143,452.75333333333333,0.0,0.0,0.0,9012.162166666674,9012.162166666674,2025-02-01T00:00:00,2025-02-01T00:10:00

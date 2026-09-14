@@ -1,0 +1,168 @@
+% F0 四问统一建模框架及信息递进关系
+% 由本文件被论文第 2 章 2.1 末尾 \input；同一文件也被 figures/framework_standalone.tex
+% 直接 \input 编译为 framework.pdf / framework.png，保证正文与交付图完全同源。
+% 结构：上层为四问共用的物理内核与执行/核算层，下层为四问逐级增加的信息与机制。
+% 原则：每个模块嵌入真实方法对象（约束式、日内价格—储能示意解、信息可得性条、
+%       双价格通道），不使用纯文字方框。
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit, backgrounds, calc}
+
+\begin{tikzpicture}[
+  font=\small,
+  io/.style={rectangle, draw=green!45!black, line width=0.5pt, rounded corners=2pt,
+             fill=green!8, inner sep=4pt, align=center},
+  flow/.style={-{Stealth[length=2.2mm,width=1.6mm]}, line width=0.8pt, draw=black!65},
+  flowd/.style={-{Stealth[length=2.0mm,width=1.4mm]}, line width=0.6pt, draw=black!45, dashed},
+  lab/.style={font=\scriptsize, text=black!72},
+  labb/.style={font=\scriptsize\bfseries, text=black!78},
+]
+
+% ================= 输入接口（四问共用） =================
+\node[io, text width=15.0cm, minimum height=0.62cm] (in) at (8.0,8.90)
+  {\scriptsize 输入（四问共用）：负荷 $L_t$、可用光伏 $V_t$、购电电价 $p_t$、储能初始状态 $E_0$
+   \quad（$t=0,\dots,143$，$\Delta t=10$\,min）};
+\draw[flow] (8.0,8.56) -- (8.0,8.18);
+
+% ================= 共用物理内核（hero） =================
+\draw[draw=teal!70!black, line width=1.0pt, rounded corners=2.5pt, fill=teal!6]
+  (0.20,5.22) rectangle (15.80,8.15);
+\node[anchor=west, font=\small\bfseries, text=teal!55!black] at (0.48,7.83)
+  {统一确定性线性规划内核（四问共用）};
+
+% 左：完整约束与目标
+\node[anchor=west, lab] at (0.62,7.38)
+  {母线能量平衡\quad $g_t+v_t+d_t=L_t+c_t$};
+\node[anchor=west, lab] at (0.62,6.98)
+  {光伏消纳与弃光\quad $0\le v_t\le V_t,\quad q_t^{\mathrm{curt}}=V_t-v_t\ge0$};
+\node[anchor=west, lab] at (0.62,6.58)
+  {储能状态递推\quad $E_{t+1}=E_t+\eta_c c_t-d_t/\eta_d,\quad \eta_c=\eta_d=0.9$};
+\node[anchor=west, lab] at (0.62,6.18)
+  {容量与功率约束\quad $1200\le E_t\le10800,\quad 0\le c_t,d_t\le833.3,\quad g_t\ge0$};
+\node[anchor=west, lab] at (0.62,5.78)
+  {目标\quad $\min\sum_{t=0}^{143} p_t g_t$\quad（决策变量 $g_t,c_t,d_t,E_t$）};
+
+% 右：真实方法对象——日内调度示意解（分时电价 + 储能轨迹）
+\draw[draw=black!22, line width=0.4pt, rounded corners=1.5pt, fill=white]
+  (10.05,5.30) rectangle (15.62,7.98);
+\draw[black!25, dashed, line width=0.4pt] (9.90,5.32) -- (9.90,7.96);
+\node[anchor=west, font=\scriptsize\bfseries, text=black!70] at (10.20,7.88)
+  {日内调度示意解（问题一）};
+\node[font=\tiny, text=black!60] at (12.835,7.66)
+  {正午光伏富余充电 $\cdot$ 早晚高峰放电 $\cdot$ 日内回归};
+
+% 分时电价柱
+\node[anchor=west, font=\tiny, text=black!60] at (10.20,7.44) {分时电价 $p_t$};
+\foreach \i/\h in {0/0.08,1/0.08,2/0.08,3/0.09,4/0.12,5/0.16,6/0.22,7/0.30,
+                   8/0.35,9/0.35,10/0.31,11/0.26,12/0.21,13/0.19,14/0.22,
+                   15/0.27,16/0.33,17/0.37,18/0.39,19/0.38,20/0.33,21/0.25,
+                   22/0.16,23/0.09}{
+  \fill[orange!45] ({10.28+\i*0.218},6.92) rectangle ({10.28+\i*0.218+0.16},{6.92+\h});
+}
+\draw[black!35, line width=0.3pt] (10.28,6.92) -- (15.50,6.92);
+
+% 储能轨迹
+\node[anchor=west, font=\tiny, text=black!60] at (10.20,6.62) {储电量 $E_t$\,(kWh)};
+\draw[red!55, dashed, line width=0.35pt] (10.28,6.44) -- (15.50,6.44);   % 上限 10800
+\draw[red!55, dashed, line width=0.35pt] (10.28,5.68) -- (15.50,5.68);   % 下限 1200
+\node[anchor=east, font=\tiny, text=red!55!black] at (10.25,6.44) {10800};
+\node[anchor=east, font=\tiny, text=red!55!black] at (10.25,5.68) {1200};
+\draw[black!30, dotted, line width=0.35pt] (10.28,6.06) -- (15.50,6.06); % 初始 6000
+\draw[teal!70!black, line width=1.0pt] plot[smooth] coordinates {
+  (10.28,6.06)(10.61,6.16)(10.94,6.30)(11.27,6.10)(11.60,5.88)
+  (11.93,5.72)(12.26,5.93)(12.59,6.27)(12.92,6.00)(13.25,5.77)
+  (13.58,5.71)(13.91,5.87)(15.50,6.06)};
+\draw[black!35, line width=0.3pt] (10.28,5.52) -- (15.50,5.52);
+\node[anchor=north, font=\tiny, text=black!55] at (10.28,5.51) {0:00};
+\node[anchor=north, font=\tiny, text=black!55] at (15.50,5.51) {24:00};
+
+\draw[flow] (8.0,5.22) -- (8.0,4.88);
+\node[anchor=west, lab] at (8.14,5.05) {计划 $g_t,c_t,d_t,E_t$};
+
+% ================= 共用执行器与独立核算器 =================
+\draw[draw=violet!60!black, line width=0.6pt, rounded corners=2pt, fill=violet!8]
+  (0.20,3.55) rectangle (7.85,4.85);
+\node[anchor=west, font=\small\bfseries, text=violet!55!black] at (0.46,4.60) {统一执行器};
+\node[anchor=west, lab, text width=7.1cm, align=left] at (0.46,4.05)
+  {计划映射为实际执行：先弃光、再形成未使用合同电、最后削减计划放电；
+   跨日储电量按实际执行结果连续传递};
+
+\draw[draw=violet!60!black, line width=0.6pt, rounded corners=2pt, fill=violet!8]
+  (8.15,3.55) rectangle (15.80,4.85);
+\node[anchor=west, font=\small\bfseries, text=violet!55!black] at (8.41,4.60) {独立核算器};
+\node[anchor=west, lab, text width=7.0cm, align=left] at (8.41,4.05)
+  {不调用优化目标；逐槽复算母线平衡与 $p_t g_t$，
+   费用一律以核算器结果为准};
+
+% ================= 分界：四问逐级增加的信息与机制 =================
+\draw[black!35, dashed, line width=0.5pt] (0.20,3.32) -- (15.80,3.32);
+\node[fill=white, inner sep=2pt, font=\scriptsize, text=black!65, align=center] at (8.0,3.32)
+  {四问逐级增加的信息集、\\滚动机制与结算方式};
+
+% ================= 第二层：Q1--Q4 =================
+\foreach \x in {2.075,6.025,9.975,13.925}{ \draw[flowd] (\x,3.28) -- (\x,3.04); }
+
+% ---- 问题一 ----
+\draw[fill=teal!4, draw=teal!40!black, line width=0.5pt, rounded corners=2pt]
+  (0.30,0.52) rectangle (3.85,3.02);
+\node[anchor=north, font=\small\bfseries, text=teal!45!black] at (2.075,2.94) {问题一};
+\draw[teal!40!black, line width=0.3pt] (0.62,2.62) -- (3.53,2.62);
+\node[anchor=north, labb] at (2.075,2.52) {完整日内确定性信息};
+\node[anchor=north, lab, text width=3.20cm, align=center] at (2.075,2.22)
+  {单日求解 $\cdot$ 周期库存 $E_0=E_{144}=6000$};
+% 真实对象：信息可得性条（全天真值已知）
+\fill[teal!45] (0.58,1.05) rectangle (3.57,1.33);
+\draw[teal!70!black, line width=0.4pt] (0.58,1.05) rectangle (3.57,1.33);
+\node[font=\tiny, text=black!70] at (2.075,0.86) {0:00--24:00 真值全知};
+
+% ---- 问题二 ----
+\draw[fill=teal!9, draw=teal!50!black, line width=0.5pt, rounded corners=2pt]
+  (4.25,0.52) rectangle (7.80,3.02);
+\node[anchor=north, font=\small\bfseries, text=teal!55!black] at (6.025,2.94) {问题二};
+\draw[teal!50!black, line width=0.3pt] (4.57,2.62) -- (7.48,2.62);
+\node[anchor=north, labb] at (6.025,2.52) {历史信息 $\rightarrow$ D-7 因果预测};
+\node[anchor=north, lab, text width=3.20cm, align=center] at (6.025,2.22)
+  {7 日滚动视野 $\cdot$ 跨日 SOC 连续 $\cdot$ $5p_t$ 紧急购电};
+% 真实对象：信息可得性条（历史已知 / 未来待预测）
+\fill[teal!45] (4.53,1.05) rectangle (5.43,1.33);
+\fill[teal!10] (5.43,1.05) rectangle (7.52,1.33);
+\draw[teal!70!black, line width=0.4pt] (4.53,1.05) rectangle (7.52,1.33);
+\draw[teal!70!black, dashed, line width=0.4pt] (5.43,1.05) -- (5.43,1.33);
+\node[font=\tiny, text=black!70] at (6.025,0.86) {已观测 $\;|\;$ D-7 点预测};
+
+% ---- 问题三 ----
+\draw[fill=teal!15, draw=teal!65!black, line width=0.5pt, rounded corners=2pt]
+  (8.20,0.52) rectangle (11.75,3.02);
+\node[anchor=north, font=\small\bfseries, text=teal!65!black] at (9.975,2.94) {问题三};
+\draw[teal!65!black, line width=0.3pt] (8.52,2.62) -- (11.43,2.62);
+\node[anchor=north, labb] at (9.975,2.52) {附件3 整点光伏预报};
+\node[anchor=north, lab, text width=3.20cm, align=center] at (9.975,2.22)
+  {0/6/12/18 更新 $\cdot$ 未执行区间重优化（$1.5\times$/$0.5\times$）};
+% 真实对象：信息可得性条（日内四次发布）
+\fill[teal!14] (8.48,1.05) rectangle (11.47,1.33);
+\draw[teal!70!black, line width=0.4pt] (8.48,1.05) rectangle (11.47,1.33);
+\foreach \f in {0,0.25,0.5,0.75}{
+  \draw[teal!70!black, line width=0.7pt] ({8.48+\f*2.99},1.05) -- ({8.48+\f*2.99},1.33);
+  \fill[teal!70!black] ({8.48+\f*2.99},1.33) circle (0.7pt);
+}
+\node[font=\tiny, text=black!70] at (9.975,0.86) {0:00 \; 6:00 \; 12:00 \; 18:00};
+
+% ---- 问题四 ----
+\draw[fill=teal!21, draw=teal!80!black, line width=0.5pt, rounded corners=2pt]
+  (12.15,0.52) rectangle (15.70,3.02);
+\node[anchor=north, font=\small\bfseries, text=teal!75!black] at (13.925,2.94) {问题四};
+\draw[teal!80!black, line width=0.3pt] (12.47,2.62) -- (15.38,2.62);
+\node[anchor=north, labb] at (13.925,2.52) {历史波动电价 $\rightarrow$ 因果预测};
+\node[anchor=north, lab, text width=3.20cm, align=center] at (13.925,2.22)
+  {第二问式 / 第三问式 双通道对比};
+% 真实对象：双价格通道
+\fill[orange!35] (12.43,1.14) rectangle (15.43,1.36);
+\draw[orange!65!black, line width=0.4pt] (12.43,1.14) rectangle (15.43,1.36);
+\node[font=\tiny] at (13.93,1.25) {预测价 $\to$ 计划};
+\fill[black!12] (12.43,0.82) rectangle (15.43,1.04);
+\draw[black!45, line width=0.4pt] (12.43,0.82) rectangle (15.43,1.04);
+\node[font=\tiny] at (13.93,0.93) {真实价 $\to$ 事后结算};
+\draw[flowd] (15.34,1.12) -- (15.34,1.06);
+
+% 问题一至四逐级推进的衔接箭头
+\foreach \x in {4.05,8.00,11.95}{ \draw[flowd] (\x,1.77) -- (\x+0.20,1.77); }
+
+\end{tikzpicture}
