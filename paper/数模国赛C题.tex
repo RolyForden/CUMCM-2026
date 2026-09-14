@@ -9,6 +9,7 @@
 \usepackage[framemethod=TikZ]{mdframed}  % 框架宏包
 \usepackage{url}  % 网页链接宏包
 \usepackage{subcaption}  % 子图宏包
+\usepackage{dirtree}  % 附录目录树宏包
 \newcolumntype{C}{>{\centering\arraybackslash}X}
 \newcolumntype{R}{>{\raggedleft\arraybackslash}X}
 \newcolumntype{L}{>{\raggedright\arraybackslash}X}\renewcommand{\textbf}[1]{{\song\bfseries #1}}
@@ -75,7 +76,7 @@
 
 \textbf{对于问题二,}在问题一内核上建立严格因果的全年逐日滚动模型：每天 0:00 仅用该时刻已观测到的历史数据，以七天前同刻点预测当天负荷与光伏，并以滚动 7 天视野协同优化、只执行当天计划；储能储电量跨日连续传递，供电缺口按交易时刻电价的 5 倍紧急购电，未使用的合同电按计划量计费但不进入母线。对 2025 年 2 月 1 日至 12 月 31 日共 334 天顺序回放，全年购电费 16\,886\,077.67 元（正常合同电费 12\,190\,821.03 元、紧急购电费 4\,695\,256.64 元），紧急购电量 1\,199\,863.45 kWh，334 天全部可行，跨日储电量连续无断裂。同年度回放中D-7费用低于同星期日衰减平均；联合分位扰动方案费用较高，表明当前场景下基准滚动策略具有更好的经济性。
 
-\textbf{对于问题三,}在问题二的因果回放框架上建立四时点确定性模型预测控制模型。附件3的整点光伏点预测经无泄漏线性展开后，在0:00、6:00、12:00和18:00依次更新；已执行时段锁定，未执行时段按相邻版本的非对称现金流优化。334天回放总费用为15805751.77元，较问题二降低6.3977\%（其中仅约3.23个百分点来自追加日内更新），紧急购电量降低32.5567\%。其中换用附件3的0:00预报及相应计划降低费用53.54万元，追加6:00、12:00、18:00更新再降低54.49万元，表明日内信息更新能够进一步改善调度经济性。
+\textbf{对于问题三,}在问题二的因果回放框架上建立四时点确定性模型预测控制模型。附件3的整点光伏点预测经无泄漏线性展开后，在0:00、6:00、12:00和18:00依次更新；已执行时段锁定，未执行时段按相邻版本的非对称现金流优化。334天回放总费用为15805751.77元，较问题二降低6.3977\%（其中仅约3.23个百分点来自追加日内更新），紧急购电量降低32.5567\%。其中更换附件3的0:00预报及相应计划降低费用53.54万元，6:00与12:00的日内更新进一步节省约54.49万元，而18:00更新边际收益近零，表明预报信息价值随决策时刻呈明显递减特征。
 
 \textbf{对于问题四,}将附件4的10分钟波动电价接入问题二、三的滚动框架，并严格分离“决策时可得的预测价”和“事后结算的真实价”。仅用一月顺序窗口选定同星期日四周衰减加权预测。第二问式与第三问式全年实际费用分别为17\,743\,324.88元和16\,606\,095.44元；更换光伏预报来源并加入日内更新后的合并效果为节省1\,137\,229.44元，降幅6.4093\%，紧急购电量降低32.7207\%。结果表明，在波动电价环境下，预测信息与日内滚动更新仍能显著改善购电策略。
 
@@ -258,24 +259,17 @@
 \begin{table}[htbp]
 \centering
 \caption{全文主要符号}
-	\begin{tabularx}{\textwidth}{cL}
+	\begin{tabularx}{\textwidth}{@{}cL@{\hspace{1.2em}}cL@{}}
 		\toprule
-		符号    & 含义    \\
+		符号 & 含义 & 符号 & 含义 \\
 		\midrule
-		$t$ & 10 分钟时段序号，$t=0,1,\ldots,143$ \\
-		$\Delta t$ & 时段长度，$\Delta t=1/6\ \mathrm{h}$ \\
-		$p_t$ & 时段 $t$ 电价 \\
-		$L_t$ & 时段 $t$ 负荷电量 \\
-		$V_t$ & 时段 $t$ 可用光伏电量 \\
-		$v_t$ & 时段 $t$ 实际消纳光伏电量 \\
-		$q_t^{\mathrm{curt}}$ & 时段 $t$ 弃光电量 \\
-		$g_t$ & 时段 $t$ 外网计划购电量 \\
-		$c_t,\,d_t$ & 母线侧充电量、放电量 \\
-		$E_t$ & 时段 $t$ 边界储电量 \\
-		$E^{\max}$ & 储电量允许上限，取 10800 \\
-		$\eta_c,\,\eta_d$ & 充、放电效率，均取 0.9 \\
-		$g_t^{\mathrm{emg}}$ & 时段 $t$ 紧急购电量，按 $5p_t$ 计费 \\
-		$C$ & 全天购电费用 \\
+		$t$ & 10 分钟时段序号，$t=0,1,\ldots,143$ & $g_t$ & 时段 $t$ 外网计划购电量 \\
+		$\Delta t$ & 时段长度，$\Delta t=1/6\ \mathrm{h}$ & $c_t,\,d_t$ & 母线侧充电量、放电量 \\
+		$p_t$ & 时段 $t$ 电价 & $E_t$ & 时段 $t$ 边界储电量 \\
+		$L_t$ & 时段 $t$ 负荷电量 & $E^{\max}$ & 储电量允许上限，取 10800 \\
+		$V_t$ & 时段 $t$ 可用光伏电量 & $\eta_c,\,\eta_d$ & 充、放电效率，均取 0.9 \\
+		$v_t$ & 时段 $t$ 实际消纳光伏电量 & $g_t^{\mathrm{emg}}$ & 时段 $t$ 紧急购电量，按 $5p_t$ 计费 \\
+		$q_t^{\mathrm{curt}}$ & 时段 $t$ 弃光电量 & $C$ & 全天购电费用 \\
 		\bottomrule
 	\end{tabularx}
 	\label{tab:符号说明}
@@ -722,7 +716,7 @@ C_3=\sum_t p_tq_t^{(0)}
 \end{figure}
 
 %% Q3_UPDATE_ABLATION_BEGIN
-\textbf{更新时点消融。} 保持数据、执行器、结算器和预测展开完全一致，依次加入6:00、12:00和18:00批次，结果见表~\ref{tab:q3_ablation}。6:00使总费用下降341695.91元、紧急购电量下降159601.56 kWh；12:00在此基础上再降低203250.02元和70515.50 kWh。18:00相较截至12:00的方案反而轻微增加2.90元和0.27 kWh，费用变化低于0.001\%、电量变化低于百万分之一。因此，6:00与12:00预报具有明确经济价值，18:00在当前数据上不具实质边际收益；没有证据支持再引入更密集的其他发布时间。由于附件未提供其他发布时间的预报，本文不对其作无法验证的收益推断。
+\textbf{更新时点消融。} 保持数据、执行器、结算器和预测展开完全一致，依次加入6:00、12:00和18:00批次，结果见表~\ref{tab:q3_ablation}。6:00使总费用下降341695.91元、紧急购电量下降159601.56 kWh；12:00在此基础上再降低203250.02元和70515.50 kWh。18:00相较截至12:00的方案反而轻微增加2.90元和0.27 kWh，费用变化低于0.001\%、电量变化低于百万分之一。因此，在附件提供的可验证发布时间中，6:00与12:00具有明确经济价值，而18:00边际收益可忽略。由于附件未提供其他发布时间的预报，本文不进一步外推更密集更新的潜在收益。
 
 \begin{table}[htbp]
 \centering
@@ -933,10 +927,13 @@ C_{4-2}=\sum_t p_t q_t^{(0)}+\sum_t5p_tg_t^{\mathrm{emg}}.
 \item 四问共用母线能量平衡、SOC递推和功率边界，新增问题只改变信息集与结算层，避免重复模型产生口径冲突。
 \item 预测、计划、执行和核算相互分离；每条历史与预报均记录可观测时刻，能够直接核对是否提前读取未来数据。
 \item 正式结果均由独立核算器从逐槽记录复算，并对官方工作簿回读，费用结论可追溯到具体槽位和计划版本。
+\item 问题三以四时点确定性 MPC 构造“预测发布—计划改版—按版结算”闭环，并通过逐级消融量化不同发布时间的信息价值，使预测精度最终落实到实际经济收益；消融结果显示 6:00 与 12:00 预报带来明确节省，18:00 在当前数据上无实质边际收益。
+\item 问题四采用“预测价决策—真实价结算”的双价格通道，并引入完美信息下界量化信息不足造成的经济损失，避免使用未来真实价格产生的信息泄漏；两条分支均在同一核算器下比较全年实际费用，下界则给出不可执行的费用参照。
 \end{itemize}
 
 \subsection{模型的缺点}
 \begin{itemize}[itemindent=2em]
+\item 问题二采用 D-7 历史同刻点预测，具有严格因果、稳定和可解释的优点，但对季节漂移、天气突变及短期异常波动的响应能力有限。
 \item 电价预测仅利用同星期历史槽位，虽然实现稳定且易于核对，但没有显式利用节假日、天气或负荷与电价的联合变化。
 \item 模型未显式计入电池循环老化成本，而充放电深度与循环频率会影响电池寿命及真实运行经济性\cite{xu2018aging}。题目没有给出电池类型、循环寿命曲线、购置或更换成本和温度条件，若直接套用外部磨损单价会把无法校准的假设带入正式购电目标，因此本文只将其列为局限。
 \end{itemize}
@@ -951,7 +948,7 @@ C_{4-2}=\sum_t p_t q_t^{(0)}+\sum_t5p_tg_t^{\mathrm{emg}}.
 
 \subsection{模型的改进}
 
-在获得多年预测版本、实际值及电池参数后，可先用仅来自决策时点以前的联合残差生成少量场景，再以滚动留出数据比较确定性MPC、SAA和均值--CVaR策略，同时报告实际总费用、紧急购电量、尾部日成本与场景稳定性。电池寿命可先用吞吐成本区间做敏感性，再在参数充分时加入循环深度退化模型；无论采用何种扩展，都保留本文确定性LP作为可解释基线和核算检查。
+在获得多年预测版本、实际值及电池参数后，可先用仅来自决策时点以前的联合残差生成少量场景，再以滚动留出数据比较确定性MPC、SAA和均值--CVaR策略，同时报告实际总费用、紧急购电量、尾部日成本与场景稳定性。电池寿命可先用吞吐成本区间做敏感性，再在参数充分时加入循环深度退化模型；无论采用何种扩展，都保留本文确定性LP作为可解释基线和核算检查。在预测层，后续可直接对净负荷 $N_t=L_t-V_t$ 的历史预测残差进行成本敏感分位建模，以匹配计划购电与 5 倍紧急购电之间的非对称损失，避免分别调整负荷和光伏分位数产生方向抵消。
 
 \subsection{模型的推广}
 
@@ -970,8 +967,13 @@ C_{4-2}=\sum_t p_t q_t^{(0)}+\sum_t5p_tg_t^{\mathrm{emg}}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 参考文献
+% 参考文献允许从新页开始
+\newpage
 \bibliographystyle{gbt7714-numerical}  % 引用格式
 \bibliography{ref.bib}  % bib源
+
+% 参考文献结束后允许直接换页进入附录
+\newpage
 
 
 
@@ -989,51 +991,54 @@ C_{4-2}=\sum_t p_t q_t^{(0)}+\sum_t5p_tg_t^{\mathrm{emg}}.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 附录
 \begin{appendices}
-	
-	
-	
-	
-\section{文件列表}
+\setcounter{section}{0}
+% appendices 环境默认改用英文大写字母编号，这里恢复为与正文一致的中文数字
+\renewcommand{\thesection}{\chinese{section}、}
+
+\section{支撑材料目录}
+
+随论文提交的支撑材料文件夹目录结构如下，共 5 个一级目录。文件清单与 SHA-256 校验值见支撑材料根目录
+\texttt{README.md} 与 \texttt{SHA256SUMS.txt}。
+
+% 目录树左对齐展示，压缩层级缩进；中文注释用 \rmfamily（等宽字体不含中文字形）
+\begingroup
+\renewcommand\DTstyle{\ttfamily}
+\setlength{\DTbaselineskip}{0.9\baselineskip}
+\renewcommand\DTstylecomment{\rmfamily}
+\dirtree{%
+.1 支撑材料/.
+.2 源码/{\rmfamily （71 个 Python 文件，保留 core/、plots/ 子目录）}.
+.3 core/{\rmfamily （19 个核心模块：时间槽适配、LP 内核、执行器、核算器等）}.
+.3 plots/{\rmfamily （11 个论文图绘制脚本）}.
+.2 正式结果/{\rmfamily （result1--result4 共 5 份已核验工作簿）}.
+.2 官方附件/{\rmfamily （附件1至附件5原始输入与官方空模板）}.
+.2 论文图/{\rmfamily （论文图 1--12 对应 PNG）}.
+.2 AI 工具使用详情/{\rmfamily （AI 使用说明源文件与 PDF）}.
+.2 \texttt{README.md}、\texttt{requirements.txt}、\texttt{SHA256SUMS.txt}.
+}
+\endgroup
+
+\vspace{4pt}
+\texttt{源码/}目录下另有全部 41 个顶层 Python 文件，其主要组成见表~\ref{tab:支撑材料源码}。
+
+% 长文件名用 \path 排版，允许在单元格内断行，避免溢出与重叠；\, 补充宏后缺省的空格
+\newcommand{\fn}[1]{\path{#1}\,}
+
 \begin{table}[H]
 \centering
-\begin{tabularx}{\textwidth}{LL}
+\caption{支撑材料\texttt{源码/}目录顶层文件组成}
+\label{tab:支撑材料源码}
+\begin{tabularx}{\textwidth}{@{}>{\hsize=0.85\hsize}L>{\hsize=1.45\hsize}L>{\hsize=0.7\hsize}L@{}}
 \toprule
-文件名   & 功能描述 \\
+文件类别 & 代表文件 & 作用 \\
 \midrule
-slot\_adapter.py & 144 槽位适配器 \\
-wallclock\_output.py & 真实墙钟时间戳聚合层 \\
-lp\_kernel.py & 确定性 LP 内核与双引擎求解 \\
-executor.py & 执行器与计划版本账本 \\
-accountant.py & 独立核算器 \\
-template\_io.py & 官方模板原位填写与回读 \\
-figure\_style.py & 论文图中文字体与字号统一配置 \\
-data\_io.py & 附件读取与防泄漏接口 \\
-validate\_official\_attachment2.py & 官方附件2光伏/负荷读取核对 \\
-extract\_required\_dates.py & 四个指定日期摘要抽取 \\
-generate\_q1\_result.py & Q1 正式结果生成与审计 \\
-validate\_q1.py & Q1 结果独立验证 \\
-q2\_forecast.py / q2\_conservative.py & Q2 因果预测候选与分位保守计划 \\
-q2\_replay.py & Q2 顺序回放与终端库存口径 \\
-generate\_q2\_result.py & Q2 正式 result2 生成、回读与审计 \\
-q2\_three\_day\_acceptance.py & Q2 三天连续窗口独立验收 \\
-q2\_emergency\_merge\_tests.py & Q2 紧急购电时段合并测试 \\
-q3\_forecast.py & 附件3点预测的因果10分钟展开 \\
-q3\_optimizer.py & Q3初始计划与日内调整的稀疏LP \\
-q3\_replay.py & 四时点顺序回放与合同版本记录 \\
-generate\_q3\_result.py & Q3全年正式结果生成 \\
-finalize\_q3\_result.py & Q3官方结果模板生成 \\
-plots/plot\_*.py & 论文图绘制脚本（图2--图12） \\
-figures/framework.pdf & 四问统一建模框架图（图1，矢量图） \\
-validate\_q3\_result.py & Q3物理、账本与工作簿独立验证 \\
-q4\_price.py & Q4严格因果电价预测 \\
-q4\_energy.py & Q4复用Q2/Q3能量预测的因果适配器 \\
-q4\_replay.py & Q4双价格滚动回放与版本结算 \\
-generate\_q4\_results.py & Q4两条全年正式回放 \\
-finalize\_q4\_results.py & Q4官方结果模板生成 \\
-validate\_q4\_results.py & Q4物理、价格、账本与工作簿独立验证 \\
+正式结果生成入口 & \fn{generate_q1_result.py} 至 \fn{generate_q4_results.py}，\fn{finalize_q3_result.py}，\fn{finalize_q4_results.py} & 生成并填写五份正式结果工作簿 \\
+独立验证入口 & \fn{validate_q1.py} 至 \fn{validate_q4_results.py}，\fn{q2_three_day_acceptance.py} 等 & 不调用主回放程序，独立复算物理约束、费用账本与工作簿一致性 \\
+预测与策略选择 & \fn{q2_forecast.py}，\fn{q2_conservative.py}，\fn{q4_price.py}，\fn{q2_strategy_selection.py}，\fn{q4_price_strategy_selection.py} 等 & 因果预测、候选方法比较与正式预测口径选定 \\
+测试与对照 & \fn{q3_ledger_synthetic_tests.py}，\fn{q4_oracle_benchmark.py}，\fn{test_validate_q1.py} 等 & 构造算例测试、完美信息下界与各类对照实验 \\
+辅助工具 & \fn{extract_required_dates.py}，\fn{render_framework_figure.py}，\fn{validate_official_attachment2.py}，\fn{package_support.py} 等 & 指定日期摘要抽取、框架图渲染、附件读取链核对与支撑材料打包 \\
 \bottomrule
 \end{tabularx}
-\label{tab:文件列表}
 \end{table}
 
 

@@ -3,7 +3,7 @@
 - 状态：已完成（2026-09-12）。
 - 目标：不重做 Q1 主模型，独立核对正式 CSV、用显式 SOC 的互斥 MILP 对拍，并完成参数敏感性、输入扰动稳健性和 Q1 正文。
 - 主输入：`data/raw/official/附件1.xlsm`、`outputs/q1_scheme_a/q1_dispatch.csv`、`q1_audit.json`、`q1_paper_tables.json`。
-- 产物：可重复运行的验证脚本、机器可读验证结果、必要图表、`research/C_q1_validation.md`、写入 `paper/数模通用模板.tex` 的 Q1 正文。
+- 产物：可重复运行的验证脚本、机器可读验证结果、必要图表、`research/C_q1_validation.md`、写入 `paper/数模国赛C题.tex` 的 Q1 正文。
 
 ## 验证路线
 

@@ -64,7 +64,7 @@
 - 独立核验：`src/validate_q4_results.py`
 - 完美信息对照：`src/q4_oracle_benchmark.py`
 - 论文数字：`outputs/q4/q4_paper_tables.json`
-- 论文：`paper/数模通用模板.tex`
+- 论文：`paper/数模国赛C题.tex`
 
 ## 下一步
 
